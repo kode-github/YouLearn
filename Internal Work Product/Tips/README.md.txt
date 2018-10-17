@@ -1,10 +1,18 @@
-Questa cartella verrà utilizzata per:
+Funzionamento dei documenti Tips:
 
-- Definire idee per sviluppi futuri.
-- Definire delle caratteristiche da implementare in futuro (Es: Presenza di un elemento tag per la ricerca)
 
-Regole da rispettare:
--  Ogni documento è modificabile da ogni membro del gruppo
--  Ad ogni tips aggiunta bisogna specificare il documento e l'elemento a cui è collegata l'idea proposta
-- Ogni elemento deve essere discusso in un meeting e approvato da MS.
+1. Ogni membro ha un Tips Document affiliato per evitare conflitti
 
+2. In ogni Tips si ha:
+    - Un titolo strutturato come "TIPS DI NOME GENERATO DA CAMPO"
+    - Il NOME è quello del membro del gruppo
+    - Il CAMPO è quello legato alla fonte del tips
+
+3. PER GLI SCENARI:
+    Per ogni scenario che presenta almeno un tips deve essere specificato nel seguente modo:
+    (Questa riga in grassetto) "Analisi dello scenario NOME_SCENARIO
+     Punto x - Tips in x
+
+Per maggiori informazioni vedere il documento Tips_Scenari_MS_YouLearn
+
+ 
