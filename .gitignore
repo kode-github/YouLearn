@@ -6,4 +6,6 @@ Internal Work Product/Objects/~$bjects.docx
 Internal Work Product/Casi d'uso/~$e_Case.docx
 *.bak*
 *.lck.*
+*.tmp*
+*~$*
 InternalWorkProduct/ComponentiRAD/UseCases/~$e_Case.docx
