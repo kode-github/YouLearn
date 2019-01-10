@@ -16,7 +16,6 @@ public class CartaDiCreditoBean {
 	private String meseScadenza;
 	private String annoScadenza;
 	private CartaEnum tipo;
-	private int countAccount;
 	
 	/**
 	 * Costruttore della classe generico, viene utilizzato per le operazioni con il database
@@ -25,16 +24,18 @@ public class CartaDiCreditoBean {
 	 * 
 	 */
 	
-	public CartaDiCreditoBean(String nomeIntestatario, String numeroCarta, String meseScadenza, String annoScadenza, CartaEnum tipo, int countAccount) {
+	public CartaDiCreditoBean(String nomeIntestatario, String numeroCarta, String meseScadenza, String annoScadenza, CartaEnum tipo) {
 		this.nomeIntestatario = nomeIntestatario;
 		this.numeroCarta = numeroCarta;
 		this.meseScadenza = meseScadenza;
 		this.annoScadenza = annoScadenza;
 		this.tipo = tipo;
-		this.countAccount = countAccount;
 	}
 
-	public CartaDiCreditoBean() {}
+	public CartaDiCreditoBean() {
+		nomeIntestatario=numeroCarta=meseScadenza=annoScadenza="";
+		tipo=null;
+	}
 	
 	/**
 	 * Ritorna il nome dell'intestatario
@@ -117,23 +118,6 @@ public class CartaDiCreditoBean {
 		this.tipo = tipo;
 	}
 
-	/**
-	 * Ritorna il contatore degli account di sistema che utilizzano la medesima carta
-	 * @return int : countAccount
-	 */
-	
-	public int countAccount() {
-		return this.countAccount;
-	}
-
-	/**
-	 * Modifica il contatore degli account di sistema che utilizzano la medesima carta
-	 * @param int countAccount
-	 */
-	public void setCountAccount(int countAccount) {
-		this.countAccount = countAccount;
-	}
-	
 	
 	
 	

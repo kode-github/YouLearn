@@ -17,7 +17,7 @@ public class AccountBean {
 	private String password;
 	private String mail;
 	private Ruolo tipo;
-	private int verificato = 0;
+	private boolean verificato = false;
 	private  String numeroCarta;
 	
 	
@@ -29,7 +29,7 @@ public class AccountBean {
 	 * 
 	 */
 	
-	public AccountBean(String nome, String cognome, String password, String mail, Ruolo tipo, int verificato, String numeroCarta) {
+	public AccountBean(String nome, String cognome, String password, String mail, Ruolo tipo, boolean verificato, String numeroCarta) {
 		this.nome = nome;
 		this.cognome = cognome;
 		this.password = password;
@@ -58,6 +58,11 @@ public class AccountBean {
 	
 	
 	
+	public AccountBean() {
+		// TODO Auto-generated constructor stub
+	}
+
+
 	/**
 	 * Ritorna il nome dell'account
 	 * @return String : nome
@@ -156,7 +161,7 @@ public class AccountBean {
 	 * @return String : cognome
 	 */
 	
-	public int getVerificato() {
+	public boolean getVerificato() {
 		return verificato;
 	}
 
@@ -165,7 +170,7 @@ public class AccountBean {
 	 * @param bool
 	 */
 	
-	public void setVerificato(int verificato) {
+	public void isVerificato(boolean verificato) {
 		this.verificato = verificato;
 	}
 
