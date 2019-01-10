@@ -6,18 +6,19 @@ package bean;
  * @author Mario Sessa
  * @version 1.0
  * @since 8/01/2019
+ * 
  */
 
 public class AccountBean {
 	
 	public enum Ruolo{Utente, Supervisore}; 
-	
 	private String nome;
 	private String cognome;
 	private String password;
 	private String mail;
 	private Ruolo tipo;
-	private boolean verificato = false;
+	private int verificato = 0;
+	private  String numeroCarta;
 	
 	
 	/**
@@ -28,13 +29,14 @@ public class AccountBean {
 	 * 
 	 */
 	
-	public AccountBean(String nome, String cognome, String password, String mail, Ruolo tipo, boolean verificato) {
+	public AccountBean(String nome, String cognome, String password, String mail, Ruolo tipo, int verificato, String numeroCarta) {
 		this.nome = nome;
 		this.cognome = cognome;
 		this.password = password;
 		this.mail = mail;
 		this.tipo = tipo;
 		this.verificato = verificato;
+		this.numeroCarta = numeroCarta;
 	}
 	
 	/**
@@ -45,13 +47,15 @@ public class AccountBean {
 	 * 
 	 */
 	
-	public AccountBean(String nome, String cognome, String password, String mail, Ruolo tipo) {
+	public AccountBean(String nome, String cognome, String password, String mail, Ruolo tipo, String numeroCarta) {
 		this.nome = nome;
 		this.cognome = cognome;
 		this.password = password;
 		this.mail = mail;
 		this.tipo = tipo;
+		this.numeroCarta = numeroCarta;
 	}
+	
 	
 	
 	/**
@@ -148,11 +152,11 @@ public class AccountBean {
 	}
 
 	/**
-	 * Ritorna true o false a secondo del valore dell'attributo di verifica
+	 * Ritorna 0 o 1 a secondo del valore dell'attributo di verifica
 	 * @return String : cognome
 	 */
 	
-	public boolean isVerificato() {
+	public int getVerificato() {
 		return verificato;
 	}
 
@@ -161,19 +165,26 @@ public class AccountBean {
 	 * @param bool
 	 */
 	
-	public void setVerificato(boolean verificato) {
+	public void setVerificato(int verificato) {
 		this.verificato = verificato;
 	}
 
 	/**
-	 *  Funzione di test remoto durante la fase di implementazione della classe, in seguito al test di unità verrà eliminato
+	 * Restituisce il numero della carta di credito legata all'account
+	 * @return String : numeroCarta
 	 */
 	
-	public static void remoteTest() {
-		
-		
-		
+	public String getNumeroCarta() {
+		return this.numeroCarta;
 	}
-
+	
+	/**
+	 * Modifica il numero di carta associata all'account
+	 * @param String numeroCarta
+	 */
+	
+	public void setNumeroCarta(String numeroCarta) {
+		this.numeroCarta = numeroCarta;
+	}
 }
 

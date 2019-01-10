@@ -10,10 +10,11 @@ package bean;
 
 public class CommentoBean {
 
-	private int lezioneIdLezione;
+	private int corsoIdCorso;
 	private int idCommento;
 	private String testo;
 	private String accountMail;
+	private int numeroLezione;
 	
 	/**
 	 * Costruttore generico degli oggetti di tipo commento
@@ -21,8 +22,8 @@ public class CommentoBean {
 	 * @param String testo accountMail
 	 * 
 	 */
-	public CommentoBean(int lezioneIdLezione, int idCommento, String testo, String accountMail) {
-		this.lezioneIdLezione = lezioneIdLezione;
+	public CommentoBean(int numeroLezione, int idCommento, String testo, String accountMail) {
+		this.numeroLezione = numeroLezione;
 		this.idCommento = idCommento;
 		this.testo = testo;
 		this.accountMail = accountMail;
@@ -33,17 +34,33 @@ public class CommentoBean {
 	 * @return int : lezioneIdLezione
 	 */
 	
-	public int getLezioneIdLezione() {
-		return lezioneIdLezione;
+	public int getcorsoIdCorso() {
+		return corsoIdCorso;
 	}
 
 	/**
-	 * Modifica l'id della lezione a cui è collegato il commento secondo il parametro collegato
+	 * Modifica l'id del corso collegata alla lezione in cui c'è il commento
+	 * @param int corsoIdCorso
+	 */
+	public void setCorsoIdCorso(int corsoIdCorso) {
+		this.corsoIdCorso = corsoIdCorso;
+	}
+	
+	/**
+	 * Preleva il numero della lezione a cui è collegato il commento
+	 * @return int : numeroLezione
+	 */
+	
+	public int getNumeroLezione(int numeroLezione) {
+		return this.numeroLezione;
+	}
+	/**
+	 * Modifica il numero della lezione a cui è collegato il commento secondo il parametro collegato
 	 * @param int lezioneIdLezione
 	 */
 	
-	public void setLezioneIdLezione(int lezioneIdLezione) {
-		this.lezioneIdLezione = lezioneIdLezione;
+	public void setNumeroLezione(int numeroLezione) {
+		this.numeroLezione = numeroLezione;
 	}
 
 	/**

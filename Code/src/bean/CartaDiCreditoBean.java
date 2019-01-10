@@ -34,6 +34,8 @@ public class CartaDiCreditoBean {
 		this.countAccount = countAccount;
 	}
 
+	public CartaDiCreditoBean() {}
+	
 	/**
 	 * Ritorna il nome dell'intestatario
 	 * @return String : nomeIntestatario

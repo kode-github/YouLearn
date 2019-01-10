@@ -9,6 +9,7 @@ package bean;
  */
 public class CorsoBean {
 
+	public enum Categoria{Informatica, Elettronica, Musica, Fotografia, Danza};
 	private String nome;
 	private String descrizione;
 	private String dataCreazione;
@@ -18,7 +19,7 @@ public class CorsoBean {
 	private int idCorso;
 	private String accountCreatore;
 	private String accountSupervisore;
-	private String categoria;
+	private Categoria categoria;
 	
 	/**
 	 * Costruttore generico del corso
@@ -27,7 +28,7 @@ public class CorsoBean {
 	 * 
 	 */
 	public CorsoBean(String nome, String descrizione, String dataCreazione, String dataFine, int nIscritti,
-			String copertina, int idCorso, String accountCreatore, String accountSupervisore, String categoria) {
+			String copertina, int idCorso, String accountCreatore, String accountSupervisore, Categoria categoria) {
 		super();
 		this.nome = nome;
 		this.descrizione = descrizione;
@@ -210,19 +211,19 @@ public class CorsoBean {
 
 	/**
 	 * Preleva la categoria del corso 
-	 * @return String : categoria
+	 * @return Categoria : categoria
 	 */
 	
-	public String getCategoria() {
+	public Categoria getCategoria() {
 		return categoria;
 	}
 
 	/**
 	 * Modifica la categoria del corso
-	 * @param String categoria
+	 * @param Categoria categoria
 	 */
 	
-	public void setCategoria(String categoria) {
+	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
 	}
 	
