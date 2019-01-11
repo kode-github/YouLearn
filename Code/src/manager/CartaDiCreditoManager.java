@@ -45,15 +45,15 @@ public class CartaDiCreditoManager {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		
-		String sql="INSERT INTO Account VALUES(?,?,?,?,?)";
+		String sql="INSERT INTO Ca VALUES(?,?,?,?,?)";
 		try {
 			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			
 			preparedStatement.setString(1, product.getNomeIntestatario());
 			preparedStatement.setString(2, product.getNumeroCarta());
-			preparedStatement.setString(3, product.getMeseScadenza());
-			preparedStatement.setString(4, product.getAnnoScadenza());
+			preparedStatement.setDate(3, product.getMeseScadenza());
+			preparedStatement.setDate(4, product.getAnnoScadenza());
 			preparedStatement.setString(5, parserTipoCarta(product.getTipo()));
 			System.out.println("doSave: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();

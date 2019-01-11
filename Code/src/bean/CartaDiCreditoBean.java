@@ -1,5 +1,7 @@
 package bean;
 
+import java.sql.Date;
+
 /***
  * 
  * Classe rappresentante un entità CartaDiCredito persistente
@@ -13,8 +15,8 @@ public class CartaDiCreditoBean {
 	public enum CartaEnum{PAYPAL, POSTEPAY, AMERICANEXPRESS};
 	private String nomeIntestatario;
 	private String numeroCarta;
-	private String meseScadenza;
-	private String annoScadenza;
+	private Date meseScadenza;
+	private Date annoScadenza;
 	private CartaEnum tipo;
 	
 	/**
@@ -24,7 +26,7 @@ public class CartaDiCreditoBean {
 	 * 
 	 */
 	
-	public CartaDiCreditoBean(String nomeIntestatario, String numeroCarta, String meseScadenza, String annoScadenza, CartaEnum tipo) {
+	public CartaDiCreditoBean(String nomeIntestatario, String numeroCarta, Date meseScadenza, Date annoScadenza, CartaEnum tipo) {
 		this.nomeIntestatario = nomeIntestatario;
 		this.numeroCarta = numeroCarta;
 		this.meseScadenza = meseScadenza;
@@ -33,8 +35,9 @@ public class CartaDiCreditoBean {
 	}
 
 	public CartaDiCreditoBean() {
-		nomeIntestatario=numeroCarta=meseScadenza=annoScadenza="";
+		nomeIntestatario=numeroCarta="";
 		tipo=null;
+		meseScadenza=annoScadenza=null;
 	}
 	
 	/**
@@ -76,11 +79,11 @@ public class CartaDiCreditoBean {
 	 * @return String : meseScadenza
 	 */
 	
-	public String getMeseScadenza() {
+	public Date getMeseScadenza() {
 		return meseScadenza;
 	}
 
-	public void setMeseScadenza(String meseScadenza) {
+	public void setMeseScadenza(Date meseScadenza) {
 		this.meseScadenza = meseScadenza;
 	}
 
@@ -89,7 +92,7 @@ public class CartaDiCreditoBean {
 	 * @return String : annoScadenza
 	 */
 	
-	public String getAnnoScadenza() {
+	public Date getAnnoScadenza() {
 		return annoScadenza;
 	}
 
@@ -97,7 +100,7 @@ public class CartaDiCreditoBean {
 	 * Imposta l'anno di scadenza della carta
 	 * @param String annoScadenza
 	 */
-	public void setAnnoScadenza(String annoScadenza) {
+	public void setAnnoScadenza(Date annoScadenza) {
 		this.annoScadenza = annoScadenza;
 	}
 

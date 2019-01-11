@@ -11,7 +11,7 @@ package bean;
 public class CommentoBean {
 
 	private int corsoIdCorso;
-	private int idCommento;
+	private Integer idCommento;
 	private String testo;
 	private String accountMail;
 	private int numeroLezione;
@@ -22,11 +22,16 @@ public class CommentoBean {
 	 * @param String testo accountMail
 	 * 
 	 */
-	public CommentoBean(int numeroLezione, int idCommento, String testo, String accountMail) {
+	public CommentoBean(int numeroLezione, Integer idCommento, String testo, String accountMail,int idCorso) {
 		this.numeroLezione = numeroLezione;
 		this.idCommento = idCommento;
 		this.testo = testo;
 		this.accountMail = accountMail;
+		corsoIdCorso=idCorso;
+	}
+
+	public CommentoBean() {
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -51,7 +56,7 @@ public class CommentoBean {
 	 * @return int : numeroLezione
 	 */
 	
-	public int getNumeroLezione(int numeroLezione) {
+	public int getNumeroLezione() {
 		return this.numeroLezione;
 	}
 	/**
