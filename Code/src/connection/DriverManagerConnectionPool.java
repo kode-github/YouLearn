@@ -24,7 +24,7 @@ public class DriverManagerConnectionPool {
 		Connection newConnection = null;
 		String ip = "localhost";
 		String port = "3306";
-		String db = "ottico";
+		String db = "youlearndb";
 		String username = "root";
 		String password = "PentiumD";
 
@@ -59,8 +59,11 @@ public class DriverManagerConnectionPool {
 	
 	public static synchronized void releaseConnection(Connection connection) 
 			throws SQLException {
-		if(connection != null) freeDbConnections.add(connection);
+		if(connection != null && connection.getCatalog().equals("youlearndb")) { //controllo che il db sia lo stesso
+			freeDbConnections.add(connection);
+		}
+			
 	}	
-	
+
 	
 }

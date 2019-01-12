@@ -88,13 +88,13 @@ public class RepositoryCarta implements Repository<CartaDiCreditoBean> {
 
 	@Override
 	public void remove(CartaDiCreditoBean item) throws SQLException {
-		// TODO Auto-generated method stub
+		// TODO non necessario
 		
 	}
 
 	@Override
 	public void remove(Specification specification) throws SQLException {
-		// TODO Auto-generated method stub
+		// TODO non necessario
 		
 	}
 

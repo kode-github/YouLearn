@@ -36,7 +36,6 @@ public class RepositoryAccount implements Repository<AccountBean> {
 			for(AccountBean a: items) {
 				sql="Insert into Account values(?,?,,?,?,?,?)";
 				statement=c.prepareStatement(sql);
-				
 				statement.setString(1, a.getNome());
 				statement.setString(2, a.getCognome());
 				statement.setString(3, a.getPassword());

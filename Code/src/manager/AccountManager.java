@@ -8,17 +8,10 @@ import bean.AccountBean;
 import bean.AccountBean.Ruolo;
 import connection.DriverManagerConnectionPool;
 import exception.*;
+import utility.RuoloUtility;
 
 public class AccountManager {
 	
-	/**
-	 * Converte un oggetto Ruolo in un 0 o 1 per il salvataggio nel DB
-	 * @param r Oggetto Ruolo
-	 * @return 0=Utente 1=Supervisore
-	 */
-	private int ruoloParser(Ruolo r) {
-		return r.equals(Ruolo.Utente)? 0:1;
-	}
 	
 	/**
 	 * Recupera un Account dal DB
@@ -82,7 +75,7 @@ public class AccountManager {
 			preparedStatement.setString(2, product.getCognome());
 			preparedStatement.setString(3, product.getPassword());
 			preparedStatement.setString(4, product.getMail());
-			preparedStatement.setInt(5, ruoloParser(product.getTipo()));
+			preparedStatement.setInt(5, RuoloUtility.ruoloParser(product.getTipo()));
 			preparedStatement.setBoolean(6, product.getVerificato());
 			preparedStatement.setString(7, product.getNumeroCarta());
 			System.out.println("doSave: "+ preparedStatement.toString());
@@ -119,7 +112,7 @@ public class AccountManager {
 			preparedStatement.setString(2, product.getCognome());
 			preparedStatement.setString(3, product.getPassword());
 			preparedStatement.setString(4, product.getMail());
-			preparedStatement.setInt(5, ruoloParser(product.getTipo()));
+			preparedStatement.setInt(5, RuoloUtility.ruoloParser(product.getTipo()));
 			preparedStatement.setBoolean(6, product.getVerificato());
 			preparedStatement.setString(7, product.getNumeroCarta());
 			preparedStatement.setString(8, product.getMail());
