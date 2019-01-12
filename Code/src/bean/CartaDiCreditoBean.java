@@ -18,7 +18,7 @@ public class CartaDiCreditoBean {
 	private String meseScadenza;
 	private String annoScadenza;
 	private CartaEnum tipo;
-	private Collection<AccountBean> accountCollegati;
+	private AccountBean account;
 	
 	/**
 	 * Costruttore della classe generico, viene utilizzato per le operazioni con il database
@@ -28,18 +28,18 @@ public class CartaDiCreditoBean {
 	 * 
 	 */
 	
-	public CartaDiCreditoBean(String nomeIntestatario, String numeroCarta, String meseScadenza, String annoScadenza, CartaEnum tipo, Collection<AccountBean> accountCollegati) {
+	public CartaDiCreditoBean(String nomeIntestatario, String numeroCarta, String meseScadenza, String annoScadenza, CartaEnum tipo, AccountBean accountCollegati) {
 		this.nomeIntestatario = nomeIntestatario;
 		this.numeroCarta = numeroCarta;
 		this.meseScadenza = meseScadenza;
 		this.annoScadenza = annoScadenza;
 		this.tipo = tipo;
-		this.accountCollegati = accountCollegati;
+		setAccount(accountCollegati);
 	}
 	
 	public CartaDiCreditoBean() {
 		nomeIntestatario=numeroCarta=meseScadenza=annoScadenza="";
-		accountCollegati=null;
+		account=null;
 		tipo=null;
 	}
 
@@ -48,8 +48,8 @@ public class CartaDiCreditoBean {
 	 * @return Collection<AccountBean> : accountCollegati
 	 */
 	
-	public Collection<AccountBean> getAccountCollegati() {
-		return accountCollegati;
+	public AccountBean getAccount() {
+		return account;
 	}
 
 	/**
@@ -57,8 +57,9 @@ public class CartaDiCreditoBean {
 	 * @param Collection<AccountBean> accountCollegati
 	 */
 	
-	public void setAccountCollegati(Collection<AccountBean> accountCollegati) {
-		this.accountCollegati = accountCollegati;
+	public void setAccount(AccountBean accountCollegati) {
+		account=accountCollegati;
+		account.setCarta(this);
 	}
 
 	/**
