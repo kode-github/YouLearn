@@ -4,23 +4,23 @@ package bean;
  * 
  * Classe che rappresenta un Pagamento persistente
  * @author Mario Sessa
- * @version 1.0
- * @since 09/01/2019
+ * @version 1.1
+ * @since 11/01/2019
  *
  */
 public class PagamentoBean {
 
-	private String accountMail;
-	private int corsoIdCorso;
+	private AccountBean account;
+	private CorsoBean corso;
 	private String dataPagamento;
 	private double importo;
 	private String fattura;
 	
 	
-	public PagamentoBean(String accountMail, int corsoIdCorso, String dataPagamento, double importo, String fattura) {
+	public PagamentoBean(AccountBean account, CorsoBean corso, String dataPagamento, double importo, String fattura) {
 		super();
-		this.accountMail = accountMail;
-		this.corsoIdCorso = corsoIdCorso;
+		this.account = account;
+		this.corso = corso;
 		this.dataPagamento = dataPagamento;
 		this.importo = importo;
 		this.fattura = fattura;
@@ -29,39 +29,39 @@ public class PagamentoBean {
 	public PagamentoBean() {}
 	
 	/**
-	 * Preleva l'email dell'account collegata al pagamento
+	 * Preleva l'account collegata al pagamento
 	 * @return String : accountMail
 	 */
 	
-	public String getAccountMail() {
-		return accountMail;
+	public AccountBean getAccount() {
+		return this.account;
 	}
 	
 	/**
-	 * Modifica la mail dell'account collegata al pagamento. 
+	 * Modifica l'account collegata al pagamento. 
 	 * @param accountMail
 	 */
 	
-	public void setAccountMail(String accountMail) {
-		this.accountMail = accountMail;
+	public void setAccount(AccountBean account) {
+		this.account = account;
 	}
 	
 	/**
-	 * Preleva l'id del corso collegato al pagamento 
+	 * Preleva il corso collegato al pagamento 
 	 * @return int : corsoIdCorso
 	 */
 	
-	public int getCorsoIdCorso() {
-		return corsoIdCorso;
+	public CorsoBean getCorso() {
+		return corso;
 	}
 	
 	/**
-	 * Modifica l'id del corso affiliato al pagamento 
+	 * Modifica il corso affiliato al pagamento 
 	 * @param int corsoIdCorso
 	 */
 	
-	public void setCorsoIdCorso(int corsoIdCorso) {
-		this.corsoIdCorso = corsoIdCorso;
+	public void setCorsoIdCorso(CorsoBean corso) {
+		this.corso = corso;
 	}
 	
 	/**

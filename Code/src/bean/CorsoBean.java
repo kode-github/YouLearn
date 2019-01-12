@@ -1,11 +1,13 @@
 package bean;
 
+import java.util.Collection;
+
 /**
  * 
  * Classe identificante una classe Corso persistente
  * @author Mario Sessa
- * @vesione 1.0
- * @since 09/01/2019
+ * @vesione 1.1
+ * @since 11/01/2019
  */
 public class CorsoBean {
 
@@ -17,8 +19,9 @@ public class CorsoBean {
 	private int nIscritti;
 	private String copertina;
 	private int idCorso;
-	private String accountCreatore;
-	private String accountSupervisore;
+	private AccountBean docente;
+	private AccountBean supervisore;
+	private Collection<AccountBean> studenti;
 	private Categoria categoria;
 	
 	/**
@@ -28,7 +31,7 @@ public class CorsoBean {
 	 * 
 	 */
 	public CorsoBean(String nome, String descrizione, String dataCreazione, String dataFine, int nIscritti,
-			String copertina, int idCorso, String accountCreatore, String accountSupervisore, Categoria categoria) {
+			String copertina, int idCorso, AccountBean docente, AccountBean supervisore, Categoria categoria, Collection<AccountBean> studenti) {
 		super();
 		this.nome = nome;
 		this.descrizione = descrizione;
@@ -37,12 +40,32 @@ public class CorsoBean {
 		this.nIscritti = nIscritti;
 		this.copertina = copertina;
 		this.idCorso = idCorso;
-		this.accountCreatore = accountCreatore;
-		this.accountSupervisore = accountSupervisore;
+		this.docente = docente;
+		this.supervisore = supervisore;
+		this.studenti = studenti;
 		this.categoria = categoria;
 	}
 
+	/**
+	 * Ritorna la collezione degli studenti del corso
+	 * @return Collection<AccountBean> : studenti
+	 */
 	
+	public Collection<AccountBean> getStudenti() {
+		return studenti;
+	}
+
+	/**
+	 * Assegna una collezione di studenti al corso
+	 * @param Collection<AccountBean> studenti
+	 */
+	
+	
+	public void setStudenti(Collection<AccountBean> studenti) {
+		this.studenti = studenti;
+	}
+
+
 	/**
 	 * Preleva il valore del nome del corso.
 	 * @return String : nome
@@ -175,38 +198,38 @@ public class CorsoBean {
 	
 	/**
 	 * Preleva l'email dell'account del creatore del corso 
-	 * @return String : accountCreatore
+	 * @return AccountBean : doc ente
 	 */
 	
-	public String getAccountCreatore() {
-		return accountCreatore;
+	public AccountBean getDocente() {
+		return docente;
 	}
 
 	/**
 	 * Modifica della mail dell'account del creatore 
-	 * @param accountCreatore
+	 * @param AccountBean docente
 	 */
 	
-	public void setAccountCreatore(String accountCreatore) {
-		this.accountCreatore = accountCreatore;
+	public void setDocente(AccountBean docente) {
+		this.docente = docente;
 	}
 
 	/**
 	 * 
 	 * Prelieva la mail dell'account del supervisore
-	 * @return String : accountSupervisore
+	 * @return AccountBean : supervisore
 	 */
-	public String getAccountSupervisore() {
-		return accountSupervisore;
+	public AccountBean getSupervisore() {
+		return supervisore;
 	}
 
 	/**
 	 * Modifica la mail dell'account del supervisore 
-	 * @param String accountSupervisore
+	 * @param AccountBean supervisore
 	 */
 	
-	public void setAccountSupervisore(String accountSupervisore) {
-		this.accountSupervisore = accountSupervisore;
+	public void setSupervisore(AccountBean supervisore) {
+		this.supervisore = supervisore;
 	}
 
 	/**

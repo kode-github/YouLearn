@@ -1,13 +1,13 @@
 package bean;
 
-import java.sql.Date;
+import java.util.Collection;
 
 /***
  * 
  * Classe rappresentante un entità CartaDiCredito persistente
  * @author Mario Sessa
- * @version 1.0
- * @since 8/01/2019
+ * @version 1.1
+ * @since 11/01/2019
  */
 
 public class CartaDiCreditoBean {
@@ -15,31 +15,52 @@ public class CartaDiCreditoBean {
 	public enum CartaEnum{PAYPAL, POSTEPAY, AMERICANEXPRESS};
 	private String nomeIntestatario;
 	private String numeroCarta;
-	private Date meseScadenza;
-	private Date annoScadenza;
+	private String meseScadenza;
+	private String annoScadenza;
 	private CartaEnum tipo;
+	private Collection<AccountBean> accountCollegati;
 	
 	/**
 	 * Costruttore della classe generico, viene utilizzato per le operazioni con il database
 	 * @param String nomeIntestatario numeroCarta meseScadenza annoScadenza accountMail
 	 * @param CartaEnum tipo
+	 * @param Collection<AccountBean> accountCollegati
 	 * 
 	 */
 	
-	public CartaDiCreditoBean(String nomeIntestatario, String numeroCarta, Date meseScadenza, Date annoScadenza, CartaEnum tipo) {
+	public CartaDiCreditoBean(String nomeIntestatario, String numeroCarta, String meseScadenza, String annoScadenza, CartaEnum tipo, Collection<AccountBean> accountCollegati) {
 		this.nomeIntestatario = nomeIntestatario;
 		this.numeroCarta = numeroCarta;
 		this.meseScadenza = meseScadenza;
 		this.annoScadenza = annoScadenza;
 		this.tipo = tipo;
-	}
-
-	public CartaDiCreditoBean() {
-		nomeIntestatario=numeroCarta="";
-		tipo=null;
-		meseScadenza=annoScadenza=null;
+		this.accountCollegati = accountCollegati;
 	}
 	
+	public CartaDiCreditoBean() {
+		nomeIntestatario=numeroCarta=meseScadenza=annoScadenza="";
+		accountCollegati=null;
+		tipo=null;
+	}
+
+	/**
+	 * Restituisce la collezione di account che utilizzano la carta di credito
+	 * @return Collection<AccountBean> : accountCollegati
+	 */
+	
+	public Collection<AccountBean> getAccountCollegati() {
+		return accountCollegati;
+	}
+
+	/**
+	 * Sostituisce la collezione di account che utilizzano la carta di credito
+	 * @param Collection<AccountBean> accountCollegati
+	 */
+	
+	public void setAccountCollegati(Collection<AccountBean> accountCollegati) {
+		this.accountCollegati = accountCollegati;
+	}
+
 	/**
 	 * Ritorna il nome dell'intestatario
 	 * @return String : nomeIntestatario
@@ -79,11 +100,11 @@ public class CartaDiCreditoBean {
 	 * @return String : meseScadenza
 	 */
 	
-	public Date getMeseScadenza() {
+	public String getMeseScadenza() {
 		return meseScadenza;
 	}
 
-	public void setMeseScadenza(Date meseScadenza) {
+	public void setMeseScadenza(String meseScadenza) {
 		this.meseScadenza = meseScadenza;
 	}
 
@@ -92,7 +113,7 @@ public class CartaDiCreditoBean {
 	 * @return String : annoScadenza
 	 */
 	
-	public Date getAnnoScadenza() {
+	public String getAnnoScadenza() {
 		return annoScadenza;
 	}
 
@@ -100,7 +121,7 @@ public class CartaDiCreditoBean {
 	 * Imposta l'anno di scadenza della carta
 	 * @param String annoScadenza
 	 */
-	public void setAnnoScadenza(Date annoScadenza) {
+	public void setAnnoScadenza(String annoScadenza) {
 		this.annoScadenza = annoScadenza;
 	}
 
