@@ -1,6 +1,7 @@
 package bean;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 /***
  * 
@@ -11,7 +12,7 @@ import java.util.Collection;
  *
  */
 
-public class AccountBean {
+public class AccountBean{
 	
 	public enum Ruolo{Utente, Supervisore}; 
 	private String nome;
@@ -23,145 +24,36 @@ public class AccountBean {
 	private CartaDiCreditoBean carta;
 	private Collection<CorsoBean> corsiTenuti;
 	private Collection<CorsoBean> corsiDaSupervisionare;
-	private Collection<PagamentoBean> acquisti;
+	private Collection<PagamentoBean> acquisti; /* Da modificare se l'associazione tra un corso e un utente che segue tale corso non è creato attraverso l'entità pagamento*/
 	private Collection<CommentoBean> commentiScritti;
 	
 	/**
 	 * Costruttore della classe generico, gli usi di tale costruttore sono molteplici. In genere viene utilizzato per prelevare informazioni dal database.
-	 * @param String nome cognome password mail
-	 * @param int tipo
-	 * @param boolean verificato
-	 * @param Collection<CorsoBean> corsiTenuti corsiDaSupervisionare
-	 * @param Collection<PagamentoBean> acquisti
-	 * @param Collection<CommentoBean> commentiScritti;
-	 * 
+	 * @param CartaDiCreditoBean carta
 	 */
 	
-	public AccountBean(String nome, String cognome, String password, String mail, Ruolo tipo, boolean verificato,
-			CartaDiCreditoBean carta, Collection<CorsoBean> corsiTenuti, Collection<CorsoBean> corsiDaSupervisionare,
-			Collection<PagamentoBean> acquisti, Collection<CommentoBean> commentiScritti) {
-		super();
-		this.nome = nome;
-		this.cognome = cognome;
-		this.password = password;
-		this.mail = mail;
-		this.tipo = tipo;
-		this.verificato = verificato;
-		this.carta = carta;
-		this.corsiTenuti = corsiTenuti;
-		this.corsiDaSupervisionare = corsiDaSupervisionare;
-		this.acquisti = acquisti;
-		this.commentiScritti = commentiScritti;
+	public AccountBean(CartaDiCreditoBean carta) {
+		setCarta(carta);
+		
 	}
-
-	
-	
-	public AccountBean() {
-		nome=cognome=password=mail="";
-		verificato=false;
-		corsiTenuti=corsiDaSupervisionare=null;
-		acquisti=null;
-		commentiScritti=null;
-	}
-
-
-	/**
-	 * Restituisce la collezione di corsi tenuti dall'account
-	 * @return Collection<CorsoBean> : corsiTenuti
-	 */
-	public Collection<CorsoBean> getCorsiTenuti() {
-		return corsiTenuti;
-	}
-
-
-	/**
-	 * Sostituzione della collezione di corsi tenuti dall'account
-	 * @param Collection<CorsoBean> corsiTenuti
-	 */
-
-
-	public void setCorsiTenuti(Collection<CorsoBean> corsiTenuti) {
-		this.corsiTenuti = corsiTenuti;
-	}
-
-
-
-	/**
-	 * Preleva la collezione di corsi supervisionati dall'account
-	 * @return Collection<CorsoBean> corsiDaSupervisionare
-	 */
-
-	public Collection<CorsoBean> getCorsiDaSupervisionare() {
-		return corsiDaSupervisionare;
-	}
-
-
-	/**
-	 * Sostituisce della collezione di corsi da supervisionare dall'account
-	 * @param Collection<CorsoBean> corsiDaSupervisionare
-	 */
-
-
-	public void setCorsiDaSupervisionare(Collection<CorsoBean> corsiDaSupervisionare) {
-		this.corsiDaSupervisionare = corsiDaSupervisionare;
-	}
-
-
-	/**
-	 * Restituisce la collezione dei pagamenti per l'iscrizione ad un corso dell'account
-	 * @return Collection<PagamentoBean> : acquisti
-	 */
-
-
-	public Collection<PagamentoBean> getAcquisti() {
-		return acquisti;
-	}
-
-
-	/**
-	 * Sostituisce la collezione degli pagamenti per l'iscrizione ad un corso da parte dell'account
-	 * @param acquisti
-	 */
-
-
-	public void setAcquisti(Collection<PagamentoBean> acquisti) {
-		this.acquisti = acquisti;
-	}
-
-
-	/**
-	 * Restituisce la collezione dei commenti scritti dall'account
-	 * @return Collection<CommentoBean> : commentiScritti
-	 */
-
-
-	public Collection<CommentoBean> getCommentiScritti() {
-		return commentiScritti;
-	}
-
-	/**
-	 * Sostituisce la collezione dei commenti scritti dall'account
-	 * @param Collection<CommentoBean> commentiScritti
-	 */
-
-
-
-	public void setCommentiScritti(Collection<CommentoBean> commentiScritti) {
-		this.commentiScritti = commentiScritti;
-	}
-
-
 
 	/**
 	 * Sostituisce il parametro legato alla verifica dell'email dell'account
-	 * @param verificato
+	 * @param boolean verificato
 	 */
 
 	public void setVerificato(boolean verificato) {
 		this.verificato = verificato;
 	}
 
-
+	/**
+	 * Ritorna 0 o 1 a secondo del valore dell'attributo di verifica
+	 * @return String : cognome
+	 */
+	
+	public boolean getVerificato() {
+		return verificato;
+	}
 
 	/**
 	 * Ritorna il nome dell'account
@@ -256,23 +148,6 @@ public class AccountBean {
 		this.tipo = nuovoTipo;
 	}
 
-	/**
-	 * Ritorna 0 o 1 a secondo del valore dell'attributo di verifica
-	 * @return String : cognome
-	 */
-	
-	public boolean getVerificato() {
-		return verificato;
-	}
-
-	/**
-	 * Modifica il valore della verifica dell'account, utilizzato per verificare l'email di un account
-	 * @param bool
-	 */
-	
-	public void isVerificato(boolean verificato) {
-		this.verificato = verificato;
-	}
 
 	/**
 	 * Restituisce il numero della carta di credito legata all'account
@@ -288,8 +163,215 @@ public class AccountBean {
 	 * @param CartaDiCreditoBean numeroCarta
 	 */
 	
-	public void setCarta(CartaDiCreditoBean carta) {
-		this.carta= carta;
+	
+	public void setCarta(CartaDiCreditoBean newCarta) {
+		
+		if(this.carta != newCarta) {
+		
+			CartaDiCreditoBean old = this.carta;
+		this.carta = newCarta;
+		
+		if(this.carta != null) {
+		   this.carta.setAccount(this);
+		}
+		
+		if(old != null) {
+			old.setAccount(null);
+		}
+		
+		}
 	}
+	
+
+	/**
+	 * Restituisce la collezione dei pagamenti per l'iscrizione ad un corso dell'account
+	 * @return Collection<PagamentoBean> : acquisti
+	 */
+
+	public Collection<PagamentoBean> getAcquisti() {
+		return acquisti;
+	}
+
+	/**
+	 * Aggiunge una collezione degli pagamenti per l'iscrizione ad un corso da parte dell'account
+	 * @param PagamentoBean acquisti
+	 */
+	
+
+	public void addAcquisti(Collection<PagamentoBean> nuoviAcquisti) {
+		Iterator<PagamentoBean> pagamentiDaAggiungere = (Iterator<PagamentoBean>) nuoviAcquisti.iterator();
+		while(pagamentiDaAggiungere.hasNext()) {
+			PagamentoBean added = pagamentiDaAggiungere.next();
+			this.acquisti.add(added);
+			added.setAccount(this);
+		}
+	}
+	
+	/**
+	 * Rimuove un pagamento collegato all'account
+	 * @param PagamentoBean pagamentoToRemove
+	 */
+	
+	public void removeAcquisto(PagamentoBean pagamentoToRemove) {
+		this.acquisti.remove(pagamentoToRemove);
+		pagamentoToRemove.setAccount(null);
+	}
+	
+	/**
+	 * Aggiungi un singolo acquisto alla lista dei pagamenti associati all'account 
+	 * @param PagamentoBean pagamentoAggiunto
+	 */
+
+	public void addAcquisto(PagamentoBean pagamentoAggiunto) {
+		this.acquisti.add(pagamentoAggiunto);
+		pagamentoAggiunto.setAccount(this);
+		
+	}
+	
+	/**
+	 * Preleva la collezione di corsi supervisionati dall'account
+	 * @return Collection<CorsoBean> corsiDaSupervisionare
+	 */
+
+	public Collection<CorsoBean> getCorsiDaSupervisionare() {
+		return corsiDaSupervisionare;
+	}
+
+
+	/**
+	 * Sostituisce della collezione di corsi da supervisionare dall'account
+	 * @param Collection<CorsoBean> corsiDaSupervisionare
+	 */
+
+
+	public void AddCorsiDaSupervisionare(Collection<CorsoBean> corsiDaSupervisionare) {
+		   Iterator<CorsoBean> corsiDaAggiungere =  (Iterator<CorsoBean>) corsiDaSupervisionare.iterator();
+		   while(corsiDaAggiungere.hasNext()) {
+			   CorsoBean corso = corsiDaAggiungere.next();
+			   this.corsiDaSupervisionare.add(corso);
+			   corso.setSupervisore(this);
+		   }
+		}
+
+	/**
+	 * Rimuove l'associazione tra il docente e il suo corso, questo metodo viene richiamato ad esempio quando un corso viene rifiutato.
+	 * @param CorsoBean corsoTenuto
+	 */
+	
+	public void removeCorsoDaSupervisionare(CorsoBean corsoDaSupervisionare) {
+		this.corsiTenuti.remove(corsoDaSupervisionare);
+		corsoDaSupervisionare.setSupervisore(null);
+	}
+	
+	/**
+	 * Aggiunge un singolo corso da supervisionare alla collezione dei corsi da supervisionare dall'account
+	 * @param CorsoBean corsoDaAggiungere
+	 */
+	
+	public void addCorsoDaSupervisionare(CorsoBean corsoDaAggiungere) {
+		this.corsiDaSupervisionare.add(corsoDaAggiungere);
+		corsoDaAggiungere.setSupervisore(this);
+		
+	}
+
+	/**
+	 * Restituisce la collezione di corsi tenuti dall'account
+	 * @return Collection<CorsoBean> : corsiTenuti
+	 */
+	
+	public Collection<CorsoBean> getCorsiTenuti() {
+		return corsiTenuti;
+	}
+
+	/**
+	 * Aggiunge una collezione di corsi tenuti dall'account
+	 * @param CorsoBean corsiTenuti
+	 */
+	
+	public void AddCorsiTenuti(Collection<CorsoBean> corsiTenuti) {
+	   Iterator<CorsoBean> corsiDaAggiungere =  (Iterator<CorsoBean>) corsiTenuti.iterator();
+	   while(corsiDaAggiungere.hasNext()) {
+		   CorsoBean corso = corsiDaAggiungere.next();
+		   this.corsiTenuti.add(corso);
+		   corso.setDocente(this);
+	   }
+	}
+	
+	
+	/**
+	 * Aggiunge un singolo corso tenuto dall'account alla lista dei corsi tenuti dall'account
+	 * @param CorsoBean corso
+	 */
+	
+	public void AddCorsoTenuto(CorsoBean corso) {
+		this.corsiTenuti.add(corso);
+		corso.setDocente(this);
+		
+	}
+	
+
+	/**
+	 * Rimuove l'associazione tra il docente e il suo corso, questo metodo viene richiamato ad esempio quando un corso viene rifiutato.
+	 * @param CorsoBean corsoTenuto
+	 */
+	
+	public void removeCorsoTenuto(CorsoBean corsoTenuto) {
+		this.corsiTenuti.remove(corsoTenuto);
+		corsoTenuto.setDocente(null);
+	}
+	
+	/**
+	 * Restituisce la collezione dei commenti scritti dall'account
+	 * @return Collection<CommentoBean> : commentiScritti
+	 */
+
+
+	public Collection<CommentoBean> getCommentiScritti() {
+		return commentiScritti;
+	}
+
+	
+	/**
+	 * Aggiunge commenti alla collezione dei commenti scritti dall'account
+	 * @param CommentoBean commentiScritti
+	 */
+
+
+	public void addCommentiScritti(Collection<CommentoBean> commenti) {
+		Iterator<CommentoBean> commentiDaAggiungere = (Iterator<CommentoBean>) commenti.iterator();
+		while(commentiDaAggiungere.hasNext()) {
+			CommentoBean added = commentiDaAggiungere.next();
+			this.commentiScritti.add(added);
+			added.setAccountCreatore(this);
+		}
+	}
+
+	/**
+	 * Rimuove un commento scritto dall'account
+	 * @param CommentoBean commento
+	 */
+	
+	public void removeCommento(CommentoBean commenti) {
+		this.commentiScritti.remove(commenti);
+		commenti.setAccountCreatore(null);
+	}
+	
+	/**
+	 * Aggiunge un singolo commento alla collezione dei commenti scritti dall'account
+	 * @param CommentoBean commentoAggiunto
+	 */
+	
+	public void addCommentoScritto(CommentoBean commentoAggiunto) {
+		this.commentiScritti.add(commentoAggiunto);
+		commentoAggiunto.setAccountCreatore(this);		
+	}
+
+
+	
+
+	
+
+
 }
+
 

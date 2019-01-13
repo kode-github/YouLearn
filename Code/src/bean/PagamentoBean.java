@@ -17,52 +17,7 @@ public class PagamentoBean {
 	private String fattura;
 	
 	
-	public PagamentoBean(AccountBean account, CorsoBean corso, String dataPagamento, double importo, String fattura) {
-		super();
-		this.account = account;
-		this.corso = corso;
-		this.dataPagamento = dataPagamento;
-		this.importo = importo;
-		this.fattura = fattura;
-	}
-	
 	public PagamentoBean() {}
-	
-	/**
-	 * Preleva l'account collegata al pagamento
-	 * @return String : accountMail
-	 */
-	
-	public AccountBean getAccount() {
-		return this.account;
-	}
-	
-	/**
-	 * Modifica l'account collegata al pagamento. 
-	 * @param accountMail
-	 */
-	
-	public void setAccount(AccountBean account) {
-		this.account = account;
-	}
-	
-	/**
-	 * Preleva il corso collegato al pagamento 
-	 * @return int : corsoIdCorso
-	 */
-	
-	public CorsoBean getCorso() {
-		return corso;
-	}
-	
-	/**
-	 * Modifica il corso affiliato al pagamento 
-	 * @param int corsoIdCorso
-	 */
-	
-	public void setCorsoIdCorso(CorsoBean corso) {
-		this.corso = corso;
-	}
 	
 	/**
 	 * Preleva la data di quando è stato effettuato il pagamento 
@@ -116,6 +71,62 @@ public class PagamentoBean {
 	
 	public void setFattura(String fattura) {
 		this.fattura = fattura;
+	}
+
+	/**
+	 * Preleva l'account collegata al pagamento
+	 * @return String : accountMail
+	 */
+	
+	public AccountBean getAccount() {
+		return this.account;
+	}
+	
+	/**
+	 * Modifica l'account collegata al pagamento. 
+	 * @param accountMail
+	 */
+	
+	public void setAccount(AccountBean account) {
+		if(this.account != account) {
+			AccountBean old = this.account;
+		this.account = account;
+		
+		if(this.account != null) {
+		   
+		   this.account.addAcquisto(this);
+		}
+		if(old != null) {
+			old.removeAcquisto(this);
+		}
+	}
+	
+	/**
+	 * Preleva il corso collegato al pagamento 
+	 * @return int : corsoIdCorso
+	 */
+	
+	public CorsoBean getCorso() {
+		return corso;
+	}
+	
+	/**
+	 * Modifica il corso affiliato al pagamento 
+	 * @param int corsoIdCorso
+	 */
+	
+	public void setCorso(CorsoBean corso) {
+		if(this.corso != corso) {
+			CorsoBean old = this.corso;
+		this.corso = corso;
+		
+		if(this.corso != null) {
+		   
+		   this.corso.addPagamento(this);
+		}
+		if(old != null) {
+			old.removePagamento(this);
+		}
 	}
 	
 	

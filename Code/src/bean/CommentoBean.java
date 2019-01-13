@@ -11,7 +11,6 @@ package bean;
 
 public class CommentoBean {
 
-	private CorsoBean corso;
 	private int idCommento;
 	private String testo;
 	private AccountBean accountCreatore;
@@ -19,49 +18,18 @@ public class CommentoBean {
 	
 	/**
 	 * Costruttore generico degli oggetti di tipo commento
-	 * @param int idCommento
-	 * @param String testo
-	 * @param AccountBean accountCreatore
-	 * @param CorsoBean corso
 	 * @param LezioneBean lezione
+	 * @param AccountBean accountCreatore
 	 * 
 	 */
-	public CommentoBean(LezioneBean lezione, int idCommento, String testo, AccountBean accountCreatore, CorsoBean corso) {
-		this.lezione = lezione;
-		this.idCommento = idCommento;
-		this.testo = testo;
-		this.accountCreatore = accountCreatore;
-		this.corso = corso;
+	public CommentoBean(LezioneBean lezione, AccountBean accountCreatore) {
+		setLezione(lezione);
+		setAccountCreatore(accountCreatore);
 	}
 
-	public CommentoBean() {
-		lezione=null;
-		corso=null;
-		idCommento=0;
-		testo="";
-		
-		
-		
-	}
-	
-	/**
-	 * Preleva l'id della lezione a cui è collegato il commento
-	 * @return int : lezioneIdLezione
-	 */
-	
-	public CorsoBean getCorso() {
-		return corso;
-	}
+	public CommentoBean() {}
 
-	/**
-	 * Modifica l'id del corso collegata alla lezione in cui c'è il commento
-	 * @param int corsoIdCorso
-	 */
-	public void setCorso(CorsoBean corso) {
-		this.corso = corso;
-	}
 	
-
 	/**
 	 * Preleva l'id del commento
 	 * @return int : idCommento
@@ -97,13 +65,14 @@ public class CommentoBean {
 	public void setTesto(String testo) {
 		this.testo = testo;
 	}
-
+	
 	/**
-	 * Restituisce la lezione del commento affiliato
-	 * @return LezioneBean : lezione
+	 * Preleva la lezione lezione a cui è collegato il commento
+	 * @return int : lezioneIdLezione
 	 */
+	
 	public LezioneBean getLezione() {
-		return lezione;
+		return this.lezione;
 	}
 	
 	/**
@@ -112,7 +81,16 @@ public class CommentoBean {
 	 */
 
 	public void setLezione(LezioneBean lezione) {
-		this.lezione = lezione;
+		if(this.lezione != lezione) {
+			LezioneBean old = this.lezione;
+			this.lezione = lezione;
+			if(this.lezione != null) {
+				this.lezione.addCommento(this);
+			}
+			if(old != null) {
+				old.removeCommento(this);
+			}
+		}
 	}
 
 	/**
@@ -130,7 +108,16 @@ public class CommentoBean {
 	 */
 	
 	public void setAccountCreatore(AccountBean accountCreatore) {
-		this.accountCreatore = accountCreatore;
+		if(this.accountCreatore != accountCreatore) {
+		    AccountBean old = this.accountCreatore;
+			this.accountCreatore = accountCreatore;
+			if(this.accountCreatore != null) {
+				this.accountCreatore.addCommentoScritto(this);
+			}
+			if(old != null) {
+				old.removeCommento(this);
+			}
+		}
 	}
 	
 	

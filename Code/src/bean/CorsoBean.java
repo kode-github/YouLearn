@@ -1,17 +1,19 @@
 package bean;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
- * 
  * Classe identificante una classe Corso persistente
  * @author Mario Sessa
  * @vesione 1.1
  * @since 11/01/2019
  */
+
 public class CorsoBean {
 
 	public enum Categoria{Informatica, Elettronica, Musica, Fotografia, Danza};
+	public enum Stato{Attesa,Completamento, Attivo, Disattivo};
 	private String nome;
 	private String descrizione;
 	private String dataCreazione;
@@ -21,8 +23,10 @@ public class CorsoBean {
 	private int idCorso;
 	private AccountBean docente;
 	private AccountBean supervisore;
-	private Collection<AccountBean> studenti;
+	private Collection<PagamentoBean> pagamenti; /* Da modificare se si vuole aggiungere direttamente uno studente ad un corso e non indirettamente tramite i pagamenti*/
+	private Collection<LezioneBean> lezioni; 
 	private Categoria categoria;
+	private Stato stato;
 	
 	/**
 	 * Costruttore generico del corso
@@ -30,42 +34,10 @@ public class CorsoBean {
 	 * @param int nIscritti idCorso
 	 * 
 	 */
-	public CorsoBean(String nome, String descrizione, String dataCreazione, String dataFine, int nIscritti,
-			String copertina, int idCorso, AccountBean docente, AccountBean supervisore, Categoria categoria, Collection<AccountBean> studenti) {
-		super();
-		this.nome = nome;
-		this.descrizione = descrizione;
-		this.dataCreazione = dataCreazione;
-		this.dataFine = dataFine;
-		this.nIscritti = nIscritti;
-		this.copertina = copertina;
-		this.idCorso = idCorso;
-		this.docente = docente;
-		this.supervisore = supervisore;
-		this.studenti = studenti;
-		this.categoria = categoria;
+	public CorsoBean() {
+	   
 	}
-
-	/**
-	 * Ritorna la collezione degli studenti del corso
-	 * @return Collection<AccountBean> : studenti
-	 */
 	
-	public Collection<AccountBean> getStudenti() {
-		return studenti;
-	}
-
-	/**
-	 * Assegna una collezione di studenti al corso
-	 * @param Collection<AccountBean> studenti
-	 */
-	
-	
-	public void setStudenti(Collection<AccountBean> studenti) {
-		this.studenti = studenti;
-	}
-
-
 	/**
 	 * Preleva il valore del nome del corso.
 	 * @return String : nome
@@ -197,6 +169,42 @@ public class CorsoBean {
 
 	
 	/**
+	 * Preleva la categoria del corso 
+	 * @return Categoria : categoria
+	 */
+	
+	public Categoria getCategoria() {
+		return categoria;
+	}
+
+	/**
+	 * Modifica la categoria del corso
+	 * @param Categoria categoria
+	 */
+	
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
+	}
+
+	/**
+	 * Preleva lo stato del corso
+	 * @return Stato : stato
+	 */
+	
+	public Stato getStato() {
+		return this.stato;
+	}
+	
+	/**
+	 * Modifica lo stato del corso
+	 * @param Stato newStato
+	 */
+	
+	public void setStato(Stato newStato) {
+		this.stato = newStato;
+	}
+	
+	/**
 	 * Preleva l'email dell'account del creatore del corso 
 	 * @return AccountBean : doc ente
 	 */
@@ -211,7 +219,19 @@ public class CorsoBean {
 	 */
 	
 	public void setDocente(AccountBean docente) {
+		
+		if(this.docente != docente) {
+			AccountBean old = this.docente;
 		this.docente = docente;
+		
+		if(this.docente != null) {
+		   this.docente.AddCorsoTenuto(this);
+		}
+		if(old != null) {
+			old.removeCorsoTenuto(this);
+		}
+		
+		}
 	}
 
 	/**
@@ -229,26 +249,106 @@ public class CorsoBean {
 	 */
 	
 	public void setSupervisore(AccountBean supervisore) {
+		if(this.supervisore != supervisore) {
+			AccountBean old = this.supervisore;
 		this.supervisore = supervisore;
+		
+		if(this.supervisore != null) {
+		   
+		   this.supervisore.addCorsoDaSupervisionare(this);
+		}
+		if(old != null) {
+			old.removeCorsoDaSupervisionare(this);
+		}
+		
+		}
+	}
+
+	
+	/**
+	 * Ritorna la collezione dei pagamenti associati agli utenti che hanno acquistato il corso, ossia gli studenti del corso stesso.
+	 * @return Collection<AccountBean> : studenti
+	 */
+	
+	public Collection<PagamentoBean> getPagamenti() {
+		return this.pagamenti;
 	}
 
 	/**
-	 * Preleva la categoria del corso 
-	 * @return Categoria : categoria
+	 * Aggiunge una collezione di pagamenti associati agli studenti che hanno acquistato il corso.
+	 * @param Collection<AccountBean> studenti
 	 */
 	
-	public Categoria getCategoria() {
-		return categoria;
+	
+	public void addPagamenti(Collection<PagamentoBean> newPagamenti) {
+		 Iterator<PagamentoBean>  pagamentiDaAggiungere =  (Iterator<PagamentoBean>) newPagamenti.iterator();
+		   while(pagamentiDaAggiungere.hasNext()) {
+			  PagamentoBean addedPagamento = pagamentiDaAggiungere.next();
+			   this.pagamenti.add(addedPagamento);
+			   addedPagamento.setCorso(this);
+		   }
+	}
+	
+	/**
+	 * Rimuove un pagamento dal corso in associazione.
+	 * @param PagamentoBean pagamentoRimosso
+	 */
+	
+	public void removePagamento(PagamentoBean pagamentoRimosso) {
+		this.pagamenti.remove(pagamentoRimosso);
+		pagamentoRimosso.setCorso(null);
+	}
+
+
+	/**
+	 * Aggiunge un singolo pagamento alla lista dei pagamenti legati all'iscrizione del corso
+	 * @param PagamentoBean pagamentoBean
+	 */
+	
+	public void addPagamento(PagamentoBean pagamentoAggiunto) {
+		this.pagamenti.add(pagamentoAggiunto);
+		pagamentoAggiunto.setCorso(this);
+		
+	}
+	
+	/**
+	 * Aggiunte una collezione di lezioni alla collezione di lezioni associata al corso.
+	 * @param Collection<LezioneBean> newLezioni
+	 */
+	
+	public void addLezioni(Collection<LezioneBean> newLezioni) {
+		 Iterator<LezioneBean>  lezioniDaAggiungere =  (Iterator<LezioneBean>) newLezioni.iterator();
+		   while(lezioniDaAggiungere.hasNext()) {
+			  LezioneBean addedLezione = lezioniDaAggiungere.next();
+			   this.lezioni.add(addedLezione);
+			   addedLezione.setCorso(this);
+		   }	
+	}
+	
+	/**
+	 * Rimuove la lezione che viene passata come parametro
+	 * @param LezioneBean lezioneDaRimuovere
+	 */
+	
+	public void removeLezione(LezioneBean lezioneDaRimuovere) {
+		this.lezioni.remove(lezioneDaRimuovere);
+		lezioneDaRimuovere.setCorso(null);
+		
 	}
 
 	/**
-	 * Modifica la categoria del corso
-	 * @param Categoria categoria
+	 * Aggiunte la lezione passato come parametro alla lista delle lezioni del corso.
+	 * @param  LezioneBean lezioneAggiunta
 	 */
-	
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
+
+	public void addLezione(LezioneBean lezioneAggiunta) {
+		this.lezioni.add(lezioneAggiunta);
+		lezioneAggiunta.setCorso(this);		
+		
 	}
+
+
+	
 	
 	
 }

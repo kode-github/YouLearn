@@ -1,6 +1,7 @@
 package bean;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * 
@@ -12,7 +13,7 @@ import java.util.Collection;
  */
 public class LezioneBean {
 
-	private int corsoIdCorso;
+	private CorsoBean corso;
 	private String nome;
 	private int visualizzazioni;
 	private int numeroLezione;
@@ -21,57 +22,18 @@ public class LezioneBean {
 	/**
 	 * 
 	 * Costruttore generico delle lezioni
-	 * @param int corsoIdCorso visualizzazioni numeroLezione
-	 * @param String nome
+	 * @param CorsoBean corso
+	 * @param Collection<CommentoBean> commenti
 	 */
 	
-	public LezioneBean(int corsoIdCorso, String nome, int visualizzazioni, int numeroLezione, Collection<CommentoBean> commenti) {
-		super();
-		this.corsoIdCorso = corsoIdCorso;
-		this.nome = nome;
-		this.visualizzazioni = visualizzazioni;
-		this.numeroLezione = numeroLezione;
-		this.commenti = commenti;
+	public LezioneBean(CorsoBean corso, Collection<CommentoBean> commenti) {
+		setCorso(corso);
+		addCommenti(commenti);	
 	}
-	
-	
 
 	public LezioneBean() {}
 	
-	/**
-	 * Ritorna la collezione dei commenti affiliati alla lezione
-	 * @return Collection<CommentoBean> : commenti
-	 */
-	
-	public Collection<CommentoBean> getCommenti() {
-		return commenti;
-	}
 
-	/**
-	 * Imposta la collezione dei commenti legati alla lezione
-	 * @param Collection<CommentoBean> commenti
-	 */
-	public void setCommenti(Collection<CommentoBean> commenti) {
-		this.commenti = commenti;
-	}
-
-	/**
-	 * Preleva l'id del corso affiliato alla lezione 
-	 * @return int : corsoIdCorso
-	 */
-	
-	public int getCorsoIdCorso() {
-		return corsoIdCorso;
-	}
-
-	/**
-	 *  Modifica l'id del corso affiliato alla lezione
-	 * @param int corsoIdCorso
-	 */
-	
-	public void setCorsoIdCorso(int corsoIdCorso) {
-		this.corsoIdCorso = corsoIdCorso;
-	}
 
 	/**
 	 * Prelievo del nome della lezione 
@@ -130,6 +92,78 @@ public class LezioneBean {
 		this.numeroLezione = numeroLezione;
 	}
 	
+	public CorsoBean getCorso() {
+		return corso;
+	}
+
+	/**
+	 *  Modifica l'id del corso affiliato alla lezione
+	 * @param int corsoIdCorso
+	 */
+	
+	public void setCorso(CorsoBean newCorso) {
+		
+		if(this.corso != newCorso) {
+			
+	    CorsoBean old = this.corso;
+		this.corso = newCorso;
+		
+		if(this.corso != null) {
+		   this.corso.addLezione(this);
+		}		
+		
+		if(old != null) {
+			old.removeLezione(this);
+		}
+		}
+	}	
+	
+	/**
+	 * Ritorna la collezione dei commenti affiliati alla lezione
+	 * @return Collection<CommentoBean> : commenti
+	 */
+	
+	public Collection<CommentoBean> getCommenti() {
+		return commenti;
+	}
+
+	/**
+	 * Imposta la collezione dei commenti legati alla lezione
+	 * @param Collection<CommentoBean> commenti
+	 */
+	
+	public void addCommenti(Collection<CommentoBean> commenti) {
+		Iterator<CommentoBean> commentiDaAggiungere = (Iterator<CommentoBean>) commenti.iterator();
+		while(commentiDaAggiungere.hasNext()) {
+			CommentoBean added = commentiDaAggiungere.next();
+			this.commenti.add(added);
+			added.setLezione(this);
+		}
+	}
+	
+	/**
+	 * Aggiunge un singolo commento alla collezione dei commenti della lezione.
+	 * @param CommentoBean commentoAggiunto
+	 */
+	
+	public void addCommento(CommentoBean commentoAggiunto) {
+		this.commenti.add(commentoAggiunto);
+		commentoAggiunto.setLezione(this);
+	}
+	
+	/**
+	 * Rimuove un singolo commento alla collezione dei commenti della lezione
+	 * @param CommentoBean commento
+	 */
+	public void removeCommento(CommentoBean commento) {
+		this.commenti.remove(commento);
+		commento.setLezione(null);
+	}
+	
+
+
+
+
 	
 	
 	
