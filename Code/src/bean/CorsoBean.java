@@ -23,7 +23,7 @@ public class CorsoBean {
 	private int idCorso;
 	private AccountBean docente;
 	private AccountBean supervisore;
-	private Collection<PagamentoBean> pagamenti; /* Da modificare se si vuole aggiungere direttamente uno studente ad un corso e non indirettamente tramite i pagamenti*/
+	private Collection<IscrizioneBean> pagamenti; /* Da modificare se si vuole aggiungere direttamente uno studente ad un corso e non indirettamente tramite i pagamenti*/
 	private Collection<LezioneBean> lezioni; 
 	private Categoria categoria;
 	private Stato stato;
@@ -270,7 +270,7 @@ public class CorsoBean {
 	 * @return Collection<AccountBean> : studenti
 	 */
 	
-	public Collection<PagamentoBean> getPagamenti() {
+	public Collection<IscrizioneBean> getPagamenti() {
 		return this.pagamenti;
 	}
 
@@ -280,10 +280,10 @@ public class CorsoBean {
 	 */
 	
 	
-	public void addPagamenti(Collection<PagamentoBean> newPagamenti) {
-		 Iterator<PagamentoBean>  pagamentiDaAggiungere =  (Iterator<PagamentoBean>) newPagamenti.iterator();
+	public void addPagamenti(Collection<IscrizioneBean> newPagamenti) {
+		 Iterator<IscrizioneBean>  pagamentiDaAggiungere =  (Iterator<IscrizioneBean>) newPagamenti.iterator();
 		   while(pagamentiDaAggiungere.hasNext()) {
-			  PagamentoBean addedPagamento = pagamentiDaAggiungere.next();
+			  IscrizioneBean addedPagamento = pagamentiDaAggiungere.next();
 			   this.pagamenti.add(addedPagamento);
 			   addedPagamento.setCorso(this);
 		   }
@@ -291,10 +291,10 @@ public class CorsoBean {
 	
 	/**
 	 * Rimuove un pagamento dal corso in associazione.
-	 * @param PagamentoBean pagamentoRimosso
+	 * @param IscrizioneBean pagamentoRimosso
 	 */
 	
-	public void removePagamento(PagamentoBean pagamentoRimosso) {
+	public void removePagamento(IscrizioneBean pagamentoRimosso) {
 		this.pagamenti.remove(pagamentoRimosso);
 		pagamentoRimosso.setCorso(null);
 	}
@@ -302,10 +302,10 @@ public class CorsoBean {
 
 	/**
 	 * Aggiunge un singolo pagamento alla lista dei pagamenti legati all'iscrizione del corso
-	 * @param PagamentoBean pagamentoBean
+	 * @param IscrizioneBean pagamentoBean
 	 */
 	
-	public void addPagamento(PagamentoBean pagamentoAggiunto) {
+	public void addPagamento(IscrizioneBean pagamentoAggiunto) {
 		this.pagamenti.add(pagamentoAggiunto);
 		pagamentoAggiunto.setCorso(this);
 		

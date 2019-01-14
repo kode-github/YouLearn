@@ -2,13 +2,13 @@ package bean;
 
 /**
  * 
- * Classe che rappresenta un Pagamento persistente
+ * Classe che rappresenta un'iscrizione persistente
  * @author Mario Sessa
  * @version 1.1
  * @since 11/01/2019
  *
  */
-public class PagamentoBean {
+public class IscrizioneBean {
 
 	private AccountBean account;
 	private CorsoBean corso;
@@ -17,7 +17,7 @@ public class PagamentoBean {
 	private String fattura;
 	
 	
-	public PagamentoBean() {}
+	public IscrizioneBean() {}
 	
 	/**
 	 * Preleva la data di quando è stato effettuato il pagamento 
@@ -100,6 +100,7 @@ public class PagamentoBean {
 			old.removeAcquisto(this);
 		}
 	}
+	}
 	
 	/**
 	 * Preleva il corso collegato al pagamento 
@@ -129,6 +130,6 @@ public class PagamentoBean {
 		}
 	}
 	
-	
+	}
 	
 }

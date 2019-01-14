@@ -126,6 +126,7 @@ public class RepositoryCarta implements Repository<CartaDiCreditoBean> {
 				temp2.setTipo(RuoloUtility.ruoloParser(rs.getInt("Tipo")));
 				temp2.setMail(rs.getString("Email"));
 				temp2.isVerificato(rs.getBoolean("Verificato"));
+				
 				temp.setAccount(temp2);
 				
 				collection.add(temp);
