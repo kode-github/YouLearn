@@ -3,13 +3,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.apache.tomcat.jdbc.pool.DataSource;
 import bean.CartaDiCreditoBean;
-import bean.CartaDiCreditoBean.CartaEnum;
 import connection.DriverManagerConnectionPool;
 import exception.NotFoundException;
+import utility.CartaEnumUtility;
 
 public class CartaDiCreditoManager {
 
+	DataSource dataSource;
+	
+	public  CartaDiCreditoManager() {
+		dataSource= new DataSource();
+	}
+	
 	private CartaDiCreditoBean doRetrieveByKey(String code) throws SQLException,NotFoundException {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
@@ -17,7 +24,7 @@ public class CartaDiCreditoManager {
 		
 		String sql="SELECT* FROM CartaDiCredito WHERE numeroCarta=?";		
 		try {
-			connection=DriverManagerConnectionPool.getConnection();
+			connection=dataSource.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1, code);
 			System.out.println("Query: " + preparedStatement.toString());
@@ -27,17 +34,14 @@ public class CartaDiCreditoManager {
 	
 			temp.setNomeIntestatario(rs.getString("NomeIntestatario"));
 			temp.setNumeroCarta(rs.getString("NumeroCarta"));
-			temp.setMeseScadenza(rs.getString("MeseScadenza"));
-			temp.setAnnoScadenza(rs.getString("AnnoScadenza"));
-			temp.setTipo(parserTipoCarta(rs.getString("tipo")));
+			temp.setMeseScadenza(rs.getDate("MeseScadenza"));
+			temp.setAnnoScadenza(rs.getDate("AnnoScadenza"));
+			temp.setTipo(CartaEnumUtility.parserTipoCarta(rs.getInt("tipo")));
 		}finally {
-			try {
 			if(preparedStatement!=null)
 				preparedStatement.close();
-			}finally {
-				DriverManagerConnectionPool.releaseConnection(connection);
-			}
 		}
+		
 		return temp;
 	}
 	
@@ -54,7 +58,7 @@ public class CartaDiCreditoManager {
 			preparedStatement.setString(2, product.getNumeroCarta());
 			preparedStatement.setDate(3, product.getMeseScadenza());
 			preparedStatement.setDate(4, product.getAnnoScadenza());
-			preparedStatement.setString(5, parserTipoCarta(product.getTipo()));
+			preparedStatement.setInt(5, CartaEnumUtility.parserTipoCarta(product.getTipo()));
 			System.out.println("doSave: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
 			connection.commit();
@@ -68,79 +72,48 @@ public class CartaDiCreditoManager {
 		}
 
 	}
-	/**
-	 * Aggiorna una carta nel DB
-	 * @param product La nuova carta
-	 * @throws SQLException Errore di connessione al DB
-	 * @throws NotFoundException La carta non era stata precedentemente inserita nel DB
-	 */
-	private void doUpdate(CartaDiCreditoBean product) throws SQLException, NotFoundException {
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-
-		String insertSQL = "UPDATE CartaDiCredito SET NomeIntestatario = ?, NumeroCarta = ?, MeseScadenza= ?, "
-				+ "AnnoScadenza=?, Tipo=? "
-				+ " WHERE NumeroCarta = ?";
-
-		try {
-			connection = DriverManagerConnectionPool.getConnection();
-			preparedStatement = connection.prepareStatement(insertSQL);
-			preparedStatement.setString(1, product.getNomeIntestatario());
-			preparedStatement.setString(2, product.getNumeroCarta());
-			preparedStatement.setString(3, product.getMeseScadenza());
-			preparedStatement.setString(4, product.getAnnoScadenza());
-			preparedStatement.setString(5, parserTipoCarta(product.getTipo()));
-			preparedStatement.setString(6, product.getNumeroCarta());
-			System.out.println("doUpdate: "+ preparedStatement.toString());
-			if((preparedStatement.executeUpdate())==0) throw new NotFoundException("Carta non trovata");
-			connection.commit();
-		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				DriverManagerConnectionPool.releaseConnection(connection);
-			}
-		}
-		
-	}
 	
-	/**
-	 * Restituisce un oggetto CartaEnum in base ai valori 0,1,2 usati nel DB per salvarla
-	 * @param string
-	 * @return
-	 */
-	private CartaEnum parserTipoCarta(String string) {
-		CartaEnum tmp = null;
-		switch(string) {
-		case "0":  tmp=CartaEnum.POSTEPAY; break;
-		case "1":  tmp=CartaEnum.AMERICANEXPRESS; break;
-		case "2":  tmp=CartaEnum.PAYPAL; break;
-		}
-		return tmp;
-	}
-	
-	/** Restituisce un oggetto CartaEnum in base ai valori 0,1,2 usati nel DB per salvarla
-	 * @param string
-	 * @return
-	 */
-	private String parserTipoCarta(CartaEnum enumCarta) {
-		String tmp = null;
-		switch(enumCarta) {
-		case POSTEPAY:  tmp="0"; break;
-		case AMERICANEXPRESS:  tmp="1"; break;
-		case PAYPAL:  tmp="2"; break;
-		}
-		return tmp;
-	}
+
 
 	//O boolean?
 	public void registerCard(CartaDiCreditoBean carta) throws SQLException {
 		doSave(carta);
 	}
 	
-	public void modifyCard(CartaDiCreditoBean newCarta,String numeroCarta) {
-		//Vedi Appunti 10 gennaio
+	/**
+	 * Modifica una carta esistente
+	 * @param newCarta la nuova carta da inserire
+	 * @param numeroCarta la carta da modificare
+	 * @throws SQLException
+	 * @throws Exception
+	 */
+	public void modifyCard(CartaDiCreditoBean newCarta,String numeroCarta) throws SQLException, Exception {
+		if(!checkCarta(numeroCarta)) throw new NotFoundException("La carta da modificare non esiste");
+		if(!checkCarta(newCarta.getNumeroCarta())) throw new Exception("La carta inserita esiste già");
+		
+		Connection connection=null;
+		PreparedStatement preparedStatement=null;
+		
+		String sql="Update Cartadicredito set numerocarta=?, annooscadenza=?, mesescadenza=?, tipo=?, nomeIntestatario=?, accountMail=?"
+				+ " where numeroCarta=?";		
+		try {
+			connection=dataSource.getConnection();
+			preparedStatement= connection.prepareStatement(sql);
+			System.out.println("Update: " + preparedStatement.toString());
+			preparedStatement.setString(1, newCarta.getNumeroCarta());
+			preparedStatement.setString(5, newCarta.getNomeIntestatario());
+			preparedStatement.setDate(3, newCarta.getMeseScadenza());
+			preparedStatement.setDate(2, newCarta.getAnnoScadenza());
+			preparedStatement.setInt(4, CartaEnumUtility.parserTipoCarta(newCarta.getTipo()));
+			preparedStatement.setString(6, newCarta.getAccount().getMail());
+			preparedStatement.setString(7, newCarta.getNumeroCarta());
+			preparedStatement.executeUpdate();
+			
+		}finally {
+		
+			if(preparedStatement!=null)
+				preparedStatement.close();
+		}	
 	}
 	
 	public boolean checkCarta(String numeroCarta) throws SQLException {

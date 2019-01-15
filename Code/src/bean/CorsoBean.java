@@ -23,7 +23,7 @@ public class CorsoBean {
 	private int idCorso;
 	private AccountBean docente;
 	private AccountBean supervisore;
-	private Collection<IscrizioneBean> pagamenti; /* Da modificare se si vuole aggiungere direttamente uno studente ad un corso e non indirettamente tramite i pagamenti*/
+	private Collection<IscrizioneBean> iscrizioni; /* Da modificare se si vuole aggiungere direttamente uno studente ad un corso e non indirettamente tramite i iscrizioni*/
 	private Collection<LezioneBean> lezioni; 
 	private Categoria categoria;
 	private Stato stato;
@@ -266,48 +266,48 @@ public class CorsoBean {
 
 	
 	/**
-	 * Ritorna la collezione dei pagamenti associati agli utenti che hanno acquistato il corso, ossia gli studenti del corso stesso.
+	 * Ritorna la collezione dei iscrizioni associati agli utenti che hanno acquistato il corso, ossia gli studenti del corso stesso.
 	 * @return Collection<AccountBean> : studenti
 	 */
 	
-	public Collection<IscrizioneBean> getPagamenti() {
-		return this.pagamenti;
+	public Collection<IscrizioneBean> getiscrizioni() {
+		return this.iscrizioni;
 	}
 
 	/**
-	 * Aggiunge una collezione di pagamenti associati agli studenti che hanno acquistato il corso.
+	 * Aggiunge una collezione di iscrizioni associati agli studenti che hanno acquistato il corso.
 	 * @param Collection<AccountBean> studenti
 	 */
 	
 	
-	public void addPagamenti(Collection<IscrizioneBean> newPagamenti) {
-		 Iterator<IscrizioneBean>  pagamentiDaAggiungere =  (Iterator<IscrizioneBean>) newPagamenti.iterator();
-		   while(pagamentiDaAggiungere.hasNext()) {
-			  IscrizioneBean addedPagamento = pagamentiDaAggiungere.next();
-			   this.pagamenti.add(addedPagamento);
+	public void addiscrizioni(Collection<IscrizioneBean> newiscrizioni) {
+		 Iterator<IscrizioneBean>  iscrizioniDaAggiungere =  (Iterator<IscrizioneBean>) newiscrizioni.iterator();
+		   while(iscrizioniDaAggiungere.hasNext()) {
+			  IscrizioneBean addedPagamento = iscrizioniDaAggiungere.next();
+			   this.iscrizioni.add(addedPagamento);
 			   addedPagamento.setCorso(this);
 		   }
 	}
 	
 	/**
-	 * Rimuove un pagamento dal corso in associazione.
-	 * @param IscrizioneBean pagamentoRimosso
+	 * Rimuove un iscrizione dal corso in associazione.
+	 * @param IscrizioneBean iscrizioneRimosso
 	 */
 	
-	public void removePagamento(IscrizioneBean pagamentoRimosso) {
-		this.pagamenti.remove(pagamentoRimosso);
-		pagamentoRimosso.setCorso(null);
+	public void removePagamento(IscrizioneBean iscrizioneRimosso) {
+		this.iscrizioni.remove(iscrizioneRimosso);
+		iscrizioneRimosso.setCorso(null);
 	}
 
 
 	/**
-	 * Aggiunge un singolo pagamento alla lista dei pagamenti legati all'iscrizione del corso
-	 * @param IscrizioneBean pagamentoBean
+	 * Aggiunge un singolo iscrizione alla lista dei iscrizioni legati all'iscrizione del corso
+	 * @param IscrizioneBean iscrizioneBean
 	 */
 	
-	public void addPagamento(IscrizioneBean pagamentoAggiunto) {
-		this.pagamenti.add(pagamentoAggiunto);
-		pagamentoAggiunto.setCorso(this);
+	public void addPagamento(IscrizioneBean iscrizioneAggiunto) {
+		this.iscrizioni.add(iscrizioneAggiunto);
+		iscrizioneAggiunto.setCorso(this);
 		
 	}
 	

@@ -4,20 +4,35 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+
+import org.apache.tomcat.jdbc.pool.DataSource;
+
 import bean.AccountBean;
 import bean.AccountBean.Ruolo;
+import bean.CartaDiCreditoBean;
+import bean.CorsoBean;
+import bean.IscrizioneBean;
 import connection.DriverManagerConnectionPool;
 import exception.*;
+import utility.CartaEnumUtility;
 import utility.RuoloUtility;
+import utility.StatoUtility;
 
 public class AccountManager {
 	
+	DataSource dataSource;
+	
+	public AccountManager() {
+		dataSource= new DataSource();
+	}
 	
 	/**
 	 * Recupera un Account dal DB
 	 * @param code La mail dell'Account
 	 * @return Account
 	 * @throws SQLException Errore nell'accesso al db
+	 * @throws NotFoundException L'account non esiste
 	 */
 	public AccountBean doRetrieveByKey(String code) throws SQLException,NotFoundException {
 		Connection connection=null;
@@ -44,8 +59,6 @@ public class AccountManager {
 			else 
 				temp.setTipo(Ruolo.Supervisore);
 			temp.setMail(rs.getString("Email"));
-			temp.isVerificato(rs.getBoolean("Verificato"));
-			temp.setNumeroCarta(rs.getString("numeroCarta"));
 		}finally {
 			try {
 			if(preparedStatement!=null)
@@ -58,79 +71,6 @@ public class AccountManager {
 	}
 
 	/**
-	 * Aggiunge un nuovo Account al DB
-	 * @param product Il nuovo Account da inserire
-	 * @throws SQLException Errore di connessione al DB
-	 */
-	public void doSave(AccountBean product) throws SQLException {
-		Connection connection=null;
-		PreparedStatement preparedStatement=null;
-		
-		String sql="INSERT INTO Account VALUES(?,?,?,?,?)";
-		try {
-			connection=DriverManagerConnectionPool.getConnection();
-			preparedStatement= connection.prepareStatement(sql);
-			
-			preparedStatement.setString(1, product.getNome());
-			preparedStatement.setString(2, product.getCognome());
-			preparedStatement.setString(3, product.getPassword());
-			preparedStatement.setString(4, product.getMail());
-			preparedStatement.setInt(5, RuoloUtility.ruoloParser(product.getTipo()));
-			preparedStatement.setBoolean(6, product.getVerificato());
-			preparedStatement.setString(7, product.getNumeroCarta());
-			System.out.println("doSave: "+ preparedStatement.toString());
-			preparedStatement.executeUpdate();
-			connection.commit();
-		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				DriverManagerConnectionPool.releaseConnection(connection);
-			}
-		}
-
-	}
-
-	/**
-	 * Aggiorna un Account nel DB
-	 * @param product Il nuovo Account
-	 * @throws SQLException Errore di connessione al DB
-	 * @throws NotFoundException L'Account non era stato precedentemente inserito nel DB
-	 */
-	public void doUpdate(AccountBean product) throws SQLException, NotFoundException {
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-
-		String insertSQL = "UPDATE Account SET Nome = ?, Cognome = ?, Password= ?, Email=?, Tipo=?, Verificato=? "
-				+ " WHERE Email = ?";
-
-		try {
-			connection = DriverManagerConnectionPool.getConnection();
-			preparedStatement = connection.prepareStatement(insertSQL);
-			preparedStatement.setString(1, product.getNome());
-			preparedStatement.setString(2, product.getCognome());
-			preparedStatement.setString(3, product.getPassword());
-			preparedStatement.setString(4, product.getMail());
-			preparedStatement.setInt(5, RuoloUtility.ruoloParser(product.getTipo()));
-			preparedStatement.setBoolean(6, product.getVerificato());
-			preparedStatement.setString(7, product.getNumeroCarta());
-			preparedStatement.setString(8, product.getMail());
-			System.out.println("doUpdate: "+ preparedStatement.toString());
-			if((preparedStatement.executeUpdate())==0) throw new NotFoundException("Account non trovato");
-			connection.commit();
-		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				DriverManagerConnectionPool.releaseConnection(connection);
-			}
-		}
-		
-	}
-		
-	/**
 	 * Modifica la password di un Account
 	 * @param cf
 	 * @param pass
@@ -139,6 +79,8 @@ public class AccountManager {
 	 * @throws NotFoundException 
 	 */
 	public void modificaPassword(String email, String pass) throws SQLException, NotFoundException {
+		if(!checkMail(email)) throw new NotFoundException("L'account non esiste");
+		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
@@ -146,7 +88,7 @@ public class AccountManager {
 				+ " WHERE Email = ?";
 
 		try {
-			connection = DriverManagerConnectionPool.getConnection();
+			connection =dataSource.getConnection();
 			preparedStatement = connection.prepareStatement(insertSQL);
 			preparedStatement.setString(1, pass);
 			preparedStatement.setString(2, email);
@@ -154,12 +96,8 @@ public class AccountManager {
 			if((preparedStatement.executeUpdate())==0) throw new NotFoundException("Account non trovato");
 			connection.commit();
 		} finally {
-			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
-			} finally {
-				DriverManagerConnectionPool.releaseConnection(connection);
-			}
 		}
 		
 	}
@@ -173,6 +111,8 @@ public class AccountManager {
 	 * @throws NotFoundException 
 	 */
 	public void modificaMail(String email, String newMail) throws SQLException, NotFoundException {
+		if(!checkMail(email)) throw new NotFoundException("L'account non esiste");
+		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
@@ -199,37 +139,124 @@ public class AccountManager {
 	}
 	
 	/**
-	 * Effettua il login di un Account
+	 * Effettua il login di un Utente
+	 * Sto metodo si deve ottimizzare, fa schifo
 	 * @param email email dell'account
 	 * @param password password dell'account
 	 * @return L'Account 
 	 * @throws SQLException Errore di connessione ad DB
 	 * @throws NotFoundException 
+	 * @throws DatiErratiException 
 	 */
-	public AccountBean authenticateUser(String email, String password) throws SQLException, NotFoundException {
-			AccountBean account=doRetrieveByKey(email);
-			if(!account.getPassword().equals(password))
-				return null;
-			else {
-				account.setPassword(""); //Elimino la password prima di metterlo in sessione (?)
-				return account;
-			}	
+	public AccountBean loginUtente(String email, String password) throws SQLException, NotFoundException, DatiErratiException {
+		if(!checkMail(email) || checkTipoUser(email)==0) throw new NotFoundException("Questo utente non esiste: " + email); //Precondizione
+		if(!checkPassword(email,password)) throw new DatiErratiException();
+		
+		Connection connection=null;
+		PreparedStatement preparedStatement=null;
+		AccountBean temp=new AccountBean();
+		
+		//Query per le diverse informazioni da ottenere
+		String sqlCarta="numeroCarta,ca.annoScadenza,ca.meseScadenza,ca.nomeIntestatario,ca.tipo "+ 
+				"cartadicredito as ca \r\n" + 
+				"ca.accountMail=?";		
+		String sqlCreati="select idCorso,nome,descrizione,copertina,stato \r\n" + 
+				"from corso\r\n" +
+				"where accountCreatore=?";
+		String sqlSeguiti="SELECT idCorso,nome,descrizione,copertina,stato "
+				+ " FROM corso, Iscrizione"
+				+ " where idCorso=corsoIdCorso && accountMail=?";
+		try {
+			//Informazioni su Account
+			temp=doRetrieveByKey(email);
+			//FINE INFORMAZIONI ACCOUNT
+			connection=dataSource.getConnection();
+			//Informazioni di carta
+			preparedStatement= connection.prepareStatement(sqlCarta);
+			preparedStatement.setString(1, email);
+			System.out.println("Query: " + preparedStatement.toString());
+			ResultSet rs= preparedStatement.executeQuery();
+			rs.next();
+			CartaDiCreditoBean carta= new CartaDiCreditoBean();
+			carta.setNumeroCarta(rs.getString("numeroCarta"));
+			carta.setAnnoScadenza(rs.getDate("annoScadenza"));
+			carta.setMeseScadenza(rs.getDate("meseScadenza"));
+			carta.setNomeIntestatario(rs.getString("NomeIntestatario"));
+			carta.setTipo(CartaEnumUtility.parserTipoCarta(rs.getInt("tipo")));
+			temp.setCarta(carta);
+			preparedStatement.close();
+			//Informazioni corsi tenuti
+			preparedStatement= connection.prepareStatement(sqlCreati);
+			preparedStatement.setString(1, email);
+			System.out.println("Query: " + preparedStatement.toString());
+			rs= preparedStatement.executeQuery();
+			while(rs.next()) {
+				// idCorso,nome,descrizione,copertina,stato
+				 CorsoBean corso= new CorsoBean();
+				 corso.setIdCorso(rs.getInt("idcorso"));
+				 corso.setNome(rs.getString("nome"));
+				 corso.setDescrizione(rs.getString("Descrizione"));
+				 corso.setCopertina(rs.getString("copertina"));
+				 corso.setStato(StatoUtility.parserTipoCarta(rs.getInt("stato")));
+				 temp.AddCorsoTenuto(corso);
+			}
+			preparedStatement.close();
+			//Fine informazioni corso
+			//Informazioni corsi seguiti
+			preparedStatement= connection.prepareStatement(sqlSeguiti);
+			preparedStatement.setString(1, email);
+			System.out.println("Query: " + preparedStatement.toString());
+			rs= preparedStatement.executeQuery();
+			while(rs.next()) {
+				// idCorso,nome,descrizione,copertina,stato
+				 CorsoBean corso= new CorsoBean();
+				 IscrizioneBean i=new IscrizioneBean();
+				 corso.setIdCorso(rs.getInt("idcorso"));
+				 corso.setNome(rs.getString("nome"));
+				 corso.setDescrizione(rs.getString("Descrizione"));
+				 corso.setCopertina(rs.getString("copertina"));
+				 corso.setStato(StatoUtility.parserTipoCarta(rs.getInt("stato")));
+				 i.setCorso(corso);
+				 temp.addIscrizione(i);
+			}
+			
+		}finally {
+			if(preparedStatement!=null)
+				preparedStatement.close();
+		}
+		return temp;
 	}
 	
 	/**
 	 * Registra un nuovo utente
 	 * @param user
 	 * @return
-	 * @throws SQLException 
+	 * @throws Exception 
 	 */
-	public boolean setRegistration(AccountBean user) {
-		try {
-			doSave(user);
-			return true;
-		} catch (SQLException e) {
-			return false;
-		}
+	public void setRegistration(AccountBean user) throws Exception {
+		if(checkMail(user.getMail())) throw new Exception("Questo account esiste già");
 		
+		Connection connection=null;
+		PreparedStatement preparedStatement=null;
+		
+		String sql="INSERT INTO Account VALUES(?,?,?,?,?,?)";
+		try {
+			connection=dataSource.getConnection();
+			preparedStatement= connection.prepareStatement(sql);
+			
+			preparedStatement.setString(1, user.getNome());
+			preparedStatement.setString(2, user.getCognome());
+			preparedStatement.setString(3, user.getPassword());
+			preparedStatement.setString(4, user.getMail());
+			preparedStatement.setInt(5, RuoloUtility.ruoloParser(user.getTipo()));
+			preparedStatement.setBoolean(6, user.getVerificato());
+			System.out.println("Registrazione Utente: "+ preparedStatement.toString());
+			preparedStatement.executeUpdate();
+			connection.commit();
+		} finally {
+				if (preparedStatement != null)
+					preparedStatement.close();
+		}
 	}
 	
 	/**
@@ -265,15 +292,16 @@ public class AccountManager {
 	}
 	
 	 /**
-	  * Sta roba non ha senso
 	  * Verifica se la password per un certo user è corretta
 	  * @param password
 	  * @param cf
 	  * @return
 	  */
-	public boolean checkPassword(String password, String cf) {
+	public boolean checkPassword(String password, String email) {
 		return false;
 		
 	}
+	
+
 	
 }
