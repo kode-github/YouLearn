@@ -11,7 +11,7 @@ package bean;
 
 public class CommentoBean {
 
-	private int idCommento;
+	private Integer idCommento;
 	private String testo;
 	private AccountBean accountCreatore;
 	private LezioneBean lezione;
@@ -22,7 +22,9 @@ public class CommentoBean {
 	 * @param AccountBean accountCreatore
 	 * 
 	 */
-	public CommentoBean(LezioneBean lezione, AccountBean accountCreatore) {
+	public CommentoBean(Integer id,String t,LezioneBean lezione, AccountBean accountCreatore) {
+		idCommento=id;
+		testo=t;
 		setLezione(lezione);
 		setAccountCreatore(accountCreatore);
 	}
@@ -35,7 +37,7 @@ public class CommentoBean {
 	 * @return int : idCommento
 	 */
 	
-	public int getIdCommento() {
+	public Integer getIdCommento() {
 		return idCommento;
 	}
 
@@ -44,7 +46,7 @@ public class CommentoBean {
 	 * @param idCommento
 	 */
 	
-	public void setIdCommento(int idCommento) {
+	public void setIdCommento(Integer idCommento) {
 		this.idCommento = idCommento;
 	}
 

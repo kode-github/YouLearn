@@ -31,10 +31,7 @@ CREATE TABLE `account` (
   `email` varchar(255) NOT NULL,
   `tipo` int(10) NOT NULL,
   `verificato` tinyint(1) NOT NULL,
-  `numeroCarta` varchar(16) DEFAULT NULL,
-  PRIMARY KEY (`email`),
-  KEY `account_ibfk_1` (`numeroCarta`),
-  CONSTRAINT `account_ibfk_1` FOREIGN KEY (`numeroCarta`) REFERENCES `cartadicredito` (`numeroCarta`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -44,7 +41,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES ('Luigi','Crisci','Epsondx4400','x',0,0,NULL);
+INSERT INTO `account` VALUES ('Luigi','Crisci','Epsondx4400','t',0,0),('Luigi','Ferri','Epson_dx4400','y',0,0);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -61,7 +58,10 @@ CREATE TABLE `cartadicredito` (
   `annoScadenza` varchar(20) NOT NULL,
   `tipo` int(10) NOT NULL,
   `nomeIntestatario` varchar(50) NOT NULL,
-  PRIMARY KEY (`numeroCarta`)
+  `accountMail` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`numeroCarta`),
+  KEY `Account_idx` (`accountMail`),
+  CONSTRAINT `Account` FOREIGN KEY (`accountMail`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -71,6 +71,7 @@ CREATE TABLE `cartadicredito` (
 
 LOCK TABLES `cartadicredito` WRITE;
 /*!40000 ALTER TABLE `cartadicredito` DISABLE KEYS */;
+INSERT INTO `cartadicredito` VALUES ('1','1998/02/02','1998/02/02',2,'qq','t');
 /*!40000 ALTER TABLE `cartadicredito` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -83,10 +84,10 @@ DROP TABLE IF EXISTS `commento`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `commento` (
   `idcommento` int(11) NOT NULL,
-  `NumeroLezione` int(11) NOT NULL,
-  `IdCorso` int(11) NOT NULL,
+  `NumeroLezione` int(11) DEFAULT NULL,
+  `IdCorso` int(11) DEFAULT NULL,
   `testo` varchar(1024) NOT NULL,
-  `AccountMail` varchar(255) NOT NULL,
+  `AccountMail` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idcommento`),
   KEY `b_idx` (`IdCorso`,`NumeroLezione`),
   KEY `creatore_idx` (`AccountMail`),
@@ -121,16 +122,16 @@ CREATE TABLE `corso` (
   `dataFine` date NOT NULL,
   `copertina` varchar(255) NOT NULL,
   `prezzo` varchar(10) NOT NULL,
-  `stato` int(10) NOT NULL,
+  `stato` varchar(20) NOT NULL,
   `categoria` varchar(30) NOT NULL,
   `nLezioni` int(10) NOT NULL,
   `nIscritti` int(10) NOT NULL,
   PRIMARY KEY (`idCorso`),
-  KEY `accountCreatore` (`accountCreatore`),
-  KEY `accountSupervisore` (`accountSupervisore`),
-  CONSTRAINT `corso_ibfk_1` FOREIGN KEY (`accountCreatore`) REFERENCES `account` (`email`),
-  CONSTRAINT `corso_ibfk_2` FOREIGN KEY (`accountSupervisore`) REFERENCES `account` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  KEY `corso_ibfk_1` (`accountCreatore`),
+  KEY `corso_ibfk_2` (`accountSupervisore`),
+  CONSTRAINT `corso_ibfk_1` FOREIGN KEY (`accountCreatore`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `corso_ibfk_2` FOREIGN KEY (`accountSupervisore`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -139,8 +140,39 @@ CREATE TABLE `corso` (
 
 LOCK TABLES `corso` WRITE;
 /*!40000 ALTER TABLE `corso` DISABLE KEYS */;
-INSERT INTO `corso` VALUES (1,'x','x','l','l','1985-02-02','1555-02-02','a','89',0,'s',1,0);
+INSERT INTO `corso` VALUES (1,'t','t','l','l','1985-02-02','1555-02-02','a','89','0','s',1,0),(2,'y','t','o','o','1985-02-02','1555-02-02','b','78','0','s',0,0);
 /*!40000 ALTER TABLE `corso` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `iscrizione`
+--
+
+DROP TABLE IF EXISTS `iscrizione`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `iscrizione` (
+  `accountMail` varchar(255) NOT NULL,
+  `corsoIdCorso` int(11) NOT NULL,
+  `dataPagamento` date NOT NULL,
+  `importo` double NOT NULL,
+  `fattura` int(10) NOT NULL,
+  PRIMARY KEY (`accountMail`,`corsoIdCorso`),
+  UNIQUE KEY `fattura` (`fattura`),
+  KEY `iscrizione_ibfk_2` (`corsoIdCorso`),
+  CONSTRAINT `iscrizione_ibfk_1` FOREIGN KEY (`accountMail`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `iscrizione_ibfk_2` FOREIGN KEY (`corsoIdCorso`) REFERENCES `corso` (`idCorso`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `iscrizione`
+--
+
+LOCK TABLES `iscrizione` WRITE;
+/*!40000 ALTER TABLE `iscrizione` DISABLE KEYS */;
+INSERT INTO `iscrizione` VALUES ('t',1,'1958-02-02',45,11118),('t',2,'1987-02-02',45,8888);
+/*!40000 ALTER TABLE `iscrizione` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -211,36 +243,6 @@ DELIMITER ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
--- Table structure for table `pagamento`
---
-
-DROP TABLE IF EXISTS `pagamento`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `pagamento` (
-  `accountMail` varchar(255) NOT NULL,
-  `corsoIdCorso` int(11) NOT NULL,
-  `dataPagamento` date NOT NULL,
-  `importo` double NOT NULL,
-  `fattura` int(10) NOT NULL,
-  PRIMARY KEY (`accountMail`,`corsoIdCorso`),
-  UNIQUE KEY `fattura` (`fattura`),
-  KEY `corsoIdCorso` (`corsoIdCorso`),
-  CONSTRAINT `pagamento_ibfk_1` FOREIGN KEY (`accountMail`) REFERENCES `account` (`email`),
-  CONSTRAINT `pagamento_ibfk_2` FOREIGN KEY (`corsoIdCorso`) REFERENCES `corso` (`idCorso`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `pagamento`
---
-
-LOCK TABLES `pagamento` WRITE;
-/*!40000 ALTER TABLE `pagamento` DISABLE KEYS */;
-/*!40000 ALTER TABLE `pagamento` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Dumping events for database 'youlearndb'
 --
 
@@ -257,4 +259,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-10 19:23:26
+-- Dump completed on 2019-01-17 13:01:52

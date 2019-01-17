@@ -24,8 +24,18 @@ public class AccountBean{
 	private CartaDiCreditoBean carta;
 	private Collection<CorsoBean> corsiTenuti;
 	private Collection<CorsoBean> corsiDaSupervisionare;
-	private Collection<IscrizioneBean> acquisti; /* Da modificare se l'associazione tra un corso e un utente che segue tale corso non è creato attraverso l'entità pagamento*/
+	private Collection<IscrizioneBean> iscrizioni; /* Da modificare se l'associazione tra un corso e un utente che segue tale corso non è creato attraverso l'entità pagamento*/
 	private Collection<CommentoBean> commentiScritti;
+	
+	public AccountBean() {
+		nome=cognome=password=mail="";
+		tipo=null;
+		carta=null;
+		corsiTenuti=corsiDaSupervisionare=null;
+		iscrizioni=null;
+		commentiScritti=null;
+	}
+	
 	
 	/**
 	 * Costruttore della classe generico, gli usi di tale costruttore sono molteplici. In genere viene utilizzato per prelevare informazioni dal database.
@@ -185,16 +195,16 @@ public class AccountBean{
 
 	/**
 	 * Restituisce la collezione dei pagamenti per l'iscrizione ad un corso dell'account
-	 * @return Collection<IscrizioneBean> : acquisti
+	 * @return Collection<IscrizioneBean> : iscrizioni
 	 */
 
 	public Collection<IscrizioneBean> getAcquisti() {
-		return acquisti;
+		return iscrizioni;
 	}
 
 	/**
 	 * Aggiunge una collezione degli pagamenti per l'iscrizione ad un corso da parte dell'account
-	 * @param IscrizioneBean acquisti
+	 * @param IscrizioneBean iscrizioni
 	 */
 	
 
@@ -202,7 +212,7 @@ public class AccountBean{
 		Iterator<IscrizioneBean> pagamentiDaAggiungere = (Iterator<IscrizioneBean>) nuoviAcquisti.iterator();
 		while(pagamentiDaAggiungere.hasNext()) {
 			IscrizioneBean added = pagamentiDaAggiungere.next();
-			this.acquisti.add(added);
+			this.iscrizioni.add(added);
 			added.setAccount(this);
 		}
 	}
@@ -212,18 +222,18 @@ public class AccountBean{
 	 * @param IscrizioneBean pagamentoToRemove
 	 */
 	
-	public void removeAcquisto(IscrizioneBean pagamentoToRemove) {
-		this.acquisti.remove(pagamentoToRemove);
+	public void removeIscrizione(IscrizioneBean pagamentoToRemove) {
+		this.iscrizioni.remove(pagamentoToRemove);
 		pagamentoToRemove.setAccount(null);
 	}
 	
 	/**
-	 * Aggiungi un singolo acquisto alla lista dei pagamenti associati all'account 
+	 * Aggiungi un singolo iscrizione alla lista dei pagamenti associati all'account 
 	 * @param IscrizioneBean pagamentoAggiunto
 	 */
 
-	public void addAcquisto(IscrizioneBean pagamentoAggiunto) {
-		this.acquisti.add(pagamentoAggiunto);
+	public void addIscrizione(IscrizioneBean pagamentoAggiunto) {
+		this.iscrizioni.add(pagamentoAggiunto);
 		pagamentoAggiunto.setAccount(this);
 		
 	}

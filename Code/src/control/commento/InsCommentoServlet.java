@@ -11,27 +11,27 @@ import javax.servlet.http.HttpServletResponse;
 
 import bean.AccountBean;
 import bean.CommentoBean;
-import manager.CommentoManager;
+import bean.LezioneBean;
+import manager.LezioneManager;
 
 @WebServlet("/InsCommentoServlet")
 public class InsCommentoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	CommentoManager manager;
+	LezioneManager manager;
 	
     public InsCommentoServlet() {
         super();
-        manager= new CommentoManager();
+        manager= new LezioneManager();
     }
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		String testo=request.getParameter("testoCommento");
-		int  nLezione=Integer.parseInt(request.getParameter("nLezione"));
-		int idCorso=Integer.parseInt(request.getParameter("idCorso"));
+		LezioneBean lezione=(LezioneBean)request.getSession().getAttribute("lezione");
 		AccountBean account=(AccountBean)request.getSession().getAttribute("Account");
-		CommentoBean commento=new CommentoBean(nLezione, null, testo, account.getMail(),idCorso);
+		CommentoBean commento=new CommentoBean(null, testo, lezione,account);
 		try {
 			manager.insCommento(commento);
 			response.sendRedirect(request.getContextPath()+"\\Lezione.jsp?idCorso="+idCorso+"+&numeroLezione="+nLezione);
