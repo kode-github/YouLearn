@@ -36,6 +36,16 @@ CREATE TABLE `account` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `account`
+--
+
+LOCK TABLES `account` WRITE;
+/*!40000 ALTER TABLE `account` DISABLE KEYS */;
+INSERT INTO `account` VALUES ('Luigi','Crisci','Epsondx4400','t',0,0),('Luigi','Ferri','Epson_dx4400','y',0,0);
+/*!40000 ALTER TABLE `account` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `cartadicredito`
 --
 
@@ -54,6 +64,16 @@ CREATE TABLE `cartadicredito` (
   CONSTRAINT `Account` FOREIGN KEY (`accountMail`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cartadicredito`
+--
+
+LOCK TABLES `cartadicredito` WRITE;
+/*!40000 ALTER TABLE `cartadicredito` DISABLE KEYS */;
+INSERT INTO `cartadicredito` VALUES ('1','1998/02/02','1998/02/02',2,'qq','t');
+/*!40000 ALTER TABLE `cartadicredito` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `commento`
@@ -75,6 +95,15 @@ CREATE TABLE `commento` (
   CONSTRAINT `lezione` FOREIGN KEY (`IdCorso`, `NumeroLezione`) REFERENCES `lezione` (`corsoIdCorso`, `numeroLezione`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `commento`
+--
+
+LOCK TABLES `commento` WRITE;
+/*!40000 ALTER TABLE `commento` DISABLE KEYS */;
+/*!40000 ALTER TABLE `commento` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `corso`
@@ -106,6 +135,16 @@ CREATE TABLE `corso` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `corso`
+--
+
+LOCK TABLES `corso` WRITE;
+/*!40000 ALTER TABLE `corso` DISABLE KEYS */;
+INSERT INTO `corso` VALUES (1,'t','t','l','l','1985-02-02','1555-02-02','a','89','0','s',1,0),(2,'y','t','o','o','1985-02-02','1555-02-02','b','78','0','s',0,0);
+/*!40000 ALTER TABLE `corso` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `iscrizione`
 --
 
@@ -127,6 +166,16 @@ CREATE TABLE `iscrizione` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `iscrizione`
+--
+
+LOCK TABLES `iscrizione` WRITE;
+/*!40000 ALTER TABLE `iscrizione` DISABLE KEYS */;
+INSERT INTO `iscrizione` VALUES ('t',1,'1958-02-02',45,11118),('t',2,'1987-02-02',45,8888);
+/*!40000 ALTER TABLE `iscrizione` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `lezione`
 --
 
@@ -142,6 +191,16 @@ CREATE TABLE `lezione` (
   CONSTRAINT `lezione_ibfk_1` FOREIGN KEY (`corsoIdCorso`) REFERENCES `corso` (`idCorso`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lezione`
+--
+
+LOCK TABLES `lezione` WRITE;
+/*!40000 ALTER TABLE `lezione` DISABLE KEYS */;
+INSERT INTO `lezione` VALUES (1,'2',0,1);
+/*!40000 ALTER TABLE `lezione` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -200,4 +259,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-17 12:55:09
+-- Dump completed on 2019-01-17 13:01:52
