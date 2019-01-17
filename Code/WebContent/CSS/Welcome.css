@@ -1,0 +1,85 @@
+body {
+
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 900;
+    background-color: #393e46;
+
+
+}
+
+.header {
+    background-color: #00adb5;
+    color: #eeeeee;
+}
+
+.image {
+    padding-right: 0px;
+    padding-left: 0px;
+    padding-top: 15px;
+}
+
+.text {
+    padding-right: 0px;
+    padding-left: 0px;
+    padding-top: 25px;
+
+
+}
+
+.text-image {
+    margin: 0;
+    padding: 0;
+
+}
+
+h1 {
+
+    display: inline-block;
+    font-size: 20px;
+
+
+}
+
+h2 {
+
+    display: block;
+    font-size: 15px;
+
+
+}
+
+
+#login-register {
+
+    padding: 60px;
+
+}
+
+
+
+#footer {
+
+    text-align: center;
+    color: #fff;
+    padding-bottom: 40px;
+    background-color: #333333;
+
+}
+
+.icon-footer {
+
+    padding: 40px 10px 10px;
+
+
+}
+
+.login-register {
+
+    background-image: url(nature-grass-green-book.jpg);
+    background-repeat: no-repeat;
+
+}
+
+.card-5 {
+    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+}
