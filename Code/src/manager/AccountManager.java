@@ -54,7 +54,7 @@ public class AccountManager {
 			
 			ResultSet rs= preparedStatement.executeQuery();
 			
-			if(!rs.next()) throw new NotFoundException("L'account non è stato trovato"); //controllo che esista l'account
+			if(!rs.next()) throw new NotFoundException("L'account non ï¿½ stato trovato"); //controllo che esista l'account
 	
 			temp.setNome(rs.getString("Nome"));
 			temp.setCognome(rs.getString("Cognome"));
@@ -168,7 +168,7 @@ public class AccountManager {
 		if(temp.getTipo().equals(Ruolo.Utente)) {
 			managerCarta.retrieveByAccount(temp); //recupero la carta
 			managerCorso.retrieveByCreatore(temp); //recupero gli account da lui creati
-			managerIscrizione.getIscrizioniUtente(temp); //recupero gli account a cui è iscritto
+			managerIscrizione.getIscrizioniUtente(temp); //recupero gli account a cui ï¿½ iscritto
 		}
 		else {
 			managerCorso.doRetrieveBySupervisore(temp); //recupero i corsi supervisionati
@@ -188,7 +188,7 @@ public class AccountManager {
 	 */
 	public void setRegistration(AccountBean user) throws NotWellFormattedException, AlreadyExistingException, SQLException, NoPermissionException {
 		if(!isWellFormatted(user)) throw new NotWellFormattedException("Dati non corretti");
-		if(checkMail(user.getMail())) throw new AlreadyExistingException("Questo account esiste già");
+		if(checkMail(user.getMail())) throw new AlreadyExistingException("Questo account esiste giï¿½");
 		managerCarta= new CartaDiCreditoManager();
 		
 		Connection connection=null;
@@ -224,7 +224,7 @@ public class AccountManager {
 	
 
 	/**
-	 * Verifica se un certo utente esiste già nel database
+	 * Verifica se un certo utente esiste giï¿½ nel database
 	 * @param email la mail da verificare
 	 * @return
 	 * @throws SQLException 
@@ -276,7 +276,7 @@ public class AccountManager {
 	}
 //
 //	/**
-//	 * Controlla se un account è Utente o Supervisore
+//	 * Controlla se un account ï¿½ Utente o Supervisore
 //	 * @param email
 //	 * @return 0=Utente  1=Supervisore
 //	 * @throws SQLException Errore di connessione al DB
