@@ -3,6 +3,7 @@ package control.utente;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import javax.naming.NoPermissionException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,17 +30,19 @@ public class CambiaPassServlet extends HttpServlet {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		String newPassword=request.getParameter("newPassword");
 		AccountBean account=(AccountBean)request.getSession().getAttribute("Account");
-		try {
-			manager.modificaPassword(account.getMail(), newPassword);
-			request.getSession().setAttribute("passwordModificata",true);
-		} catch (SQLException | NotFoundException e) {
-			//Non può succedere per via dei filtri
-			//Vanno quindi eliminate le eccezioni?
+			try {
+				manager.modificaPassword(account.getMail(), newPassword);
+				request.getSession().setAttribute("passwordModificata",true);
+				if(account.getTipo().equals(Ruolo.Utente))
+					response.sendRedirect(request.getContextPath()+"\\HomepageUtente.jsp");
+				else
+					response.sendRedirect(request.getContextPath()+"\\HomepageSupervisore.jsp");	
+			} catch (NoPermissionException e) {
+				//Non ci andrà mai
+			} catch (SQLException | NotFoundException e) {
+				//pagina di errore
 		}
-		if(account.getTipo().equals(Ruolo.Utente))
-			response.sendRedirect(request.getContextPath()+"\\HomepageUtente.jsp");
-		else
-			response.sendRedirect(request.getContextPath()+"\\HomepageSupervisore.jsp");	
+	
 	}
 
 

@@ -24,16 +24,18 @@ public class CartaDiCreditoManager {
 	}
 	
 	/**
-	 * Ottiene una carta dal db
+	 * Ottiene una carta dal db con l'account associato
 	 * @param code
 	 * @return
 	 * @throws SQLException
 	 * @throws NotFoundException La carta non esiste
+	 * @throws NoPermissionException 
 	 */
-	public CartaDiCreditoBean doRetrieveByKey(String code) throws SQLException,NotFoundException {
+	public CartaDiCreditoBean doRetrieveByKey(String code) throws SQLException,NotFoundException, NoPermissionException {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		CartaDiCreditoBean temp=new CartaDiCreditoBean();
+		accountManager= new AccountManager();
 		
 		String sql="SELECT* FROM CartaDiCredito WHERE numeroCarta=?";		
 		try {
@@ -50,6 +52,8 @@ public class CartaDiCreditoManager {
 			temp.setMeseScadenza(rs.getString("MeseScadenza"));
 			temp.setAnnoScadenza(rs.getString("AnnoScadenza"));
 			temp.setTipo(CartaEnumUtility.parserTipoCarta(rs.getInt("tipo")));
+			temp.setAccount(accountManager.doRetrieveByKey(rs.getString("accountMail")));
+			
 		}finally {
 			if(preparedStatement!=null)
 				preparedStatement.close();
@@ -65,8 +69,9 @@ public class CartaDiCreditoManager {
 	 * @throws SQLException
 	 * @throws NotWellFormattedException La carta non è formattata bene
 	 * @throws AlreadyExistingException La carta esiste già
+	 * @throws NoPermissionException 
 	 */
-	public void registerCard(CartaDiCreditoBean carta) throws SQLException, NotWellFormattedException, AlreadyExistingException {
+	public void registerCard(CartaDiCreditoBean carta) throws SQLException, NotWellFormattedException, AlreadyExistingException, NoPermissionException {
 		if(!isWellFormatted(carta)) throw new NotWellFormattedException("La carta non è formattata bene");
 		if(!checkCarta(carta.getNumeroCarta())) throw new AlreadyExistingException("La carta esiste già");
 		
@@ -106,9 +111,10 @@ public class CartaDiCreditoManager {
 	 * @throws SQLException
 	 * @throws NotFoundException 
 	 * @throws AlreadyExistingException 
+	 * @throws NoPermissionException 
 	 * @throws Exception
 	 */
-	public void modifyCard(CartaDiCreditoBean newCarta,String numeroCarta) throws SQLException, NotFoundException, AlreadyExistingException {
+	public void modifyCard(CartaDiCreditoBean newCarta,String numeroCarta) throws SQLException, NotFoundException, AlreadyExistingException, NoPermissionException {
 		if(!checkCarta(numeroCarta)) throw new NotFoundException("La carta da modificare non esiste");
 		if(checkCarta(newCarta.getNumeroCarta())) throw new AlreadyExistingException("La carta inserita esiste già");
 		
@@ -136,7 +142,14 @@ public class CartaDiCreditoManager {
 		}	
 	}
 	
-	private boolean checkCarta(String numeroCarta) throws SQLException {
+	/**
+	 * Controlla se una certa carta esiste
+	 * @param numeroCarta La PK di carta
+	 * @return true le la carta esiste, false in caso contrario
+	 * @throws SQLException 
+	 * @throws NoPermissionException 
+	 */
+	private boolean checkCarta(String numeroCarta) throws SQLException, NoPermissionException {
 		try {
 			doRetrieveByKey(numeroCarta);
 			return true;
@@ -145,29 +158,15 @@ public class CartaDiCreditoManager {
 		}
 		
 	}
-
-	/**
-	 * Dovrebbe cercare se una carta esiste
-	 * Non so se necessario
-	 * @param cartaDiCreditoBean
-	 * @return
-	 * @throws SQLException
-	 */
-	public boolean checkCarta(CartaDiCreditoBean cartaDiCreditoBean) throws SQLException {
-			//controllare tutti i campo di CartaDiCredito e dare vero o falso su result set
-			return true;
-		
-	}
 	
 	
-
 	/**
 	 * Recupera una carta di credito in base ad una mail
-	 * @param email
-	 * @return una carta senza l'account collegato
-	 * @throws SQLException
-	 * @throws NotFoundException
-	 * @throws NoPermissionException 
+	 * @param email Account a cui è associata alla mail
+	 * @return La carta associata all'account
+	 * @throws SQLException 
+	 * @throws NotFoundException Non esiste l'account o la carta associata
+	 * @throws NoPermissionException L'account è un supervisore
 	 */
 	public CartaDiCreditoBean retrieveByAccount(AccountBean account) throws SQLException, NotFoundException, NoPermissionException {
 		accountManager=new AccountManager();
@@ -204,8 +203,8 @@ public class CartaDiCreditoManager {
 	
 	/**
 	 * Controlla se una carta è well formed
-	 * @param carta
-	 * @return
+	 * @param carta La carta da controllare
+	 * @return true se è ben formattata, false altrimenti
 	 */
 	public boolean isWellFormatted(CartaDiCreditoBean carta) {
 		String nome=carta.getNomeIntestatario();

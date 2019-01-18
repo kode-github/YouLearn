@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Non implementiamo mail, quindi non va toccata(?)
+ * DA ELIMINARE
  * @author Luigi
  *
  */

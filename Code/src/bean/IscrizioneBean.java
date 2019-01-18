@@ -125,10 +125,10 @@ public class IscrizioneBean {
 		
 		if(this.corso != null) {
 		   
-		   this.corso.addPagamento(this);
+		   this.corso.addIscrizione(this);
 		}
 		if(old != null) {
-			old.removePagamento(this);
+			old.removeIscrizione(this);
 		}
 	}
 	

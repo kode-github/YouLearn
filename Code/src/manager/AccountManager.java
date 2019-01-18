@@ -37,11 +37,13 @@ public class AccountManager {
 	 * @return Account
 	 * @throws SQLException Errore nell'accesso al db
 	 * @throws NotFoundException L'account non esiste
+	 * @throws NoPermissionException 
 	 */
 	public AccountBean doRetrieveByKey(String code) throws SQLException,NotFoundException {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		AccountBean temp=new AccountBean();
+		managerCarta= new CartaDiCreditoManager();
 		
 		String sql="SELECT* FROM Account WHERE email=?";		
 		try {
@@ -78,9 +80,10 @@ public class AccountManager {
 	 * @return
 	 * @throws SQLException 
 	 * @throws NotFoundException 
+	 * @throws NoPermissionException 
 	 */
-	public void modificaPassword(String email, String pass) throws SQLException, NotFoundException {
-		if(!checkMail(email)) throw new NotFoundException("L'account non esiste");
+	public void modificaPassword(String email, String pass) throws SQLException, NotFoundException, NoPermissionException {
+		if(!checkMail(email)) throw new NotFoundException("L'account non esiste");//necessario?
 		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -114,9 +117,10 @@ public class AccountManager {
 	 * @return
 	 * @throws SQLException 
 	 * @throws NotFoundException 
+	 * @throws NoPermissionException 
 	 */
-	public void modificaMail(String email, String newMail) throws SQLException, NotFoundException {
-		if(!checkMail(email)) throw new NotFoundException("L'account non esiste");
+	public void modificaMail(String email, String newMail) throws SQLException, NotFoundException, NoPermissionException {
+		if(!checkMail(email)) throw new NotFoundException("L'account non esiste"); //necessario?
 		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -143,7 +147,7 @@ public class AccountManager {
 	}
 	
 	/**
-	 * Effettua il login di un Utente
+	 * Effettua il login di un Account
 	 * @param email email dell'account
 	 * @param password password dell'account
 	 * @return L'Account 
@@ -152,47 +156,26 @@ public class AccountManager {
 	 * @throws DatiErratiException 
 	 * @throws NoPermissionException 
 	 */
-	public AccountBean loginUtente(String email, String password) throws SQLException, NotFoundException, DatiErratiException, NoPermissionException {
-		//Chiamata unica email e password
+	public AccountBean login(String email, String password) throws SQLException, NotFoundException, DatiErratiException, NoPermissionException {
 		AccountBean temp=doRetrieveByKey(email); //NotFoundException se non esiste
-		if(temp.getTipo().equals(Ruolo.Supervisore)) throw new NoPermissionException("Non puoi accedere a questa funzionalità");
 		if(temp.getPassword().equals(password)) throw new DatiErratiException(); 
 		
 		managerCarta= new CartaDiCreditoManager();
 		managerCorso= new CorsoManager();
 		managerIscrizione= new IscrizioneManager();
 
-		//temp=doRetrieveByKey(email); //recupero l'account
 		temp.setPassword(""); //elimino la password
-		managerCarta.retrieveByAccount(temp); //recupero la carta
-		managerCorso.retrieveByCreatore(temp); //recupero gli account da lui creati
-		managerIscrizione.getIscrizioniUtente(temp); //recupero gli account a cui è iscritto
+		if(temp.getTipo().equals(Ruolo.Utente)) {
+			managerCarta.retrieveByAccount(temp); //recupero la carta
+			managerCorso.retrieveByCreatore(temp); //recupero gli account da lui creati
+			managerIscrizione.getIscrizioniUtente(temp); //recupero gli account a cui è iscritto
+		}
+		else {
+			managerCorso.doRetrieveBySupervisore(temp); //recupero i corsi supervisionati
+		}
 			
 		return temp;
 	}
-	
-	/**
-	 * Effettua il login di un supervisore
-	 * @param email
-	 * @param password
-	 * @return
-	 * @throws DatiErratiException
-	 * @throws SQLException
-	 * @throws NotFoundException
-	 * @throws NoPermissionException
-	 */
-	public AccountBean loginSupervisore(String email,String password) throws DatiErratiException, SQLException, NotFoundException, NoPermissionException {
-		AccountBean temp=doRetrieveByKey(email); //NotFoundException se non esiste
-		if(temp.getTipo().equals(Ruolo.Utente)) throw new NoPermissionException("Non puoi accedere a questa funzionalità");
-		if(temp.getPassword().equals(password)) throw new DatiErratiException(); 
-		
-		temp=doRetrieveByKey(email); //recupero l'account
-		temp.setPassword(""); //elimino la password
-		managerCorso.doRetrieveBySupervisore(temp); //recupero i corsi supervisionati
-		
-		return temp;
-	}
-	
 	/**
 	 * Registra un nuovo utente con la propria carta
 	 * @param user
@@ -200,9 +183,10 @@ public class AccountManager {
 	 * @throws NotWellFormattedException 
 	 * @throws AlreadyExistingException 
 	 * @throws SQLException 
+	 * @throws NoPermissionException 
 	 * @throws Exception 
 	 */
-	public void setRegistration(AccountBean user) throws NotWellFormattedException, AlreadyExistingException, SQLException {
+	public void setRegistration(AccountBean user) throws NotWellFormattedException, AlreadyExistingException, SQLException, NoPermissionException {
 		if(!isWellFormatted(user)) throw new NotWellFormattedException("Dati non corretti");
 		if(checkMail(user.getMail())) throw new AlreadyExistingException("Questo account esiste già");
 		managerCarta= new CartaDiCreditoManager();
@@ -244,11 +228,12 @@ public class AccountManager {
 	 * @param email la mail da verificare
 	 * @return
 	 * @throws SQLException 
+	 * @throws NoPermissionException 
 	 * @throws NotFoundException 
 	 */
-	public boolean checkMail(String email) throws SQLException {
+	public boolean checkMail(String email) throws SQLException, NoPermissionException {
 		try {
-			AccountBean account=doRetrieveByKey(email);
+			doRetrieveByKey(email);
 			return true;
 		} catch (NotFoundException e) {
 			return false;
@@ -289,31 +274,23 @@ public class AccountManager {
 		}
 		return rs.next();
 	}
-
-	/**
-	 * Controlla se un account è Utente o Supervisore
-	 * @param email
-	 * @return 0=Utente  1=Supervisore
-	 * @throws SQLException Errore di connessione al DB
-	 * @throws NotFoundException 
-	 */
-	public int checkTipoUser(String email) throws SQLException, NotFoundException {
-		AccountBean account=doRetrieveByKey(email);
-		if(account.getTipo().equals(Ruolo.Utente))
-			return 0;
-		else
-			return 1;
-	}
+//
+//	/**
+//	 * Controlla se un account è Utente o Supervisore
+//	 * @param email
+//	 * @return 0=Utente  1=Supervisore
+//	 * @throws SQLException Errore di connessione al DB
+//	 * @throws NotFoundException 
+//	 * @throws NoPermissionException 
+//	 */
+//	public int checkTipoUser(String email) throws SQLException, NotFoundException, NoPermissionException {
+//		AccountBean account=doRetrieveByKey(email);
+//		if(account.getTipo().equals(Ruolo.Utente))
+//			return 0;
+//		else
+//			return 1;
+//	}
 	
-	 /**
-	  * Verifica se la password per un certo user è corretta
-	  * @param password
-	  * @param cf
-	  * @return
-	  */
-	public boolean checkPassword(String password, String email) {
-		return true;
-	}
 	
 	/**
 	 * Controlla che un account sia ben formattato
@@ -338,6 +315,8 @@ public class AccountManager {
 //		else 
 //			return false;
 	}
+
+
 
 	
 }

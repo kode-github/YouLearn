@@ -148,4 +148,11 @@ public class CorsoManager {
 		return null;
 	}
 
+
+
+	public boolean checkCorso(CorsoBean corso) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

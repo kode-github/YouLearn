@@ -3,6 +3,7 @@ package control.utente;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import javax.naming.NoPermissionException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import bean.AccountBean;
+import bean.AccountBean.Ruolo;
+import exception.DatiErratiException;
 import exception.NotFoundException;
 import manager.AccountManager;
 
@@ -31,21 +34,28 @@ public class LoginServlet extends HttpServlet {
 		password=request.getParameter("password");
 		HttpSession sessione= request.getSession();
 		try {
-			AccountBean account=manager.authenticateUser(mail, password);
-			sessione.setAttribute("Account", account);
-			response.sendRedirect(request.getContextPath()+"\\HomepageUtente.jsp");
-		} catch (NotFoundException e) {
-			sessione.setAttribute("ErroreLogin", true);
-			response.sendRedirect(request.getContextPath()+"\\Welcome.jsp");
-		} catch( SQLException e) {
-			//Pagina di errore in cui diciamo di collegarsi al sito più tardi
-			//oppure la stessa con scritto "Errore di connessione, riprovare più tardi"
+				AccountBean account;
+				account = manager.login(mail, password);
+				sessione.setAttribute("Account", account);
+				if(account.getTipo().equals(Ruolo.Utente))
+					response.sendRedirect(request.getContextPath()+"\\HomepageUtente.jsp");
+				else
+					response.sendRedirect(request.getContextPath()+"\\HomepageSupervisore.jsp");
+			} catch (NoPermissionException e) {
+				//Non dovrebbe MAI essere qui
+			} catch (DatiErratiException e) {
+				sessione.setAttribute("passwordErrata", true);
+				response.sendRedirect(request.getContextPath()+"\\Welcome.jsp");
+			} catch (NotFoundException e) {
+				sessione.setAttribute("ErroreLogin", true);
+				response.sendRedirect(request.getContextPath()+"\\Welcome.jsp");
+			} catch( SQLException e) {
+				sessione.setAttribute("ErroreConnessione", true);
+				response.sendRedirect(request.getContextPath()+"\\Welcome.jsp");
 		}
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
