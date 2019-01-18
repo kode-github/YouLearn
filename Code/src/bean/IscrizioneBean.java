@@ -1,5 +1,7 @@
 package bean;
 
+import java.sql.Date;
+
 /**
  * 
  * Classe che rappresenta un'iscrizione persistente
@@ -12,7 +14,7 @@ public class IscrizioneBean {
 
 	private AccountBean account;
 	private CorsoBean corso;
-	private String dataPagamento;
+	private Date dataPagamento;
 	private double importo;
 	private String fattura;
 	
@@ -24,7 +26,7 @@ public class IscrizioneBean {
 	 * @return String : dataPagamento
 	 */
 	
-	public String getDataPagamento() {
+	public Date getDataPagamento() {
 		return dataPagamento;
 	}
 	
@@ -34,8 +36,8 @@ public class IscrizioneBean {
 	 */
 	
 	
-	public void setDataPagamento(String dataPagamento) {
-		this.dataPagamento = dataPagamento;
+	public void setDataPagamento(Date date) {
+		this.dataPagamento = date;
 	}
 	
 	/**
@@ -94,10 +96,10 @@ public class IscrizioneBean {
 		
 		if(this.account != null) {
 		   
-		   this.account.addAcquisto(this);
+		   this.account.addIscrizione(this);
 		}
 		if(old != null) {
-			old.removeAcquisto(this);
+			old.removeIscrizione(this);
 		}
 	}
 	}

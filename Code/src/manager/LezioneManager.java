@@ -177,6 +177,12 @@ public class LezioneManager {
 		}
 		return list;
 	}
+
+	public Collection<LezioneBean> retrieveLezioniByCorso(CorsoBean corso) {
+		return null;
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 }

@@ -198,7 +198,7 @@ public class AccountBean{
 	 * @return Collection<IscrizioneBean> : iscrizioni
 	 */
 
-	public Collection<IscrizioneBean> getAcquisti() {
+	public Collection<IscrizioneBean> getIscrizioni() {
 		return iscrizioni;
 	}
 
@@ -208,7 +208,7 @@ public class AccountBean{
 	 */
 	
 
-	public void addAcquisti(Collection<IscrizioneBean> nuoviAcquisti) {
+	public void addIscrizioni(Collection<IscrizioneBean> nuoviAcquisti) {
 		Iterator<IscrizioneBean> pagamentiDaAggiungere = (Iterator<IscrizioneBean>) nuoviAcquisti.iterator();
 		while(pagamentiDaAggiungere.hasNext()) {
 			IscrizioneBean added = pagamentiDaAggiungere.next();

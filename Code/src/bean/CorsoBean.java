@@ -1,5 +1,6 @@
 package bean;
 
+import java.sql.Date;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -16,11 +17,12 @@ public class CorsoBean {
 	public enum Stato{Attesa,Completamento, Attivo, Disattivo};
 	private String nome;
 	private String descrizione;
-	private String dataCreazione;
-	private String dataFine;
+	private Date dataCreazione;
+	private Date dataFine;
 	private int nIscritti;
+	private int nLezioni;
 	private String copertina;
-	private int idCorso;
+	private Integer idCorso;
 	private AccountBean docente;
 	private AccountBean supervisore;
 	private Collection<IscrizioneBean> iscrizioni; /* Da modificare se si vuole aggiungere direttamente uno studente ad un corso e non indirettamente tramite i iscrizioni*/
@@ -80,7 +82,7 @@ public class CorsoBean {
 	 * @return String : dataCreazione
 	 */
 	
-	public String getDataCreazione() {
+	public Date getDataCreazione() {
 		return dataCreazione;
 	}
 
@@ -89,8 +91,8 @@ public class CorsoBean {
 	 * @param String dataCreazione
 	 */
 	
-	public void setDataCreazione(String dataCreazione) {
-		this.dataCreazione = dataCreazione;
+	public void setDataCreazione(Date date) {
+		this.dataCreazione = date;
 	}
 
 	/**
@@ -98,7 +100,7 @@ public class CorsoBean {
 	 * @return String : dataFine
 	 */
 	
-	public String getDataFine() {
+	public Date getDataFine() {
 		return dataFine;
 	}
 
@@ -107,8 +109,8 @@ public class CorsoBean {
 	 * @param String dataFine
 	 */
 	
-	public void setDataFine(String dataFine) {
-		this.dataFine = dataFine;
+	public void setDataFine(Date date) {
+		this.dataFine = date;
 	}
 
 	/**
@@ -270,7 +272,7 @@ public class CorsoBean {
 	 * @return Collection<AccountBean> : studenti
 	 */
 	
-	public Collection<IscrizioneBean> getiscrizioni() {
+	public Collection<IscrizioneBean> getIscrizioni() {
 		return this.iscrizioni;
 	}
 
@@ -280,7 +282,7 @@ public class CorsoBean {
 	 */
 	
 	
-	public void addiscrizioni(Collection<IscrizioneBean> newiscrizioni) {
+	public void addIscrizioni(Collection<IscrizioneBean> newiscrizioni) {
 		 Iterator<IscrizioneBean>  iscrizioniDaAggiungere =  (Iterator<IscrizioneBean>) newiscrizioni.iterator();
 		   while(iscrizioniDaAggiungere.hasNext()) {
 			  IscrizioneBean addedPagamento = iscrizioniDaAggiungere.next();
@@ -294,7 +296,7 @@ public class CorsoBean {
 	 * @param IscrizioneBean iscrizioneRimosso
 	 */
 	
-	public void removePagamento(IscrizioneBean iscrizioneRimosso) {
+	public void removeIscrizione(IscrizioneBean iscrizioneRimosso) {
 		this.iscrizioni.remove(iscrizioneRimosso);
 		iscrizioneRimosso.setCorso(null);
 	}
@@ -305,7 +307,7 @@ public class CorsoBean {
 	 * @param IscrizioneBean iscrizioneBean
 	 */
 	
-	public void addPagamento(IscrizioneBean iscrizioneAggiunto) {
+	public void addIscrizione(IscrizioneBean iscrizioneAggiunto) {
 		this.iscrizioni.add(iscrizioneAggiunto);
 		iscrizioneAggiunto.setCorso(this);
 		
@@ -345,6 +347,14 @@ public class CorsoBean {
 		this.lezioni.add(lezioneAggiunta);
 		lezioneAggiunta.setCorso(this);		
 		
+	}
+
+	public int getnLezioni() {
+		return nLezioni;
+	}
+
+	public void setnLezioni(int nLezioni) {
+		this.nLezioni = nLezioni;
 	}
 
 

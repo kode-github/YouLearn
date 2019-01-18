@@ -15,8 +15,8 @@ public class CartaDiCreditoBean {
 	public enum CartaEnum{PAYPAL, POSTEPAY, AMERICANEXPRESS};
 	private String nomeIntestatario;
 	private String numeroCarta;
-	private Date meseScadenza;
-	private Date annoScadenza;
+	private String meseScadenza;
+	private String annoScadenza;
 	private CartaEnum tipo;
 	private AccountBean account;
 	
@@ -72,7 +72,7 @@ public class CartaDiCreditoBean {
 	 * @return Date : meseScadenza
 	 */
 	
-	public Date getMeseScadenza() {
+	public String getMeseScadenza() {
 		return meseScadenza;
 	}
 
@@ -80,7 +80,7 @@ public class CartaDiCreditoBean {
 	 * Modifica il mese di scadenza della carta nel valore del parametro
 	 * @
 	 */
-	public void setMeseScadenza(Date meseScadenza) {
+	public void setMeseScadenza(String meseScadenza) {
 		this.meseScadenza = meseScadenza;
 	}
 
@@ -89,7 +89,7 @@ public class CartaDiCreditoBean {
 	 * @return Date : annoScadenza
 	 */
 	
-	public Date getAnnoScadenza() {
+	public String getAnnoScadenza() {
 		return annoScadenza;
 	}
 
@@ -97,7 +97,7 @@ public class CartaDiCreditoBean {
 	 * Imposta l'anno di scadenza della carta
 	 * @param Date annoScadenza
 	 */
-	public void setAnnoScadenza(Date annoScadenza) {
+	public void setAnnoScadenza(String annoScadenza) {
 		this.annoScadenza = annoScadenza;
 	}
 

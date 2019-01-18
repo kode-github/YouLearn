@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.naming.NoPermissionException;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
 
@@ -21,7 +22,10 @@ import utility.StatoUtility;
 
 public class AccountManager {
 	
-	DataSource dataSource;
+	private DataSource dataSource;
+	private CartaDiCreditoManager managerCarta;
+	private CorsoManager managerCorso;
+	private IscrizioneManager managerIscrizione;
 	
 	public AccountManager() {
 		dataSource= new DataSource();
@@ -41,7 +45,7 @@ public class AccountManager {
 		
 		String sql="SELECT* FROM Account WHERE email=?";		
 		try {
-			connection=DriverManagerConnectionPool.getConnection();
+			connection=dataSource.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1, code);
 			System.out.println("Query: " + preparedStatement.toString());
@@ -53,18 +57,15 @@ public class AccountManager {
 			temp.setNome(rs.getString("Nome"));
 			temp.setCognome(rs.getString("Cognome"));
 			temp.setPassword(rs.getString("Password"));
-			int tipo=rs.getInt("Tipo");
-			if(tipo==0)
-				temp.setTipo(Ruolo.Utente);
-			else 
-				temp.setTipo(Ruolo.Supervisore);
+			temp.setTipo(RuoloUtility.ruoloParser(rs.getInt("tipo")));
 			temp.setMail(rs.getString("Email"));
+			temp.setVerificato(rs.getBoolean("Verificato"));
 		}finally {
 			try {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				DriverManagerConnectionPool.releaseConnection(connection);
+				dataSource.close();
 			}
 		}
 		return temp;
@@ -93,11 +94,15 @@ public class AccountManager {
 			preparedStatement.setString(1, pass);
 			preparedStatement.setString(2, email);
 			System.out.println("doUpdate: "+ preparedStatement.toString());
-			if((preparedStatement.executeUpdate())==0) throw new NotFoundException("Account non trovato");
+			preparedStatement.executeUpdate();
 			connection.commit();
 		} finally {
-				if (preparedStatement != null)
-					preparedStatement.close();
+				try{
+					if (preparedStatement != null)
+						preparedStatement.close();
+				}finally {
+					dataSource.close();
+				}		
 		}
 		
 	}
@@ -120,19 +125,18 @@ public class AccountManager {
 				+ " WHERE Email = ?";
 
 		try {
-			connection = DriverManagerConnectionPool.getConnection();
+			connection = dataSource.getConnection();
 			preparedStatement = connection.prepareStatement(insertSQL);
 			preparedStatement.setString(1, newMail);
 			preparedStatement.setString(2, email);
-			System.out.println("doUpdate: "+ preparedStatement.toString());
-			if((preparedStatement.executeUpdate())==0) throw new NotFoundException("Account non trovato");
+			preparedStatement.executeUpdate();
 			connection.commit();
 		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 			} finally {
-				DriverManagerConnectionPool.releaseConnection(connection);
+				dataSource.close();
 			}
 		}
 		
@@ -140,101 +144,68 @@ public class AccountManager {
 	
 	/**
 	 * Effettua il login di un Utente
-	 * Sto metodo si deve ottimizzare, fa schifo
 	 * @param email email dell'account
 	 * @param password password dell'account
 	 * @return L'Account 
 	 * @throws SQLException Errore di connessione ad DB
 	 * @throws NotFoundException 
 	 * @throws DatiErratiException 
+	 * @throws NoPermissionException 
 	 */
-	public AccountBean loginUtente(String email, String password) throws SQLException, NotFoundException, DatiErratiException {
-		if(!checkMail(email) || checkTipoUser(email)==0) throw new NotFoundException("Questo utente non esiste: " + email); //Precondizione
-		if(!checkPassword(email,password)) throw new DatiErratiException();
+	public AccountBean loginUtente(String email, String password) throws SQLException, NotFoundException, DatiErratiException, NoPermissionException {
+		//Chiamata unica email e password
+		AccountBean temp=doRetrieveByKey(email); //NotFoundException se non esiste
+		if(temp.getTipo().equals(Ruolo.Supervisore)) throw new NoPermissionException("Non puoi accedere a questa funzionalità");
+		if(temp.getPassword().equals(password)) throw new DatiErratiException(); 
 		
-		Connection connection=null;
-		PreparedStatement preparedStatement=null;
-		AccountBean temp=new AccountBean();
-		
-		//Query per le diverse informazioni da ottenere
-		String sqlCarta="numeroCarta,ca.annoScadenza,ca.meseScadenza,ca.nomeIntestatario,ca.tipo "+ 
-				"cartadicredito as ca \r\n" + 
-				"ca.accountMail=?";		
-		String sqlCreati="select idCorso,nome,descrizione,copertina,stato \r\n" + 
-				"from corso\r\n" +
-				"where accountCreatore=?";
-		String sqlSeguiti="SELECT idCorso,nome,descrizione,copertina,stato "
-				+ " FROM corso, Iscrizione"
-				+ " where idCorso=corsoIdCorso && accountMail=?";
-		try {
-			//Informazioni su Account
-			temp=doRetrieveByKey(email);
-			//FINE INFORMAZIONI ACCOUNT
-			connection=dataSource.getConnection();
-			//Informazioni di carta
-			preparedStatement= connection.prepareStatement(sqlCarta);
-			preparedStatement.setString(1, email);
-			System.out.println("Query: " + preparedStatement.toString());
-			ResultSet rs= preparedStatement.executeQuery();
-			rs.next();
-			CartaDiCreditoBean carta= new CartaDiCreditoBean();
-			carta.setNumeroCarta(rs.getString("numeroCarta"));
-			carta.setAnnoScadenza(rs.getDate("annoScadenza"));
-			carta.setMeseScadenza(rs.getDate("meseScadenza"));
-			carta.setNomeIntestatario(rs.getString("NomeIntestatario"));
-			carta.setTipo(CartaEnumUtility.parserTipoCarta(rs.getInt("tipo")));
-			temp.setCarta(carta);
-			preparedStatement.close();
-			//Informazioni corsi tenuti
-			preparedStatement= connection.prepareStatement(sqlCreati);
-			preparedStatement.setString(1, email);
-			System.out.println("Query: " + preparedStatement.toString());
-			rs= preparedStatement.executeQuery();
-			while(rs.next()) {
-				// idCorso,nome,descrizione,copertina,stato
-				 CorsoBean corso= new CorsoBean();
-				 corso.setIdCorso(rs.getInt("idcorso"));
-				 corso.setNome(rs.getString("nome"));
-				 corso.setDescrizione(rs.getString("Descrizione"));
-				 corso.setCopertina(rs.getString("copertina"));
-				 corso.setStato(StatoUtility.parserTipoCarta(rs.getInt("stato")));
-				 temp.AddCorsoTenuto(corso);
-			}
-			preparedStatement.close();
-			//Fine informazioni corso
-			//Informazioni corsi seguiti
-			preparedStatement= connection.prepareStatement(sqlSeguiti);
-			preparedStatement.setString(1, email);
-			System.out.println("Query: " + preparedStatement.toString());
-			rs= preparedStatement.executeQuery();
-			while(rs.next()) {
-				// idCorso,nome,descrizione,copertina,stato
-				 CorsoBean corso= new CorsoBean();
-				 IscrizioneBean i=new IscrizioneBean();
-				 corso.setIdCorso(rs.getInt("idcorso"));
-				 corso.setNome(rs.getString("nome"));
-				 corso.setDescrizione(rs.getString("Descrizione"));
-				 corso.setCopertina(rs.getString("copertina"));
-				 corso.setStato(StatoUtility.parserTipoCarta(rs.getInt("stato")));
-				 i.setCorso(corso);
-				 temp.addIscrizione(i);
-			}
+		managerCarta= new CartaDiCreditoManager();
+		managerCorso= new CorsoManager();
+		managerIscrizione= new IscrizioneManager();
+
+		//temp=doRetrieveByKey(email); //recupero l'account
+		temp.setPassword(""); //elimino la password
+		managerCarta.retrieveByAccount(temp); //recupero la carta
+		managerCorso.retrieveByCreatore(temp); //recupero gli account da lui creati
+		managerIscrizione.getIscrizioniUtente(temp); //recupero gli account a cui è iscritto
 			
-		}finally {
-			if(preparedStatement!=null)
-				preparedStatement.close();
-		}
 		return temp;
 	}
 	
 	/**
-	 * Registra un nuovo utente
+	 * Effettua il login di un supervisore
+	 * @param email
+	 * @param password
+	 * @return
+	 * @throws DatiErratiException
+	 * @throws SQLException
+	 * @throws NotFoundException
+	 * @throws NoPermissionException
+	 */
+	public AccountBean loginSupervisore(String email,String password) throws DatiErratiException, SQLException, NotFoundException, NoPermissionException {
+		AccountBean temp=doRetrieveByKey(email); //NotFoundException se non esiste
+		if(temp.getTipo().equals(Ruolo.Utente)) throw new NoPermissionException("Non puoi accedere a questa funzionalità");
+		if(temp.getPassword().equals(password)) throw new DatiErratiException(); 
+		
+		temp=doRetrieveByKey(email); //recupero l'account
+		temp.setPassword(""); //elimino la password
+		managerCorso.doRetrieveBySupervisore(temp); //recupero i corsi supervisionati
+		
+		return temp;
+	}
+	
+	/**
+	 * Registra un nuovo utente con la propria carta
 	 * @param user
 	 * @return
+	 * @throws NotWellFormattedException 
+	 * @throws AlreadyExistingException 
+	 * @throws SQLException 
 	 * @throws Exception 
 	 */
-	public void setRegistration(AccountBean user) throws Exception {
-		if(checkMail(user.getMail())) throw new Exception("Questo account esiste già");
+	public void setRegistration(AccountBean user) throws NotWellFormattedException, AlreadyExistingException, SQLException {
+		if(!isWellFormatted(user)) throw new NotWellFormattedException("Dati non corretti");
+		if(checkMail(user.getMail())) throw new AlreadyExistingException("Questo account esiste già");
+		managerCarta= new CartaDiCreditoManager();
 		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
@@ -242,8 +213,8 @@ public class AccountManager {
 		String sql="INSERT INTO Account VALUES(?,?,?,?,?,?)";
 		try {
 			connection=dataSource.getConnection();
+			connection.setAutoCommit(false);
 			preparedStatement= connection.prepareStatement(sql);
-			
 			preparedStatement.setString(1, user.getNome());
 			preparedStatement.setString(2, user.getCognome());
 			preparedStatement.setString(3, user.getPassword());
@@ -252,13 +223,22 @@ public class AccountManager {
 			preparedStatement.setBoolean(6, user.getVerificato());
 			System.out.println("Registrazione Utente: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
+			managerCarta.registerCard(user.getCarta()); //inserisco la carta
 			connection.commit();
-		} finally {
-				if (preparedStatement != null)
-					preparedStatement.close();
+		}catch(SQLException e) {
+			connection.rollback();
+		}finally {
+				try{
+					if (preparedStatement != null)
+						preparedStatement.close();
+				}finally {
+					dataSource.close();
+				}		
 		}
 	}
 	
+	
+
 	/**
 	 * Verifica se un certo utente esiste già nel database
 	 * @param email la mail da verificare
@@ -274,6 +254,40 @@ public class AccountManager {
 			return false;
 		}
 		
+	}
+	
+	/**
+	 * Controlla se un account ha dati corretti
+	 * Non testa la password dato che si tratta di utenti in sessione
+	 * Ma non so se serva realmente
+	 * @param account
+	 * @return
+	 * @throws SQLException 
+	 */
+	public boolean checkAccount(AccountBean account) throws SQLException {
+		Connection connection=null;
+		PreparedStatement preparedStatement=null;
+		ResultSet rs;
+		
+		String sql="SELECT email FROM Account WHERE email=?, nome=?, cognome=?, tipo=?, verificato=?";		
+		try {
+			connection=dataSource.getConnection();
+			preparedStatement= connection.prepareStatement(sql);
+			preparedStatement.setString(1, account.getMail());
+			preparedStatement.setString(2, account.getNome());
+			preparedStatement.setString(3, account.getCognome());
+			preparedStatement.setInt(4, RuoloUtility.ruoloParser(account.getTipo()));
+			preparedStatement.setBoolean(5, account.getVerificato());
+			rs= preparedStatement.executeQuery();
+		}finally {
+			try {
+			if(preparedStatement!=null)
+				preparedStatement.close();
+			}finally {
+				dataSource.close();
+			}
+		}
+		return rs.next();
 	}
 
 	/**
@@ -298,10 +312,32 @@ public class AccountManager {
 	  * @return
 	  */
 	public boolean checkPassword(String password, String email) {
-		return false;
-		
+		return true;
 	}
 	
+	/**
+	 * Controlla che un account sia ben formattato
+	 * @param account
+	 */
+	public boolean isWellFormatted(AccountBean account) {
+//		if(account.getTipo()!=null) {
+//			if(account.getTipo().equals(Ruolo.Utente)) 
+//				if(account.getCorsiDaSupervisionare()!=null || account.getCarta()==null)
+//					return false;
+//			else
+//				if(account.getIscrizioni()!=null || account.getCommentiScritti()!=null || 
+//						account.getCorsiTenuti()!=null || account.getCarta()==null)
+//					return false;
+			String nome=account.getNome();
+			String cognome=account.getCognome();
+			String password=account.getPassword();
+			return nome.matches("^[a-zA-Z]{2,20}") && 
+				   cognome.matches("^[a-zA-Z]{2,20}") &&
+				   password.matches("^[a-zA-Z0-9]{5,30}") && account.getTipo()!=null;
+//			}
+//		else 
+//			return false;
+	}
 
 	
 }
