@@ -21,6 +21,7 @@ public class CorsoBean {
 	private Date dataFine;
 	private int nIscritti;
 	private int nLezioni;
+	private int prezzo;
 	private String copertina;
 	private Integer idCorso;
 	private AccountBean docente;
@@ -156,7 +157,7 @@ public class CorsoBean {
 	 * @return int : idCorso
 	 */
 	
-	public int getIdCorso() {
+	public Integer getIdCorso() {
 		return idCorso;
 	}
 
@@ -165,7 +166,7 @@ public class CorsoBean {
 	 * @param int idCorso
 	 */
 	
-	public void setIdCorso(int idCorso) {
+	public void setIdCorso(Integer idCorso) {
 		this.idCorso = idCorso;
 	}
 
@@ -314,6 +315,15 @@ public class CorsoBean {
 	}
 	
 	/**
+	 * Ritorna le lezioni collegte al corso
+	 * @return
+	 */
+	public Collection<LezioneBean> getLezioni() {
+		return lezioni;
+	}
+	
+	
+	/**
 	 * Aggiunte una collezione di lezioni alla collezione di lezioni associata al corso.
 	 * @param Collection<LezioneBean> newLezioni
 	 */
@@ -355,6 +365,14 @@ public class CorsoBean {
 
 	public void setnLezioni(int nLezioni) {
 		this.nLezioni = nLezioni;
+	}
+
+	public int getPrezzo() {
+		return prezzo;
+	}
+
+	public void setPrezzo(int prezzo) {
+		this.prezzo = prezzo;
 	}
 
 

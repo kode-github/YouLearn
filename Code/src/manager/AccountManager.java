@@ -316,6 +316,47 @@ public class AccountManager {
 //			return false;
 	}
 
+	/**
+	 * Recupero il supervisore con il minor numero di corsi da supervisionare
+	 * @return
+	 * @throws SQLException
+	 */
+	public AccountBean retrieveLessUsedSupervisor() throws SQLException {
+		Connection connection=null;
+		PreparedStatement statement=null;
+		AccountBean temp= new AccountBean();
+		
+		String sql="select * from(\r\n" + 
+				"	select email,account.nome,cognome,tipo,verificato,count(idCorso) as numero\r\n" + 
+				"	from account,corso	\r\n" + 
+				"	where tipo='Supervisore' AND email=accountSupervisore\r\n" + 
+				"	group by email) as t\r\n" + 
+				"	where numero=(select min(numero2) \r\n" + 
+				"			  from (\r\n" + 
+				"					select email,count(idCorso) as numero2\r\n" + 
+				"					from account ,corso	\r\n" + 
+				"					where tipo='Supervisore' AND email=accountSupervisore \r\n" + 
+				"                    group by email) as v) ";
+		try {
+			connection=dataSource.getConnection();
+			statement=connection.prepareStatement(sql);
+			ResultSet rs=statement.executeQuery();
+			temp.setNome(rs.getString("Nome"));
+			temp.setCognome(rs.getString("Cognome"));
+			temp.setTipo(RuoloUtility.ruoloParser(rs.getInt("tipo")));
+			temp.setMail(rs.getString("Email"));
+			temp.setVerificato(rs.getBoolean("Verificato"));
+		}finally {
+			try{
+				if(statement!=null)
+					statement.close();
+			}finally {
+				connection.close();
+			}
+		}
+		return temp;
+	}
+
 
 
 	
