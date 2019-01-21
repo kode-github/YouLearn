@@ -8,11 +8,11 @@ import javax.naming.NoPermissionException;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import bean.AccountBean;
 import bean.CartaDiCreditoBean;
+import bean.CartaDiCreditoBean.CartaEnum;
 import bean.AccountBean.Ruolo;
 import exception.AlreadyExistingException;
 import exception.NotFoundException;
 import exception.NotWellFormattedException;
-import utility.CartaEnumUtility;
 
 public class CartaDiCreditoManager {
 
@@ -51,12 +51,17 @@ public class CartaDiCreditoManager {
 			temp.setNumeroCarta(rs.getString("NumeroCarta"));
 			temp.setMeseScadenza(rs.getString("MeseScadenza"));
 			temp.setAnnoScadenza(rs.getString("AnnoScadenza"));
-			temp.setTipo(CartaEnumUtility.parserTipoCarta(rs.getInt("tipo")));
+			temp.setTipo(CartaEnum.valueOf(rs.getString("tipo")));
 			temp.setAccount(accountManager.doRetrieveByKey(rs.getString("accountMail")));
 			
 		}finally {
-			if(preparedStatement!=null)
-				preparedStatement.close();
+			try{
+				if(preparedStatement!=null)
+					preparedStatement.close();
+			}finally {
+				connection.close();
+			}
+				
 		}
 		
 		return temp;
@@ -73,7 +78,7 @@ public class CartaDiCreditoManager {
 	 */
 	public void registerCard(CartaDiCreditoBean carta) throws SQLException, NotWellFormattedException, AlreadyExistingException, NoPermissionException {
 		if(!isWellFormatted(carta)) throw new NotWellFormattedException("La carta non è formattata bene");
-		if(!checkCarta(carta.getNumeroCarta())) throw new AlreadyExistingException("La carta esiste già");
+		if(checkCarta(carta.getNumeroCarta())) throw new AlreadyExistingException("La carta esiste già");
 		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
@@ -87,7 +92,7 @@ public class CartaDiCreditoManager {
 			preparedStatement.setString(2, carta.getNumeroCarta());
 			preparedStatement.setString(3, carta.getMeseScadenza());
 			preparedStatement.setString(4, carta.getAnnoScadenza());
-			preparedStatement.setInt(5, CartaEnumUtility.parserTipoCarta(carta.getTipo()));
+			preparedStatement.setString(5, carta.getTipo().toString());
 			System.out.println("doSave: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
 			connection.commit();
@@ -99,7 +104,7 @@ public class CartaDiCreditoManager {
 				if (preparedStatement != null)
 					preparedStatement.close();
 			} finally {
-				dataSource.close();
+				connection.close();
 			}
 		}
 	}
@@ -112,9 +117,11 @@ public class CartaDiCreditoManager {
 	 * @throws NotFoundException 
 	 * @throws AlreadyExistingException 
 	 * @throws NoPermissionException 
+	 * @throws NotWellFormattedException 
 	 * @throws Exception
 	 */
-	public void modifyCard(CartaDiCreditoBean newCarta,String numeroCarta) throws SQLException, NotFoundException, AlreadyExistingException, NoPermissionException {
+	public void modifyCard(CartaDiCreditoBean newCarta,String numeroCarta) throws SQLException, NotFoundException, AlreadyExistingException, NoPermissionException, NotWellFormattedException {
+		if(!isWellFormatted(newCarta)) throw new NotWellFormattedException("La carta non è ben formattata");
 		if(!checkCarta(numeroCarta)) throw new NotFoundException("La carta da modificare non esiste");
 		if(checkCarta(newCarta.getNumeroCarta())) throw new AlreadyExistingException("La carta inserita esiste già");
 		
@@ -131,7 +138,7 @@ public class CartaDiCreditoManager {
 			preparedStatement.setString(5, newCarta.getNomeIntestatario());
 			preparedStatement.setString(3, newCarta.getMeseScadenza());
 			preparedStatement.setString(2, newCarta.getAnnoScadenza());
-			preparedStatement.setInt(4, CartaEnumUtility.parserTipoCarta(newCarta.getTipo()));
+			preparedStatement.setString(4, newCarta.getTipo().toString());
 			preparedStatement.setString(6, newCarta.getAccount().getMail());
 			preparedStatement.setString(7, newCarta.getNumeroCarta());
 			preparedStatement.executeUpdate();
@@ -149,14 +156,27 @@ public class CartaDiCreditoManager {
 	 * @throws SQLException 
 	 * @throws NoPermissionException 
 	 */
-	private boolean checkCarta(String numeroCarta) throws SQLException, NoPermissionException {
-		try {
-			doRetrieveByKey(numeroCarta);
-			return true;
-		}catch(NotFoundException e) {
-			return false;
-		}
+	private boolean checkCarta(String numeroCarta) throws SQLException {
+		Connection connection=null;
+		PreparedStatement preparedStatement=null;
 		
+		String sql="SELECT numeroCarta FROM CartaDiCredito WHERE numeroCarta=?";		
+		try {
+			connection=dataSource.getConnection();
+			preparedStatement= connection.prepareStatement(sql);
+			preparedStatement.setString(1, numeroCarta);
+			System.out.println("Query: " + preparedStatement.toString());
+			ResultSet rs= preparedStatement.executeQuery();
+			
+			return rs.next();
+		}finally {
+			try{
+				if(preparedStatement!=null)
+					preparedStatement.close();
+			}finally {
+				connection.close();
+			}
+		}
 	}
 	
 	
@@ -191,7 +211,7 @@ public class CartaDiCreditoManager {
 			temp.setNumeroCarta(rs.getString("NumeroCarta"));
 			temp.setMeseScadenza(rs.getString("MeseScadenza"));
 			temp.setAnnoScadenza(rs.getString("AnnoScadenza"));
-			temp.setTipo(CartaEnumUtility.parserTipoCarta(rs.getInt("tipo")));
+			temp.setTipo(CartaEnum.valueOf(rs.getString("tipo")));
 			temp.setAccount(account);
 		}finally {
 			if(preparedStatement!=null)

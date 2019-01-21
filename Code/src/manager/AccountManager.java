@@ -11,14 +11,7 @@ import org.apache.tomcat.jdbc.pool.DataSource;
 
 import bean.AccountBean;
 import bean.AccountBean.Ruolo;
-import bean.CartaDiCreditoBean;
-import bean.CorsoBean;
-import bean.IscrizioneBean;
-import connection.DriverManagerConnectionPool;
 import exception.*;
-import utility.CartaEnumUtility;
-import utility.RuoloUtility;
-import utility.StatoUtility;
 
 public class AccountManager {
 	
@@ -59,7 +52,7 @@ public class AccountManager {
 			temp.setNome(rs.getString("Nome"));
 			temp.setCognome(rs.getString("Cognome"));
 			temp.setPassword(rs.getString("Password"));
-			temp.setTipo(RuoloUtility.ruoloParser(rs.getInt("tipo")));
+			temp.setTipo(Ruolo.valueOf(rs.getString("tipo")));
 			temp.setMail(rs.getString("Email"));
 			temp.setVerificato(rs.getBoolean("Verificato"));
 		}finally {
@@ -67,7 +60,7 @@ public class AccountManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				dataSource.close();
+				connection.close();
 			}
 		}
 		return temp;
@@ -83,7 +76,7 @@ public class AccountManager {
 	 * @throws NoPermissionException 
 	 */
 	public void modificaPassword(String email, String pass) throws SQLException, NotFoundException, NoPermissionException {
-		if(!checkMail(email)) throw new NotFoundException("L'account non esiste");//necessario?
+		if(!checkMail(email)) throw new NotFoundException("L'account non esiste");
 		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -104,7 +97,7 @@ public class AccountManager {
 					if (preparedStatement != null)
 						preparedStatement.close();
 				}finally {
-					dataSource.close();
+					connection.close();
 				}		
 		}
 		
@@ -140,7 +133,7 @@ public class AccountManager {
 				if (preparedStatement != null)
 					preparedStatement.close();
 			} finally {
-				dataSource.close();
+				connection.close();
 			}
 		}
 		
@@ -155,16 +148,17 @@ public class AccountManager {
 	 * @throws NotFoundException 
 	 * @throws DatiErratiException 
 	 * @throws NoPermissionException 
+	 * @throws NotWellFormattedException 
 	 */
-	public AccountBean login(String email, String password) throws SQLException, NotFoundException, DatiErratiException, NoPermissionException {
+	public AccountBean login(String email, String password) throws SQLException, NotFoundException, DatiErratiException, NoPermissionException, NotWellFormattedException {
 		AccountBean temp=doRetrieveByKey(email); //NotFoundException se non esiste
-		if(temp.getPassword().equals(password)) throw new DatiErratiException(); 
+		if(temp.getPassword().equals(password)) throw new DatiErratiException("Le password non corrispondono"); 
 		
 		managerCarta= new CartaDiCreditoManager();
 		managerCorso= new CorsoManager();
 		managerIscrizione= new IscrizioneManager();
 
-		temp.setPassword(""); //elimino la password
+		temp.setPassword(""); //elimino la password in quanto va inserito in sessione
 		if(temp.getTipo().equals(Ruolo.Utente)) {
 			managerCarta.retrieveByAccount(temp); //recupero la carta
 			managerCorso.retrieveByCreatore(temp); //recupero gli account da lui creati
@@ -176,6 +170,7 @@ public class AccountManager {
 			
 		return temp;
 	}
+	
 	/**
 	 * Registra un nuovo utente con la propria carta
 	 * @param user
@@ -203,7 +198,7 @@ public class AccountManager {
 			preparedStatement.setString(2, user.getCognome());
 			preparedStatement.setString(3, user.getPassword());
 			preparedStatement.setString(4, user.getMail());
-			preparedStatement.setInt(5, RuoloUtility.ruoloParser(user.getTipo()));
+			preparedStatement.setString(5, user.getTipo().toString());
 			preparedStatement.setBoolean(6, user.getVerificato());
 			System.out.println("Registrazione Utente: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
@@ -216,7 +211,7 @@ public class AccountManager {
 					if (preparedStatement != null)
 						preparedStatement.close();
 				}finally {
-					dataSource.close();
+					connection.close();
 				}		
 		}
 	}
@@ -224,7 +219,7 @@ public class AccountManager {
 	
 
 	/**
-	 * Verifica se un certo utente esiste giï¿½ nel database
+	 * Verifica se un certo utente esiste già nel database
 	 * @param email la mail da verificare
 	 * @return
 	 * @throws SQLException 
@@ -232,13 +227,27 @@ public class AccountManager {
 	 * @throws NotFoundException 
 	 */
 	public boolean checkMail(String email) throws SQLException, NoPermissionException {
-		try {
-			doRetrieveByKey(email);
-			return true;
-		} catch (NotFoundException e) {
-			return false;
-		}
+		Connection connection=null;
+		PreparedStatement preparedStatement=null;
 		
+		String sql="SELECT email FROM Account WHERE email=?";		
+		try {
+			connection=dataSource.getConnection();
+			preparedStatement= connection.prepareStatement(sql);
+			preparedStatement.setString(1, email);
+			System.out.println("CheckMail: " + preparedStatement.toString());
+			
+			ResultSet rs= preparedStatement.executeQuery();
+			
+			return rs.next();
+		}finally {
+			try {
+			if(preparedStatement!=null)
+				preparedStatement.close();
+			}finally {
+				connection.close();
+			}
+		}
 	}
 	
 	/**
@@ -261,7 +270,7 @@ public class AccountManager {
 			preparedStatement.setString(1, account.getMail());
 			preparedStatement.setString(2, account.getNome());
 			preparedStatement.setString(3, account.getCognome());
-			preparedStatement.setInt(4, RuoloUtility.ruoloParser(account.getTipo()));
+			preparedStatement.setString(4, account.getTipo().toString());
 			preparedStatement.setBoolean(5, account.getVerificato());
 			rs= preparedStatement.executeQuery();
 		}finally {
@@ -269,31 +278,16 @@ public class AccountManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				dataSource.close();
+				connection.close();
 			}
 		}
 		return rs.next();
 	}
-//
-//	/**
-//	 * Controlla se un account ï¿½ Utente o Supervisore
-//	 * @param email
-//	 * @return 0=Utente  1=Supervisore
-//	 * @throws SQLException Errore di connessione al DB
-//	 * @throws NotFoundException 
-//	 * @throws NoPermissionException 
-//	 */
-//	public int checkTipoUser(String email) throws SQLException, NotFoundException, NoPermissionException {
-//		AccountBean account=doRetrieveByKey(email);
-//		if(account.getTipo().equals(Ruolo.Utente))
-//			return 0;
-//		else
-//			return 1;
-//	}
 	
 	
 	/**
 	 * Controlla che un account sia ben formattato
+	 * TODO Da controllare
 	 * @param account
 	 */
 	public boolean isWellFormatted(AccountBean account) {
@@ -302,14 +296,14 @@ public class AccountManager {
 //				if(account.getCorsiDaSupervisionare()!=null || account.getCarta()==null)
 //					return false;
 //			else
-//				if(account.getIscrizioni()!=null || account.getCommentiScritti()!=null || 
+//				if(account.getIscrizioni()!=null  || 
 //						account.getCorsiTenuti()!=null || account.getCarta()==null)
 //					return false;
 			String nome=account.getNome();
 			String cognome=account.getCognome();
 			String password=account.getPassword();
-			return nome.matches("^[a-zA-Z]{2,20}") && 
-				   cognome.matches("^[a-zA-Z]{2,20}") &&
+			return nome!=null && nome.matches("^[a-zA-Z]{2,20}") && cognome!=null &&
+				   cognome.matches("^[a-zA-Z]{2,20}") && password!=null &&
 				   password.matches("^[a-zA-Z0-9]{5,30}") && account.getTipo()!=null;
 //			}
 //		else 
@@ -343,7 +337,7 @@ public class AccountManager {
 			ResultSet rs=statement.executeQuery();
 			temp.setNome(rs.getString("Nome"));
 			temp.setCognome(rs.getString("Cognome"));
-			temp.setTipo(RuoloUtility.ruoloParser(rs.getInt("tipo")));
+			temp.setTipo(Ruolo.valueOf(rs.getString("tipo")));
 			temp.setMail(rs.getString("Email"));
 			temp.setVerificato(rs.getBoolean("Verificato"));
 		}finally {
@@ -356,8 +350,5 @@ public class AccountManager {
 		}
 		return temp;
 	}
-
-
-
 	
 }

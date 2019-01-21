@@ -14,8 +14,6 @@ import bean.IscrizioneBean;
 import bean.AccountBean.Ruolo;
 import exception.AlreadyExistingException;
 import exception.NotFoundException;
-import sun.nio.cs.ext.ISCII91;
-import utility.RuoloUtility;
 
 public class IscrizioneManager {
 
@@ -137,6 +135,7 @@ public class IscrizioneManager {
 				iscrizione.setCorso(corso); //aggiungo il corso
 				AccountBean account=accountManager.doRetrieveByKey(rs.getString("accountMail")); //recupero l'account
 				iscrizione.setAccount(account); //aggiungo iscrizione all'account e viceversa
+				iscrizione.setCorso(corso); //aggiungo all'iscrizione il corso e viceversa
 				collection.add(iscrizione);
 			}
 			connection.commit();

@@ -7,31 +7,30 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 import org.apache.tomcat.jdbc.pool.DataSource;
-
-import bean.AccountBean;
 import bean.CommentoBean;
 import bean.CorsoBean;
 import bean.LezioneBean;
-import bean.AccountBean.Ruolo;
-import connection.DriverManagerConnectionPool;
 import exception.NotFoundException;
+import exception.NotWellFormattedException;
 
 public class LezioneManager {
 	
 	DataSource dataSource;
+	AccountManager accountManager;
+	CorsoManager corsoManager;
 	
 	public LezioneManager() {
 		dataSource=new DataSource();
 	}
 
 	/**
-	 * Recupera un commento e le PK delle entità relate
+	 * TODO Non viene mai usato, ma va controllato
 	 * @param id PK di commento
 	 * @return Commento
 	 * @throws SQLException
 	 * @throws NotFoundException
 	 */
-	public CommentoBean retrieveCommento(int id) throws SQLException, NotFoundException {
+	public CommentoBean retrieveCommentoById(int id) throws SQLException, NotFoundException {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		CommentoBean temp=new CommentoBean();
@@ -41,7 +40,7 @@ public class LezioneManager {
 			connection=dataSource.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setInt(1, id);
-			System.out.println("Query: " + preparedStatement.toString());
+			System.out.println("retrieveCommento: " + preparedStatement.toString());
 			
 			ResultSet rs= preparedStatement.executeQuery();
 			
@@ -62,15 +61,21 @@ public class LezioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				dataSource.close();
+				connection.close();
 			}
 		}
 		return temp;
 	
 	}
 	
+	/**
+	 * Elimina un commento
+	 * @param code
+	 * @return
+	 * @throws Exception
+	 */
 	public boolean delCommento(int code) throws Exception {
-		if(!checkCommento(code)) throw new Exception("Questo commento non esiste");
+		if(!checkCommento(code)) throw new NotFoundException("Questo commento non esiste");
 		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -92,24 +97,49 @@ public class LezioneManager {
 				if (preparedStatement != null)
 					preparedStatement.close();
 			} finally {
-				dataSource.close();
+				connection.close();
 			}
 		}
 		return (result != 0);
 	}
 
-	private boolean checkCommento(int code) {
-		try{
-			CommentoBean c=retrieveCommento(code);
-			return true;
-		}catch(Exception e){ //e se ha un errore di connessione, invece?
-			return false;
+	/**
+	 * Controlla se un commento esiste nel database
+	 * @param code
+	 * @return
+	 * @throws SQLException
+	 */
+	private boolean checkCommento(int code) throws SQLException {
+		Connection connection=null;
+		PreparedStatement preparedStatement=null;
+		
+		String sql="SELECT* FROM commento WHERE id=?";		
+		try {
+			connection=dataSource.getConnection();
+			preparedStatement= connection.prepareStatement(sql);
+			preparedStatement.setInt(1, code);
+			System.out.println("Query: " + preparedStatement.toString());
+			return (preparedStatement.executeQuery()).next();
+		}finally {
+			try {
+			if(preparedStatement!=null)
+				preparedStatement.close();
+			}finally {
+				connection.close();
+			}
 		}
 		
 	}
 
-	public void insCommento(CommentoBean product) throws Exception {
-		if(checkCommento(product.getIdCommento())) throw new Exception("Esiste già questo commento");
+	/**
+	 * Inserisce un nuovo commento nel database
+	 * @param product
+	 * @throws SQLException 
+	 * @throws Exception
+	 */
+	public void insCommento(CommentoBean product) throws NotWellFormattedException, SQLException {
+		if(product.getIdCommento()!=null || !commentoIsWellFormatted(product)) throw new NotWellFormattedException("Il commento non"
+																					+ "è ben formattato");
 		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
@@ -132,47 +162,52 @@ public class LezioneManager {
 				if (preparedStatement != null)
 					preparedStatement.close();
 			} finally {
-				dataSource.close();
+				connection.close();
 			}
 		}
 
 	}
 	
-	public Collection<CommentoBean> retrieveCommentiByCorso(int nLezione,int idCorso) throws SQLException,NotFoundException {
+	/**
+	 * Recupera i commenti di una lezione
+	 * @param nLezione
+	 * @param idCorso
+	 * @return
+	 * @throws SQLException
+	 * @throws NotFoundException
+	 * @throws NotWellFormattedException 
+	 */
+	public Collection<CommentoBean> retrieveCommentiByLezione(LezioneBean lezione) throws SQLException,NotFoundException, NotWellFormattedException {
+		if(!lezioneIsWellFormatted(lezione) ) throw new NotWellFormattedException("La lezione non è ben formattata");
+		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
-		CommentoBean temp= new CommentoBean();
 		Collection<CommentoBean> list= new LinkedList<>();
 		
 		String sql="SELECT* FROM commento WHERE numeroLezione=? AND corsoIdCorso=?";		
 		try {
 			connection=dataSource.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
-			preparedStatement.setInt(1, nLezione);
-			preparedStatement.setInt(2, idCorso);
-			System.out.println("Query: " + preparedStatement.toString());
+			preparedStatement.setInt(1, lezione.getNumeroLezione());
+			preparedStatement.setInt(2, lezione.getCorso().getIdCorso());
+			System.out.println("retrieveCommentiByLezione: " + preparedStatement.toString());
 			
 			ResultSet rs= preparedStatement.executeQuery();
 			
-			if(!rs.next()) throw new NotFoundException("Non esiste questa lezione o questo corso"); //controllo che esista la lezione
-			do {
+			while(rs.next()) {
+				CommentoBean temp= new CommentoBean();
 				temp.setIdCommento(rs.getInt("idCommento"));
 				temp.setTesto(rs.getString("Testo"));
-				//Creo la lezione con la sola PK
-				LezioneBean l= new LezioneBean();
-				l.setNumeroLezione(rs.getInt("NumeroLezione"));
-				CorsoBean corso= new CorsoBean();
-				corso.setIdCorso(rs.getInt("IdCorso"));
-				l.setCorso(corso);
-				temp.setLezione(l);
+				temp.setLezione(lezione);
+				temp.setAccountCreatore(accountManager.doRetrieveByKey(rs.getString("accountCreatore")));
 				list.add(temp);
-			}while(rs.next());
+			}
 		}finally {
 			try {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				dataSource.close();
+				connection.close();
 			}
 		}
 		return list;
@@ -180,7 +215,15 @@ public class LezioneManager {
 
 	public Collection<LezioneBean> retrieveLezioniByCorso(CorsoBean corso) {
 		return null;
-		// TODO Auto-generated method stub
+	}
+	
+	public boolean commentoIsWellFormatted(CommentoBean commento) {
+		return false;
+		
+	}
+	
+	public boolean lezioneIsWellFormatted(LezioneBean lezione) {
+		return false;
 		
 	}
 	

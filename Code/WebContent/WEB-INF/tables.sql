@@ -1,15 +1,15 @@
 CREATE DATABASE  IF NOT EXISTS `youlearndb` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `youlearndb`;
--- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.13, for Win64 (x86_64)
 --
 -- Host: localhost    Database: youlearndb
 -- ------------------------------------------------------
--- Server version	5.7.20-log
+-- Server version	8.0.13
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+ SET NAMES utf8 ;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -23,13 +23,13 @@ USE `youlearndb`;
 
 DROP TABLE IF EXISTS `account`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `account` (
   `nome` varchar(25) NOT NULL,
   `cognome` varchar(25) NOT NULL,
   `password` varchar(45) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `tipo` int(10) NOT NULL,
+  `tipo` varchar(30) NOT NULL,
   `verificato` tinyint(1) NOT NULL,
   PRIMARY KEY (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -41,7 +41,6 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES ('Luigi','Crisci','Epsondx4400','t',0,0),('Luigi','Ferri','Epson_dx4400','y',0,0);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -51,12 +50,12 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `cartadicredito`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `cartadicredito` (
   `numeroCarta` varchar(16) NOT NULL,
   `meseScadenza` varchar(20) NOT NULL,
   `annoScadenza` varchar(20) NOT NULL,
-  `tipo` int(10) NOT NULL,
+  `tipo` varchar(30) NOT NULL,
   `nomeIntestatario` varchar(50) NOT NULL,
   `accountMail` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`numeroCarta`),
@@ -71,7 +70,6 @@ CREATE TABLE `cartadicredito` (
 
 LOCK TABLES `cartadicredito` WRITE;
 /*!40000 ALTER TABLE `cartadicredito` DISABLE KEYS */;
-INSERT INTO `cartadicredito` VALUES ('1','1998/02/02','1998/02/02',2,'qq','t');
 /*!40000 ALTER TABLE `cartadicredito` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -81,7 +79,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `commento`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `commento` (
   `idcommento` int(11) NOT NULL,
   `NumeroLezione` int(11) DEFAULT NULL,
@@ -92,7 +90,7 @@ CREATE TABLE `commento` (
   KEY `b_idx` (`IdCorso`,`NumeroLezione`),
   KEY `creatore_idx` (`AccountMail`),
   CONSTRAINT `creatore` FOREIGN KEY (`AccountMail`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `lezione` FOREIGN KEY (`IdCorso`, `NumeroLezione`) REFERENCES `lezione` (`corsoIdCorso`, `numeroLezione`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `lezione` FOREIGN KEY (`IdCorso`, `NumeroLezione`) REFERENCES `lezione` (`corsoidcorso`, `numerolezione`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -111,7 +109,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `corso`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `corso` (
   `idCorso` int(11) NOT NULL AUTO_INCREMENT,
   `accountCreatore` varchar(255) NOT NULL,
@@ -140,7 +138,6 @@ CREATE TABLE `corso` (
 
 LOCK TABLES `corso` WRITE;
 /*!40000 ALTER TABLE `corso` DISABLE KEYS */;
-INSERT INTO `corso` VALUES (1,'t','t','l','l','1985-02-02','1555-02-02','a','89','0','s',1,0),(2,'y','t','o','o','1985-02-02','1555-02-02','b','78','0','s',0,0);
 /*!40000 ALTER TABLE `corso` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -150,7 +147,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `iscrizione`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `iscrizione` (
   `accountMail` varchar(255) NOT NULL,
   `corsoIdCorso` int(11) NOT NULL,
@@ -161,7 +158,7 @@ CREATE TABLE `iscrizione` (
   UNIQUE KEY `fattura` (`fattura`),
   KEY `iscrizione_ibfk_2` (`corsoIdCorso`),
   CONSTRAINT `iscrizione_ibfk_1` FOREIGN KEY (`accountMail`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `iscrizione_ibfk_2` FOREIGN KEY (`corsoIdCorso`) REFERENCES `corso` (`idCorso`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `iscrizione_ibfk_2` FOREIGN KEY (`corsoIdCorso`) REFERENCES `corso` (`idcorso`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -171,7 +168,6 @@ CREATE TABLE `iscrizione` (
 
 LOCK TABLES `iscrizione` WRITE;
 /*!40000 ALTER TABLE `iscrizione` DISABLE KEYS */;
-INSERT INTO `iscrizione` VALUES ('t',1,'1958-02-02',45,11118),('t',2,'1987-02-02',45,8888);
 /*!40000 ALTER TABLE `iscrizione` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -181,14 +177,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `lezione`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `lezione` (
   `corsoIdCorso` int(11) NOT NULL,
   `nome` varchar(255) NOT NULL,
   `visualizzazione` int(32) NOT NULL,
   `numeroLezione` int(10) NOT NULL,
   PRIMARY KEY (`corsoIdCorso`,`numeroLezione`),
-  CONSTRAINT `lezione_ibfk_1` FOREIGN KEY (`corsoIdCorso`) REFERENCES `corso` (`idCorso`)
+  CONSTRAINT `lezione_ibfk_1` FOREIGN KEY (`corsoIdCorso`) REFERENCES `corso` (`idcorso`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -198,7 +194,6 @@ CREATE TABLE `lezione` (
 
 LOCK TABLES `lezione` WRITE;
 /*!40000 ALTER TABLE `lezione` DISABLE KEYS */;
-INSERT INTO `lezione` VALUES (1,'2',0,1);
 /*!40000 ALTER TABLE `lezione` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -210,8 +205,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `youlearndb`.`lezione_AFTER_INSERT` AFTER INSERT ON `lezione` FOR EACH ROW
-BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `lezione_AFTER_INSERT` AFTER INSERT ON `lezione` FOR EACH ROW BEGIN
 update corso 
     set nlezioni=nlezioni+1
     where corso.idCorso=NEW.corsoIdCorso;
@@ -230,8 +224,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `youlearndb`.`lezione_AFTER_DELETE` AFTER DELETE ON `lezione` FOR EACH ROW
-BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `lezione_AFTER_DELETE` AFTER DELETE ON `lezione` FOR EACH ROW BEGIN
 update corso 
     set nlezioni=nlezioni-1
     where corso.idCorso=OLD.corsoIdCorso;
@@ -259,4 +252,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-17 13:01:52
+-- Dump completed on 2019-01-21 23:39:41
