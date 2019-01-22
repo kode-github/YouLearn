@@ -38,126 +38,132 @@
     </div>
 
 
-    <div id="login-register">
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card card-5">
-                    <div class="card-header text-center" style="font-size: 30px;">LOGIN</div>
-                    <div class="card-body">
-                        <form class="login">
-                            <div class="form-group">
-                                <label for="exampleInputEmail">E-mail</label>
-                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                                    placeholder="Enter e-mail">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputPassword">Password</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                            </div>
-
-
-                            <button type="submit" class="btn btn-primary btn-lg btn-block">Accedi</button>
-
-
-                            <p style="margin-top:5px;">
-                                <a  data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                                    Hai dimenticato la password? Clicca qui! </a>
-
-                            </p>
-                            <div class="collapse" id="collapseExample">
-                                <div class="card card-body" style="margin-bottom:10px; text-align: center;">
-                                    <i class="fas fa-user-lock fa-5x"></i>
-                                    <label style="margin-top:5px;" for="inputEmailDimenticata">Problemi di accesso?</label>
-                                    <label for="inputEmailDimenticata">Inserisci la tua e-mail e ti invieremo un link per accedere di nuovo al tuo account.</label>
-                                    <input type="email" class="form-control" id="inputEmailDimenticata"
-                                        aria-describedby="emailHelp" placeholder="Inserisci la tua e-mail">
-                                </div>
-                                <button type="submit" class="btn btn-info btn-lg btn-block">Invia il link di accesso</button>
-                            </div>
-                        </form>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="col-lg-6">
-                <div class="card card-5">
-                    <div class="card-header text-center " style="font-size: 30px;">REGISTRAZIONE</div>
-                    <div class="card-body">
-
-                        <form class="register">
-                            <div class="form-group">
-                                <label for="InputName">Nome</label>
-                                <input type="text" class="form-control" id="InputName" aria-describedby="emailHelp"
-                                    placeholder="Nome">
-                            </div>
-                            <div class="form-group">
-                                <label for="InputCognome">Cognome</label>
-                                <input type="email" class="form-control" id="InputCognome" aria-describedby="emailHelp"
-                                    placeholder="Cognome">
-                            </div>
-                            <div class="form-group">
-                                <label for="InputEmailReg">Indirizzo e-mail</label>
-                                <input type="email" class="form-control" id="InputEmailReg" aria-describedby="emailHelp"
-                                    placeholder="Inserisci la tua e-mail">
-                                <small id="emailHelp" class="form-text text-muted">
-                                    Non condivideremo mai la tua e-mail con nessun altro.
-                                </small>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputPasswordReg">Password</label>
-                                <input type="password" class="form-control" id="exampleInputPasswordReg" placeholder="Password">
-                            </div>
-                            <div class="form-group">
-                                <label for="InputConfermaPassword">Conferma Password</label>
-                                <input type="password" class="form-control" id="InputConfermaPassword" placeholder="Conferma Password">
-                            </div>
-
-
-                            <p>
-                                <a class="btn btn-primary" data-toggle="collapse" href="#pagamento" role="button"
-                                    aria-expanded="false" aria-controls="collapseExample">
-                                    Dati Pagamento
-                                </a>
-                            </p>
-                            <div class="collapse" id="pagamento">
-
+   <section class="hero-section set-bg">
+        <div id="login-register">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card card-5">
+                        <div class="card-header text-center" style="font-size: 30px;">LOGIN</div>
+                        <div class="card-body">
+                            <form class="login">
                                 <div class="form-group">
-                                    <label for="InputNumeroCarta">Numero Carta</label>
-                                    <input type="text" class="form-control" id="InputNumeroCarta" placeholder="0000-0000-0000-0000"
-                                        maxlength="12">
+                                    <label for="exampleInputEmail">E-mail</label>
+                                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                                        placeholder="Enter e-mail">
                                 </div>
                                 <div class="form-group">
-                                    <label for="InputNomeIntestatario">Nome Intestatario</label>
-                                    <input type="text" class="form-control" id="InputNomeIntestatario" placeholder="Mario Rossi">
+                                    <label for="exampleInputPassword">Password</label>
+                                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
                                 </div>
-                                <div class="form-group">
-                                    <label for="InputTipoCarta">Tipo Carta</label>
-                                    <div class="dropdown">
-                                        <select class="form-control">
-                                            <option value="paypal">PayPal</option>
-                                            <option value="visa">Visa</option>
-                                            <option value="mastercard">MasterCard</option>
-                                        </select>
+
+
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">Accedi</button>
+
+
+                                <p style="margin-top:5px;">
+                                    <a data-toggle="collapse" href="#collapseExample" aria-expanded="false"
+                                        aria-controls="collapseExample">
+                                        Hai dimenticato la password? Clicca qui! </a>
+
+                                </p>
+                                <div class="collapse" id="collapseExample">
+                                    <div class="card card-body" style="margin-bottom:10px; text-align: center;">
+                                        <i class="fas fa-user-lock fa-5x"></i>
+                                        <label style="margin-top:5px;" for="inputEmailDimenticata">Problemi di accesso?</label>
+                                        <label for="inputEmailDimenticata">Inserisci la tua e-mail e ti invieremo un
+                                            link per accedere di nuovo al tuo account.</label>
+                                        <input type="email" class="form-control" id="inputEmailDimenticata"
+                                            aria-describedby="emailHelp" placeholder="Inserisci la tua e-mail">
                                     </div>
+                                    <button type="submit" class="btn btn-info btn-lg btn-block">Invia il link di
+                                        accesso</button>
+                                </div>
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="col-lg-6">
+                    <div class="card card-5">
+                        <div class="card-header text-center " style="font-size: 30px;">REGISTRAZIONE</div>
+                        <div class="card-body">
+
+                            <form class="register">
+                                <div class="form-group">
+                                    <label for="InputName">Nome</label>
+                                    <input type="text" class="form-control" id="InputName" aria-describedby="emailHelp"
+                                        placeholder="Nome">
                                 </div>
                                 <div class="form-group">
-                                    <label for="InputScadenzaCarta">Scadenza Carta</label>
-                                    <input type="text" class="form-control" id="InputScadenzaCarta" placeholder="3 cifre"
-                                        maxlength="3">
+                                    <label for="InputCognome">Cognome</label>
+                                    <input type="email" class="form-control" id="InputCognome" aria-describedby="emailHelp"
+                                        placeholder="Cognome">
+                                </div>
+                                <div class="form-group">
+                                    <label for="InputEmailReg">Indirizzo e-mail</label>
+                                    <input type="email" class="form-control" id="InputEmailReg" aria-describedby="emailHelp"
+                                        placeholder="Inserisci la tua e-mail">
+                                    <small id="emailHelp" class="form-text text-muted">
+                                        Non condivideremo mai la tua e-mail con nessun altro.
+                                    </small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPasswordReg">Password</label>
+                                    <input type="password" class="form-control" id="exampleInputPasswordReg"
+                                        placeholder="Password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="InputConfermaPassword">Conferma Password</label>
+                                    <input type="password" class="form-control" id="InputConfermaPassword" placeholder="Conferma Password">
                                 </div>
 
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-lg btn-block">Registrati</button>
-                        </form>
+
+                                <p>
+                                    <a class="btn btn-primary" data-toggle="collapse" href="#pagamento" role="button"
+                                        aria-expanded="false" aria-controls="collapseExample">
+                                        Dati Pagamento
+                                    </a>
+                                </p>
+                                <div class="collapse" id="pagamento">
+
+                                    <div class="form-group">
+                                        <label for="InputNumeroCarta">Numero Carta</label>
+                                        <input type="text" class="form-control" id="InputNumeroCarta" placeholder="0000-0000-0000-0000"
+                                            maxlength="12">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="InputNomeIntestatario">Nome Intestatario</label>
+                                        <input type="text" class="form-control" id="InputNomeIntestatario" placeholder="Mario Rossi">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="InputTipoCarta">Tipo Carta</label>
+                                        <div class="dropdown">
+                                            <select class="form-control">
+                                                <option value="paypal">PayPal</option>
+                                                <option value="visa">Visa</option>
+                                                <option value="mastercard">MasterCard</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="InputScadenzaCarta">Scadenza Carta</label>
+                                        <input type="text" class="form-control" id="InputScadenzaCarta" placeholder="3 cifre"
+                                            maxlength="3">
+                                    </div>
+
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">Registrati</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-    </div>
+        </div>
+    </section>
 
     <footer id="footer">
         <div class="icon-footer">

@@ -1,0 +1,42 @@
+body{
+
+    background-color: #eeeeee;
+
+}
+
+.card{
+
+    margin-top: 20px;
+
+}
+
+
+.card-header{
+    
+    text-align: center;
+    font-size: 50px;
+    font-weight: bolder;
+    background-color: #00adb5;
+    color: #eeeeee;
+
+
+}
+
+.card-body{
+
+    border: 1px solid black;
+    background-color: #393e46;
+
+
+
+}
+
+.informazioni-corso{
+
+    padding: 30px;
+    margin-left: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #eeeeee
+
+}

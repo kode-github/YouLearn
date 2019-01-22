@@ -1,0 +1,121 @@
+body {
+
+    font-family: 'Ubuntu', sans-serif;
+    background-color: #eeeeee;
+
+}
+
+.informazioni-utente-p {
+
+    display: block;
+    text-align: left;
+    font-size: 25px;
+
+
+}
+
+.top {
+    margin-top: 15px;
+
+}
+
+.utente-tab {
+
+    padding: 40px 0px;
+    text-align: center;
+    width: 340px;
+    height: 100%;
+
+}
+
+.utente-tab>.btn {
+
+    display: block;
+    margin-top: 10px;
+
+}
+
+.profile-img {
+
+    margin-bottom: 10px;
+    border-radius: 50%;
+}
+
+
+
+.card-utente{
+
+    padding: 5px 0px;
+    background-color: #00adb5;
+    color: #222831;
+    font-weight: bolder;
+}
+
+.card-b-utente{
+
+    padding: 5px 0px;
+    background-color: #393e46;
+    color: #eeeeee;
+
+}
+
+
+.card{
+
+    margin-top: 20px;
+    max-height: 900px;
+   overflow: auto;
+
+
+}
+
+.card-body{
+
+    border-bottom: 1px solid black;
+
+}
+
+.card-lista-attesa{
+
+    text-align: center;
+    font-size: 30px;
+    font-weight: bolder;
+
+}
+
+.corsi-tab{
+
+    margin-left: 382px;
+
+}
+.btn-utente {
+
+    background-color: #00adb5;
+    font-weight: bolder;
+    color: black;
+
+}
+
+ul{
+
+    padding: 30px;
+    font-size: 30px;
+    margin-left: 30px;
+    margin-top: 24px;
+
+}
+
+.img-corsi-attesa{
+
+    width: 250px;
+    height: 250px;
+
+}
+
+.btn{
+
+    padding: 20px;
+    margin-bottom: 10px;
+
+
+}

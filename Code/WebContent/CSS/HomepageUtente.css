@@ -1,0 +1,124 @@
+body {
+
+    font-family: 'Ubuntu', sans-serif;
+    background-color: #eeeeee;
+
+}
+
+.informazioni-utente-p {
+
+    display: block;
+    text-align: left;
+    font-size: 25px;
+
+
+}
+
+.top {
+    margin-top: 15px;
+
+}
+
+.utente-tab {
+
+    padding: 40px 0px;
+    text-align: center;
+    width: 340px;
+    height: 100%;
+
+}
+
+.corsi-tab{
+
+    margin-left: 382px;
+
+}
+
+p>span {
+
+    margin-left: 10px;
+
+}
+
+.utente-tab>.btn {
+
+    display: block;
+    margin-top: 10px;
+
+}
+
+.profile-img {
+
+    margin-bottom: 10px;
+    border-radius: 50%;
+}
+
+
+
+.card-utente{
+
+    padding: 5px 0px;
+    background-color: #00adb5;
+    color: #222831;
+    font-weight: bolder;
+}
+
+.card-b-utente{
+
+    padding: 5px 0px;
+    background-color: #393e46;
+    color: #eeeeee;
+
+}
+
+.border-primary {
+    border-color: #393e46 !important;
+
+}
+
+.btn-utente {
+
+    background-color: #00adb5;
+    font-weight: bolder;
+    color: black;
+
+}
+
+#carouselSlider {
+
+    margin: 10px;
+
+
+}
+
+.img-slider {
+
+    border-radius: 1%;
+
+
+}
+
+.card{
+
+    margin-top: 20px;
+    max-height: 700px
+
+
+}
+
+
+.card-h-corsi{
+
+    padding: 20px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: bolder;
+
+}
+
+.three-infromazioni{
+
+    padding: 20px;
+    text-align: center;
+
+}
