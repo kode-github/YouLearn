@@ -1,15 +1,19 @@
 package manager;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+
+import javax.servlet.http.Part;
+
 import org.apache.tomcat.jdbc.pool.DataSource;
 import bean.CommentoBean;
 import bean.CorsoBean;
 import bean.LezioneBean;
+import exception.DatiErratiException;
 import exception.NotFoundException;
 import exception.NotWellFormattedException;
 
@@ -23,6 +27,73 @@ public class LezioneManager {
 		dataSource=new DataSource();
 	}
 
+	public void insLezioniMultiple(ArrayList<LezioneBean> lezioni,ArrayList<Part> files) throws DatiErratiException {
+		if(lezioni.size()!=files.size()) throw new DatiErratiException("Non c'è un file per ogni lezione");
+		int i=0;
+		for(Part file: files) {
+			insLezione(lezioni.get(i),file);
+		}
+		
+	}
+	
+	private void insLezione(LezioneBean lezione,Part file) throws NotWellFormattedException, SQLException, DatiErratiException {
+		corsoManager= new CorsoManager();
+		if(!lezioneIsWellFormatted(lezione) || lezione.getCorso().getIdCorso()==null)  
+										throw new NotWellFormattedException("la lezione non è ben formattata");
+		if(checkLezione(lezione) || !corsoManager.checkCorso(lezione.getCorso().getIdCorso())) 
+										throw new DatiErratiException("la lezione esiste già o il corso non esiste");
+		
+	}
+	
+	public void delLezione(LezioneBean lezione) {
+		
+	}
+	
+	public boolean checkLezione(LezioneBean lezione) {
+		return true;
+	}
+	
+	/**
+	 * Recupera le lezioni di un corso (commenti esclusi)
+	 * @param corso
+	 * @return
+	 * @throws NotWellFormattedException 
+	 * @throws SQLException 
+	 */
+	public Collection<LezioneBean> retrieveLezioniByCorso(CorsoBean corso) throws NotWellFormattedException, SQLException{
+		corsoManager=new CorsoManager();
+		if(corso.getIdCorso()==null || !corsoManager.isWellFormatted(corso)) 
+								throw new NotWellFormattedException("Il corso non è ben formattato");
+		Connection connection=null;
+		PreparedStatement preparedStatement=null;
+		Collection<LezioneBean> collection=new LinkedList<LezioneBean>();
+		String sql="Select * from lezione where corsoIdCorso=?";
+		
+		try {
+			connection=dataSource.getConnection();
+			preparedStatement=connection.prepareStatement(sql);
+			preparedStatement.setInt(1, corso.getIdCorso());
+			ResultSet rs=preparedStatement.executeQuery();
+			
+			while(rs.next()) {
+				LezioneBean lezione=new LezioneBean();
+				lezione.setNome(rs.getString("nome"));
+				lezione.setNumeroLezione(rs.getInt("numeroLezioni"));
+				lezione.setVisualizzazioni(rs.getInt("visualizzazioni"));
+				lezione.setCorso(corso);
+				collection.add(lezione);
+			}
+		}finally {
+			try {
+			if(preparedStatement!=null)
+				preparedStatement.close();
+			}finally {
+				connection.close();
+			}
+		}
+		return collection;
+	}
+	
 	/**
 	 * TODO Non viene mai usato, ma va controllato
 	 * @param id PK di commento
@@ -213,9 +284,6 @@ public class LezioneManager {
 		return list;
 	}
 
-	public Collection<LezioneBean> retrieveLezioniByCorso(CorsoBean corso) {
-		return null;
-	}
 	
 	public boolean commentoIsWellFormatted(CommentoBean commento) {
 		return false;

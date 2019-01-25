@@ -38,8 +38,9 @@ public class CorsoManager {
 	 * @throws SQLException
 	 * @throws NotFoundException
 	 * @throws NoPermissionException 
+	 * @throws NotWellFormattedException 
 	 */
-	public CorsoBean doRetrieveByKey(int id) throws SQLException, NotFoundException, NoPermissionException {
+	public CorsoBean doRetrieveByKey(int id) throws SQLException, NotFoundException, NoPermissionException, NotWellFormattedException {
 		Connection connection=null;
 		PreparedStatement statement=null;
 		CorsoBean corso=new CorsoBean();
@@ -454,7 +455,7 @@ public class CorsoManager {
 	 * @return true se esiste il corso, false altrimenti
 	 * @throws SQLException 
 	 */
-	private boolean checkCorso(int idCorso) throws SQLException {
+	public boolean checkCorso(int idCorso) throws SQLException {
 		Connection connection=null;
 		PreparedStatement statement=null;
 		
