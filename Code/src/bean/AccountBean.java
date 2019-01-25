@@ -2,6 +2,7 @@ package bean;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 /***
  * 
@@ -31,9 +32,11 @@ public class AccountBean{
 		nome=cognome=password=mail="";
 		tipo=null;
 		carta=null;
-		corsiTenuti=corsiDaSupervisionare=null;
-		iscrizioni=null;
-		commentiScritti=null;
+		corsiTenuti=new LinkedList<CorsoBean>();
+		corsiDaSupervisionare=new LinkedList<CorsoBean>();
+		iscrizioni=new LinkedList<IscrizioneBean>();
+		commentiScritti=new LinkedList<CommentoBean>();
+		
 	}
 	
 	

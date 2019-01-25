@@ -25,6 +25,31 @@
 </head>
 <body>
 
+	<%
+		Boolean passwordErrata=(Boolean)request.getSession().getAttribute("passwordErrata");
+		if(passwordErrata!=null){
+			request.getSession().removeAttribute("passwordErrata");
+	%>
+	<!-- QUI VA ERRORE PER PASSWORD ERRATA -->
+	<% } %>
+	
+	<%
+		Boolean erroreLogin=(Boolean)request.getSession().getAttribute("erroreLogin");
+		if(erroreLogin!=null){
+			request.getSession().removeAttribute("erroreLogin");
+	%>
+	<!-- QUI VA ERRORE PER UTENTE NON ESISTENTE -->
+	<% } %>
+	
+	<%
+		Boolean erroreConnessione=(Boolean)request.getSession().getAttribute("erroreConnessione");
+		if(erroreConnessione!=null){
+			request.getSession().removeAttribute("erroreConnessione");
+	%>
+	<!-- QUI VA ERRORE PER ERRORE CONNESSIONE (DIRE DI PROVARE PIU' TARDI) -->
+	<% } %>
+	
+
     <div class="header">
         <div class="row">
             <div class="image col-lg-5"> <img class="" src="Images/Logo1.png" alt="" srcset="" width="150px" height="150px"
@@ -45,19 +70,19 @@
                     <div class="card card-5">
                         <div class="card-header text-center" style="font-size: 30px;">LOGIN</div>
                         <div class="card-body">
-                            <form class="login">
+                            <form class="login" method="post">
                                 <div class="form-group">
                                     <label for="exampleInputEmail">E-mail</label>
-                                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                                    <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
                                         placeholder="Enter e-mail">
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputPassword">Password</label>
-                                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                                    <input name="password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
                                 </div>
 
-
-                                <button type="submit" class="btn btn-primary btn-lg btn-block">Accedi</button>
+								<!-- Pulsante di login -->
+                                <button type="submit" formaction="http://localhost/YouLearn/LoginServlet" class="btn btn-primary btn-lg btn-block">Accedi</button>
 
 
                                 <p style="margin-top:5px;">
@@ -150,8 +175,8 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="InputScadenzaCarta">Scadenza Carta</label>
-                                        <input type="text" class="form-control" id="InputScadenzaCarta" placeholder="3 cifre"
-                                            maxlength="3">
+                                        <input type="text" class="form-control" id="InputScadenzaCarta" placeholder="mm/aaaa"
+                                            maxlength="7">
                                     </div>
 
                                 </div>

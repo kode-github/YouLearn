@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@page import="bean.*,java.util.LinkedList" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,7 +35,73 @@
 
    <%@ include file="Navbar.jsp" %>
 
-
+	<!-- IL NOME DEL CAMPO PER LA NUOVA MAIL HA name="newMail" -->
+	
+	<%
+		Boolean emailModificata=(Boolean)request.getSession().getAttribute("emailModificata");
+		if(emailModificata!=null){
+			request.getSession().removeAttribute("emailModificata");
+	%>
+	<!-- QUI VA MESSAGGIO EMAIL MODIFICATA -->
+	<% } %>
+	
+	<%
+		Boolean emailGiaEsistente=(Boolean)request.getSession().getAttribute("emailGiaEsistente");
+		if(emailGiaEsistente!=null){
+			request.getSession().removeAttribute("emailGiaEsistente");
+	%>
+	<!-- QUI VA MESSAGGIO EMAIL GIA ESISTENTE -->
+	<% } %>
+	
+	<!-- FORM MAIL -->
+	<form method="post">
+		<input name="newMail" type="text">
+		<input type="submit" formaction="http://localhost/YouLearn/CambiaMailServlet">	
+	</form>
+		
+	<%
+		Boolean passwordModificata=(Boolean)request.getSession().getAttribute("passwordModificata");
+		if(passwordModificata!=null){
+			request.getSession().removeAttribute("passwordModificata");
+	%>
+	<!-- QUI VA MESSAGGIO PASSWORD MODIFICATA -->
+	<% } %>
+	
+	<%
+		Boolean passwordNonModificata=(Boolean)request.getSession().getAttribute("passwordNonModificata");
+		if(passwordNonModificata!=null){
+			request.getSession().removeAttribute("passwordNonModificata");
+	%>
+	<!-- QUI VA MESSAGGIO PASSWORD MODIFICATA -->
+	<% } %>
+	
+		<!-- FORM PASSWORD -->
+	<form method="post">
+		<input name="newPass" type="text">
+		<input type="submit" formaction="http://localhost/YouLearn/CambiaPassServlet">	
+	</form>
+	
+	<%
+		Boolean cartaModificata=(Boolean)request.getSession().getAttribute("cartaModificata");
+		if(cartaModificata!=null){
+			request.getSession().removeAttribute("cartaModificata");
+	%>
+	<!-- QUI VA MESSAGGIO CARTA MODIFICATA -->
+	<% } %>
+	
+	<%
+		Boolean cartaNonModificata=(Boolean)request.getSession().getAttribute("cartaNonModificata");
+		if(cartaNonModificata!=null){
+			request.getSession().removeAttribute("cartaNonModificata");
+	%>
+	<!-- QUI VA MESSAGGIO CARTA NON MODIFICATA -->
+	<% } %>
+	
+	<!-- INSERIRE FORM CARTA
+		OGNI LABEL AVRA' NOME UGUALE AL CAMPO NEL DATABASE, cioe name="nomeTabella"
+	 -->
+	
+	
     <div class="container-fluid">
         <div class="row " >
             <div class="utente-tab col-lg-3 position-fixed">
@@ -92,48 +159,60 @@
                     <div class="three-infromazioni col-lg-4">ROBA DA SCRIVERE </div>
                 </div>
 
+			<!-- INIZIO CORSI SEGUITI -->
+			
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="corsi-seguiti card">
                             <h5 class="card-h-corsi card-header">CORSI SEGUITI</h5>
-                            <div class="card-b-corsi card-body">
-                                Informazioni corso
-                                
+                         <%
+                         	AccountBean a=(AccountBean)request.getSession().getAttribute("account");
+                         	LinkedList<IscrizioneBean> corsi=(LinkedList<IscrizioneBean>) a.getIscrizioni();
+                    		if(corsi.isEmpty()){
+                         %>
+                         <div class="card-b-corsi card-body">
+                                Non ci sono corsi seguiti....Corri ad iscriverti!
                             </div>
-                            <div class="card-b-corsi card-body">
-                                Informazioni corso
-                                
-                            </div>
-                            <div class="card-b-corsi card-body">
-                                Informazioni corso
-                                
-                            </div>
+                         <%}
+                    		else{
+                    			for(IscrizioneBean i: corsi){
+                    		%>
+                            	<div class="card-b-corsi card-body">
+                                	<a href="http://localhost/YouLearn/Corso.jsp?idCorso=<%=i.getCorso().getIdCorso()%>"><%=i.getCorso().getNome()%></a>
+                            	</div>
+                            <%} 
+                            }%>
                         </div>
                     </div>
 
                 </div>
-
+			<!-- INIZIO CORSI TENUTI -->
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card">
                             <h5 class="card-h-corsi card-header">CORSI TENUTI</h5>
-                            <div class="card-b-corsi card-body">
-                                Informazioni corso
-                                
+                            <%
+                         	LinkedList<CorsoBean> corsiTenuti=(LinkedList<CorsoBean>) a.getCorsiTenuti();
+                    		if(corsiTenuti.isEmpty()){
+                         %>
+                         <div class="card-b-corsi card-body">
+                                Non ci sono corsi Tenuti....M'occ a mammt
                             </div>
-                            <div class="card-b-corsi card-body">
-                                Informazioni corso
-                                
-                            </div>
-                            <div class="card-b-corsi card-body">
-                                Informazioni corso
-                                
-                            </div>
+                         <%}
+                    		else{
+                    			for(CorsoBean i: corsiTenuti){
+                    		%>
+                            	<div class="card-b-corsi card-body">
+                                	<a href="http://localhost/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><%=i.getNome()%></a>
+                            	</div>
+                            <%} 
+                            }%>
+                           
                         </div>
                     </div>
 
                 </div>
-
+			<!-- FINE -->
             </div>
             
         </div>

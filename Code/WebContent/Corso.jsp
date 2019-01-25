@@ -8,5 +8,21 @@
 </head>
 <body>
 
+<!-- 
+	QUI IL CORSO VIENE INIZIALIZZATO IN BASE ALLE INFORMAZIONI IN SESSIONE, NELL'OGGETTO ACCOUNT
+	
+ -->
+	
+	<% 	
+		String idCorso=request.getParameter("idCorso");
+		if(idCorso==null)
+			//Manda su Homepage
+			
+		//recupera il corso da Account, prima su CorsiTenuti e poi su Iscrizioni
+		//Se il corso è in CorsiTenuti, account è un docente e quindi visualizza interamente
+		//Se il corso è in Iscrizioni, account è uno studente del corso
+		//Altrimenti, non mostrare le lezioni e mostra pulsante di Acquisto
+	%>
+
 </body>
 </html>

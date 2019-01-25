@@ -17,6 +17,8 @@ public class LezioneBean {
 	private String nome;
 	private int visualizzazioni;
 	private int numeroLezione;
+	private Integer idLezione;
+	private String filePath;
 	private Collection<CommentoBean> commenti;
 	
 	/**
@@ -158,6 +160,22 @@ public class LezioneBean {
 	public void removeCommento(CommentoBean commento) {
 		this.commenti.remove(commento);
 		commento.setLezione(null);
+	}
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+	public Integer getIdLezione() {
+		return idLezione;
+	}
+
+	public void setIdLezione(Integer idLezione) {
+		this.idLezione = idLezione;
 	}
 	
 

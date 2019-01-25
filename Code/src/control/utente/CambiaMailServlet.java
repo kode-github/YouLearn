@@ -3,6 +3,7 @@ package control.utente;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import javax.naming.NoPermissionException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import bean.AccountBean;
 import bean.AccountBean.Ruolo;
+import exception.AlreadyExistingException;
 import exception.NotFoundException;
 import manager.AccountManager;
 
@@ -30,13 +32,21 @@ public class CambiaMailServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		String newMail=request.getParameter("newMail");
-		AccountBean account=(AccountBean)request.getSession().getAttribute("Account");
+		AccountBean account=(AccountBean)request.getSession().getAttribute("account");
 		try {
 			manager.modificaMail(account.getMail(), newMail);
+			account.setMail(newMail);
+			request.getSession().setAttribute("account",account);
 			request.getSession().setAttribute("emailModificata",true);
 		} catch (SQLException | NotFoundException e) {
 			//Non può succedere per via dei filtri
-			//Vanno quindi eliminate le eccezioni?
+			e.printStackTrace();
+		} catch (NoPermissionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (AlreadyExistingException e) {
+			request.getSession().setAttribute("emailGiaEsistente", true);
+			e.printStackTrace();
 		}
 		if(account.getTipo().equals(Ruolo.Utente))
 			response.sendRedirect(request.getContextPath()+"\\HomepageUtente.jsp");

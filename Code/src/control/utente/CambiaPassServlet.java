@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import bean.AccountBean;
 import bean.AccountBean.Ruolo;
 import exception.NotFoundException;
+import exception.NotWellFormattedException;
 import manager.AccountManager;
 
 @WebServlet("/CambiaPassServlet")
@@ -28,20 +29,23 @@ public class CambiaPassServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
-		String newPassword=request.getParameter("newPassword");
-		AccountBean account=(AccountBean)request.getSession().getAttribute("Account");
+		String newPassword=request.getParameter("newPass");
+		AccountBean account=(AccountBean)request.getSession().getAttribute("account");
 			try {
 				manager.modificaPassword(account.getMail(), newPassword);
 				request.getSession().setAttribute("passwordModificata",true);
-				if(account.getTipo().equals(Ruolo.Utente))
-					response.sendRedirect(request.getContextPath()+"\\HomepageUtente.jsp");
-				else
-					response.sendRedirect(request.getContextPath()+"\\HomepageSupervisore.jsp");	
 			} catch (NoPermissionException e) {
 				//Non ci andrà mai
 			} catch (SQLException | NotFoundException e) {
 				//pagina di errore
-		}
+		} catch (NotWellFormattedException e) {
+			request.getSession().setAttribute("passwordNonModificata",true);
+				e.printStackTrace();
+			}
+			if(account.getTipo().equals(Ruolo.Utente))
+				response.sendRedirect(request.getContextPath()+"\\HomepageUtente.jsp");
+			else
+				response.sendRedirect(request.getContextPath()+"\\HomepageSupervisore.jsp");	
 	
 	}
 

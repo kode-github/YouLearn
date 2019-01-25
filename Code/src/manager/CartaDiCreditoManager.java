@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 import javax.naming.NoPermissionException;
-import org.apache.tomcat.jdbc.pool.DataSource;
+import connection.ConfiguredDataSource;
 import bean.AccountBean;
 import bean.CartaDiCreditoBean;
 import bean.CartaDiCreditoBean.CartaEnum;
@@ -16,11 +16,11 @@ import exception.NotWellFormattedException;
 
 public class CartaDiCreditoManager {
 
-	DataSource dataSource;
+	ConfiguredDataSource dataSource;
 	AccountManager accountManager;
 	
 	public  CartaDiCreditoManager() {
-		dataSource= new DataSource();
+		dataSource= new ConfiguredDataSource();
 	}
 	
 	/**
@@ -128,7 +128,8 @@ public class CartaDiCreditoManager {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		
-		String sql="Update Cartadicredito set numerocarta=?, annooscadenza=?, mesescadenza=?, tipo=?, nomeIntestatario=?, accountMail=?"
+		String sql="Update Cartadicredito set numerocarta=? AND  annooscadenza=? AND  mesescadenza=? AND  tipo=? AND  nomeIntestatario=? "
+				+ "AND  accountMail=?"
 				+ " where numeroCarta=?";		
 		try {
 			connection=dataSource.getConnection();
@@ -144,8 +145,13 @@ public class CartaDiCreditoManager {
 			preparedStatement.executeUpdate();
 			
 		}finally {
-			if(preparedStatement!=null)
-				preparedStatement.close();
+			try{
+				if(preparedStatement!=null)
+					preparedStatement.close();
+			}finally {
+				connection.close();
+			}
+				
 		}	
 	}
 	
@@ -190,7 +196,7 @@ public class CartaDiCreditoManager {
 	 */
 	public CartaDiCreditoBean retrieveByAccount(AccountBean account) throws SQLException, NotFoundException, NoPermissionException {
 		accountManager=new AccountManager();
-		if(accountManager.checkAccount(account)) throw new NotFoundException("Questo account non esiste");
+		if(!accountManager.checkAccount(account)) throw new NotFoundException("Questo account non esiste");
 		if(!account.getTipo().equals(Ruolo.Utente)) throw new NoPermissionException("Questo utente non può avere corsi creati");
 		
 		Connection connection=null;
@@ -211,11 +217,15 @@ public class CartaDiCreditoManager {
 			temp.setNumeroCarta(rs.getString("NumeroCarta"));
 			temp.setMeseScadenza(rs.getString("MeseScadenza"));
 			temp.setAnnoScadenza(rs.getString("AnnoScadenza"));
-			temp.setTipo(CartaEnum.valueOf(rs.getString("tipo")));
+			temp.setTipo(CartaEnum.valueOf(rs.getString("tipo").toUpperCase()));
 			temp.setAccount(account);
 		}finally {
-			if(preparedStatement!=null)
-				preparedStatement.close();
+			try{
+				if(preparedStatement!=null)
+					preparedStatement.close();
+			}finally {
+				connection.close();
+			}
 		}
 		
 		return temp;

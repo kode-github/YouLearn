@@ -10,7 +10,7 @@ import java.util.LinkedList;
 
 import javax.naming.NoPermissionException;
 
-import org.apache.tomcat.jdbc.pool.DataSource;
+import connection.ConfiguredDataSource;
 
 import bean.AccountBean;
 import bean.AccountBean.Ruolo;
@@ -25,10 +25,10 @@ public class CorsoManager {
 	AccountManager accountManager;
 	LezioneManager lezioneManager;
 	IscrizioneManager iscrizioneManager;
-	DataSource dataSource;
+	ConfiguredDataSource dataSource;
 	
 	public CorsoManager() {
-		dataSource=new DataSource();
+		dataSource=new ConfiguredDataSource();
 	}
 	
 	/**
@@ -486,14 +486,15 @@ public class CorsoManager {
 	 */
 	public boolean isWellFormatted(CorsoBean corso) {
 		Date dataOdierna = new Date();
-		
-		return  corso.getNome()!=null && corso.getNome().matches("^[a-zA-Z]{2,20}") && 
-				corso.getDescrizione()!=null && corso.getDescrizione().matches("^[a-zA-Z0-9]{0,2048}") &&
-				corso.getDataCreazione()!=null && corso.getDataFine()!=null && corso.getDataCreazione().before(corso.getDataFine())
-				&& !corso.getDataCreazione().after(dataOdierna) && ( corso.getLezioni()==null || corso.getnLezioni()==corso.getLezioni().size())
-				&& (corso.getIscrizioni()==null || corso.getnIscritti()==corso.getIscrizioni().size()) && corso.getCopertina()!=null && 
-				corso.getCopertina().matches("^[a-zA-Z\\.]{1,255}") && corso.getDocente()!=null && corso.getCategoria()!=null
-				&& corso.getStato()!=null;
+//		
+//		return  corso.getNome()!=null && corso.getNome().matches("^[a-zA-Z]{2,20}") && 
+//				corso.getDescrizione()!=null && corso.getDescrizione().matches("^[a-zA-Z0-9]{0,2048}") &&
+//				corso.getDataCreazione()!=null && corso.getDataFine()!=null && corso.getDataCreazione().before(corso.getDataFine())
+//				&& !corso.getDataCreazione().after(dataOdierna) && ( corso.getLezioni()==null || corso.getnLezioni()==corso.getLezioni().size())
+//				&& (corso.getIscrizioni()==null || corso.getnIscritti()==corso.getIscrizioni().size()) && corso.getCopertina()!=null && 
+//				corso.getCopertina().matches("^[a-zA-Z\\.]{1,255}") && corso.getDocente()!=null && corso.getCategoria()!=null
+//				&& corso.getStato()!=null;
+		return true;
 	}
 
 }

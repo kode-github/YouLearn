@@ -3,6 +3,7 @@ package bean;
 import java.sql.Date;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * Classe identificante una classe Corso persistente
@@ -38,7 +39,8 @@ public class CorsoBean {
 	 * 
 	 */
 	public CorsoBean() {
-	   
+	   iscrizioni=new LinkedList<IscrizioneBean>();
+	   lezioni=new LinkedList<>();
 	}
 	
 	/**

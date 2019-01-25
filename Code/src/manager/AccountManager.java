@@ -6,22 +6,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.naming.NoPermissionException;
-
-import org.apache.tomcat.jdbc.pool.DataSource;
-
 import bean.AccountBean;
 import bean.AccountBean.Ruolo;
+import connection.ConfiguredDataSource;
 import exception.*;
 
 public class AccountManager {
 	
-	private DataSource dataSource;
+	private ConfiguredDataSource dataSource;
 	private CartaDiCreditoManager managerCarta;
 	private CorsoManager managerCorso;
 	private IscrizioneManager managerIscrizione;
 	
 	public AccountManager() {
-		dataSource= new DataSource();
+		dataSource= new ConfiguredDataSource();
 	}
 	
 	/**
@@ -75,8 +73,9 @@ public class AccountManager {
 	 * @throws NotFoundException 
 	 * @throws NoPermissionException 
 	 */
-	public void modificaPassword(String email, String pass) throws SQLException, NotFoundException, NoPermissionException {
+	public void modificaPassword(String email, String pass) throws SQLException, NotFoundException, NoPermissionException,NotWellFormattedException {
 		if(!checkMail(email)) throw new NotFoundException("L'account non esiste");
+		//Controllo sul formato della password
 		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -91,7 +90,6 @@ public class AccountManager {
 			preparedStatement.setString(2, email);
 			System.out.println("doUpdate: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
-			connection.commit();
 		} finally {
 				try{
 					if (preparedStatement != null)
@@ -111,10 +109,12 @@ public class AccountManager {
 	 * @throws SQLException 
 	 * @throws NotFoundException 
 	 * @throws NoPermissionException 
+	 * @throws AlreadyExistingException 
 	 */
-	public void modificaMail(String email, String newMail) throws SQLException, NotFoundException, NoPermissionException {
-		if(!checkMail(email)) throw new NotFoundException("L'account non esiste"); //necessario?
-		
+	public void modificaMail(String email, String newMail) throws SQLException, NotFoundException, NoPermissionException, AlreadyExistingException {
+		//Controlli sui formati delle mail
+		if(!checkMail(email)) throw new NotFoundException("L'account non esiste");
+		if(checkMail(newMail)) throw new AlreadyExistingException("La mail esiste gia");
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
@@ -127,7 +127,6 @@ public class AccountManager {
 			preparedStatement.setString(1, newMail);
 			preparedStatement.setString(2, email);
 			preparedStatement.executeUpdate();
-			connection.commit();
 		} finally {
 			try {
 				if (preparedStatement != null)
@@ -152,13 +151,13 @@ public class AccountManager {
 	 */
 	public AccountBean login(String email, String password) throws SQLException, NotFoundException, DatiErratiException, NoPermissionException, NotWellFormattedException {
 		AccountBean temp=doRetrieveByKey(email); //NotFoundException se non esiste
-		if(temp.getPassword().equals(password)) throw new DatiErratiException("Le password non corrispondono"); 
+		if(!temp.getPassword().equals(password)) throw new DatiErratiException("Le password non corrispondono"); 
 		
 		managerCarta= new CartaDiCreditoManager();
 		managerCorso= new CorsoManager();
 		managerIscrizione= new IscrizioneManager();
 
-		temp.setPassword(""); //elimino la password in quanto va inserito in sessione
+		
 		if(temp.getTipo().equals(Ruolo.Utente)) {
 			managerCarta.retrieveByAccount(temp); //recupero la carta
 			managerCorso.retrieveByCreatore(temp); //recupero gli account da lui creati
@@ -167,7 +166,7 @@ public class AccountManager {
 		else {
 			managerCorso.doRetrieveBySupervisore(temp); //recupero i corsi supervisionati
 		}
-			
+		temp.setPassword(""); //elimino la password in quanto va inserito in sessione
 		return temp;
 	}
 	
@@ -263,7 +262,7 @@ public class AccountManager {
 		PreparedStatement preparedStatement=null;
 		ResultSet rs;
 		
-		String sql="SELECT email FROM Account WHERE email=?, nome=?, cognome=?, tipo=?, verificato=?";		
+		String sql="SELECT email FROM Account WHERE email=? AND nome=? AND cognome=? AND tipo=? AND verificato=? ";		
 		try {
 			connection=dataSource.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
@@ -272,7 +271,9 @@ public class AccountManager {
 			preparedStatement.setString(3, account.getCognome());
 			preparedStatement.setString(4, account.getTipo().toString());
 			preparedStatement.setBoolean(5, account.getVerificato());
+			System.out.println("Query di select: "+preparedStatement.toString());
 			rs= preparedStatement.executeQuery();
+			return rs.next();
 		}finally {
 			try {
 			if(preparedStatement!=null)
@@ -281,7 +282,7 @@ public class AccountManager {
 				connection.close();
 			}
 		}
-		return rs.next();
+		
 	}
 	
 	
@@ -303,8 +304,7 @@ public class AccountManager {
 			String cognome=account.getCognome();
 			String password=account.getPassword();
 			return nome!=null && nome.matches("^[a-zA-Z]{2,20}") && cognome!=null &&
-				   cognome.matches("^[a-zA-Z]{2,20}") && password!=null &&
-				   password.matches("^[a-zA-Z0-9]{5,30}") && account.getTipo()!=null;
+				   cognome.matches("^[a-zA-Z]{2,20}") && /**password!=null && password.matches("^[a-zA-Z0-9]{5,30}") &&*/ account.getTipo()!=null;
 //			}
 //		else 
 //			return false;

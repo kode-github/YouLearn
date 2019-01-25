@@ -7,23 +7,28 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 import javax.naming.NoPermissionException;
-import org.apache.tomcat.jdbc.pool.DataSource;
+import connection.ConfiguredDataSource;
 import bean.AccountBean;
 import bean.CorsoBean;
 import bean.IscrizioneBean;
 import bean.AccountBean.Ruolo;
 import exception.AlreadyExistingException;
 import exception.NotFoundException;
+import exception.NotWellFormattedException;
 
 public class IscrizioneManager {
 
-	DataSource dataSource;
+	ConfiguredDataSource dataSource;
 	AccountManager accountManager;
 	CorsoManager corsoManager;
 	LezioneManager lezioneManager;
 	
 	
-	public IscrizioneBean doRetrieveByKey(int id,String mail) throws SQLException, NotFoundException, NoPermissionException{
+	public IscrizioneManager() {	
+		dataSource=new ConfiguredDataSource();
+	}
+	
+	public IscrizioneBean doRetrieveByKey(int id,String mail) throws SQLException, NotFoundException, NoPermissionException, NotWellFormattedException{
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		IscrizioneBean iscrizione=new IscrizioneBean();
@@ -50,7 +55,7 @@ public class IscrizioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				dataSource.close();
+				connection.close();
 			}
 		}
 		return iscrizione;
@@ -63,11 +68,12 @@ public class IscrizioneManager {
 	 * @throws SQLException
 	 * @throws NotFoundException
 	 * @throws NoPermissionException
+	 * @throws NotWellFormattedException 
 	 */
-	public Collection<IscrizioneBean> getIscrizioniUtente(AccountBean account) throws SQLException, NotFoundException, NoPermissionException {
+	public Collection<IscrizioneBean> getIscrizioniUtente(AccountBean account) throws SQLException, NotFoundException, NoPermissionException, NotWellFormattedException {
 		accountManager= new AccountManager();
 		lezioneManager= new LezioneManager();
-		if(accountManager.checkAccount(account)) throw new NotFoundException("Questo account non esiste");
+		if(!accountManager.checkAccount(account)) throw new NotFoundException("Questo account non esiste");
 		if(!account.getTipo().equals(Ruolo.Utente)) throw new NoPermissionException("Questo utente non può avere corsi creati");
 		
 		Connection connection=null;
@@ -96,7 +102,9 @@ public class IscrizioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				dataSource.close();
+				connection.close();//KONO DIO DA
+				//SEKAI ICHI!
+				//NANIII!?!?
 			}
 		}
 		return collection;
@@ -144,7 +152,7 @@ public class IscrizioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				dataSource.close();
+				connection.close();
 			}
 		}
 		return collection;
@@ -157,8 +165,9 @@ public class IscrizioneManager {
 	 * @throws NotFoundException L'account o il corso non esistono
 	 * @throws AlreadyExistingException L'iscrizione esiste già
 	 * @throws NoPermissionException 
+	 * @throws NotWellFormattedException 
 	 */
-	public void iscriviStudente(IscrizioneBean iscrizione) throws SQLException, NotFoundException, AlreadyExistingException, NoPermissionException {
+	public void iscriviStudente(IscrizioneBean iscrizione) throws SQLException, NotFoundException, AlreadyExistingException, NoPermissionException, NotWellFormattedException {
 		accountManager=new AccountManager();
 		corsoManager= new CorsoManager();
 		if(checkIscrizione(iscrizione.getCorso().getIdCorso(),iscrizione.getAccount().getMail())) 
@@ -185,7 +194,7 @@ public class IscrizioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				dataSource.close();
+				connection.close();
 			}
 		}
 	}
@@ -196,8 +205,9 @@ public class IscrizioneManager {
 	 * @return
 	 * @throws NoPermissionException
 	 * @throws SQLException
+	 * @throws NotWellFormattedException 
 	 */
-	private boolean checkIscrizione(int id ,String mail) throws NoPermissionException, SQLException {
+	private boolean checkIscrizione(int id ,String mail) throws NoPermissionException, SQLException, NotWellFormattedException {
 		try {
 			doRetrieveByKey(id, mail);
 			return true;

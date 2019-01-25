@@ -15,14 +15,20 @@ public class TestDataSource extends TestCase{
 	public void testAccesso() throws SQLException {
 		DataSource c=new DataSource();
 		c.setDriverClassName("com.mysql.jdbc.Driver");
-		c.setUrl("jdbc:mysql://localhost:3306/youlearndb?useSSL=true"); //TODO Andrà migliorata con altri parametri
+		c.setUrl("jdbc:mysql://localhost:3306/youlearndb"); //TODO Andrà migliorata con altri parametri
 		c.setUsername("root");
 		c.setPassword("PentiumD");
+		
 		Connection x=c.getConnection();
-		PreparedStatement s=x.prepareStatement("select * from account");
-		ResultSet rs=s.executeQuery();
-		rs.next();
-		System.out.println(""+rs.getString("nome"));
+		x.setAutoCommit(false);
+		PreparedStatement s=x.prepareStatement("Insert into account values ('luigi','a','a','a','aa','1')");
+		s.executeUpdate();
+//		x.rollback();
+		x.commit();
+		PreparedStatement l=x.prepareStatement("Select * from account");
+		ResultSet test=l.executeQuery();
+		test.next();
+		System.out.println(""+test.getString("nome"));
 	}
 	
 	

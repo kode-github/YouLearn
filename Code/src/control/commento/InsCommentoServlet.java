@@ -32,13 +32,13 @@ public class InsCommentoServlet extends HttpServlet {
 		LezioneBean lezione=(LezioneBean)request.getSession().getAttribute("lezione");
 		AccountBean account=(AccountBean)request.getSession().getAttribute("Account");
 		CommentoBean commento=new CommentoBean(null, testo, lezione,account);
-		try {
-			manager.insCommento(commento);
-			response.sendRedirect(request.getContextPath()+"\\Lezione.jsp?idCorso="+idCorso+"+&numeroLezione="+nLezione);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
+//		try {
+//			manager.insCommento(commento);
+//			response.sendRedirect(request.getContextPath()+"\\Lezione.jsp?idCorso="+idCorso+"+&numeroLezione="+nLezione);
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		
 	}
 
 

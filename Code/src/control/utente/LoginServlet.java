@@ -15,6 +15,7 @@ import bean.AccountBean;
 import bean.AccountBean.Ruolo;
 import exception.DatiErratiException;
 import exception.NotFoundException;
+import exception.NotWellFormattedException;
 import manager.AccountManager;
 
 @WebServlet("/LoginServlet")
@@ -36,23 +37,31 @@ public class LoginServlet extends HttpServlet {
 		try {
 				AccountBean account;
 				account = manager.login(mail, password);
-				sessione.setAttribute("Account", account);
+				System.out.println("account: "+account.getMail());
+				sessione.setAttribute("account", account);
 				if(account.getTipo().equals(Ruolo.Utente))
 					response.sendRedirect(request.getContextPath()+"\\HomepageUtente.jsp");
 				else
 					response.sendRedirect(request.getContextPath()+"\\HomepageSupervisore.jsp");
 			} catch (NoPermissionException e) {
 				//Non dovrebbe MAI essere qui
+				e.printStackTrace();
 			} catch (DatiErratiException e) {
+				e.printStackTrace();
 				sessione.setAttribute("passwordErrata", true);
 				response.sendRedirect(request.getContextPath()+"\\Welcome.jsp");
 			} catch (NotFoundException e) {
-				sessione.setAttribute("ErroreLogin", true);
+				e.printStackTrace();
+				sessione.setAttribute("erroreLogin", true);
 				response.sendRedirect(request.getContextPath()+"\\Welcome.jsp");
 			} catch( SQLException e) {
-				sessione.setAttribute("ErroreConnessione", true);
+				e.printStackTrace();
+				sessione.setAttribute("erroreConnessione", true);
 				response.sendRedirect(request.getContextPath()+"\\Welcome.jsp");
-		}
+		} catch (NotWellFormattedException e) {
+				//Non ci andrà mai
+				e.printStackTrace();
+			}
 	}
 
 	
