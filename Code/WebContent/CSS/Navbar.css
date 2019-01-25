@@ -4,6 +4,7 @@ body {
 
 }
 
+
 .nav-item {
 
     margin: 0 15px;
@@ -44,6 +45,8 @@ nav {
 
     padding: 20px 0;
     background-color: #eeeeee;
+    position: fixed;
+    width: 100%;
 
 }
 
