@@ -1,0 +1,63 @@
+.container-fluid {
+
+   
+
+}
+
+
+.div-container {
+
+	
+    
+}
+
+#titolo-pagina {
+
+    text-align: center;
+
+}
+
+#img-corso {
+
+
+    margin: 20px 0;
+
+}
+
+#p-info-corso {
+
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 35px;
+    margin: 0;
+
+}
+
+#p-info-acquisto {
+
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 25px;
+    margin: 0;
+    text-align: center;
+
+}
+
+#btn-acquisto {
+	margin-top: 10px;
+    font-size: 30px;
+
+}
+
+#prezzo {
+
+    padding: 50px;
+
+}
+
+.informazioni-corso {
+
+  	margin-top: 50px;
+    margin-left: 10px;
+    text-align: left;
+    font-size: 25px;
+
+}

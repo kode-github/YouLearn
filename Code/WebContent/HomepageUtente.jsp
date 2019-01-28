@@ -1,48 +1,66 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-<%@page import="bean.*,java.util.LinkedList" %>
+	pageEncoding="ISO-8859-1"%>
+<%@page import="bean.*,java.util.LinkedList"%>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
 
 
-    <!-- Bootstrap-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
-        crossorigin="anonymous">
-    
+<!-- Bootstrap-->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+	integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+	crossorigin="anonymous">
+<!-- CSS Style & Font-->
+<link rel="stylesheet" href="CSS/HomepageUtente.css">
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+	integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+	crossorigin="anonymous">
+<link
+	href="https://fonts.googleapis.com/css?family=Permanent+Marker|Ubuntu"
+	rel="stylesheet">
 
-    <!-- Script-->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-        crossorigin="anonymous"></script>
-        <!-- CSS Style & Font-->
-    <link rel="stylesheet" href="CSS/HomepageUtente.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
-        crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Permanent+Marker|Ubuntu" rel="stylesheet">
 
-    <title>YouLearn</title>
+<!-- Script-->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+	integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+	crossorigin="anonymous"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+	integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+	crossorigin="anonymous"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+	integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+	crossorigin="anonymous"></script>
+	
+	
+
+
+<title>YouLearn</title>
 </head>
 
 <body>
 
-   <%@ include file="Navbar.jsp" %>
+	  <%@ include file="Navbar.jsp" %>
+	
 
 	<!-- IL NOME DEL CAMPO PER LA NUOVA MAIL HA name="newMail" -->
-	
+
 	<%
 		Boolean emailModificata=(Boolean)request.getSession().getAttribute("emailModificata");
 		if(emailModificata!=null){
 			request.getSession().removeAttribute("emailModificata");
 	%>
-	<!-- QUI VA MESSAGGIO EMAIL MODIFICATA -->
+	<div id="alert" class="alert alert-success" style="text-align: center;"
+		role="alert">E-mail modificata con successo!</div>
+		
+	
 	<% } %>
 	
 	<%
@@ -50,37 +68,38 @@
 		if(emailGiaEsistente!=null){
 			request.getSession().removeAttribute("emailGiaEsistente");
 	%>
-	<!-- QUI VA MESSAGGIO EMAIL GIA ESISTENTE -->
+	<div class="alert alert-warning" style="text-align: center;"
+		role="alert">Ci dispiace! L'e-mail è già in uso. Prova con
+		un'altra!</div>
 	<% } %>
-	
-	<!-- FORM MAIL -->
-	<form method="post">
-		<input name="newMail" type="text">
-		<input type="submit" formaction="http://localhost/YouLearn/CambiaMailServlet">	
-	</form>
-		
+
+
 	<%
 		Boolean passwordModificata=(Boolean)request.getSession().getAttribute("passwordModificata");
 		if(passwordModificata!=null){
 			request.getSession().removeAttribute("passwordModificata");
 	%>
-	<!-- QUI VA MESSAGGIO PASSWORD MODIFICATA -->
+	<div class="alert alert-success" style="text-align: center;"
+		role="alert">Password modificata con successo!</div>
 	<% } %>
-	
+
 	<%
 		Boolean passwordNonModificata=(Boolean)request.getSession().getAttribute("passwordNonModificata");
 		if(passwordNonModificata!=null){
 			request.getSession().removeAttribute("passwordNonModificata");
 	%>
-	<!-- QUI VA MESSAGGIO PASSWORD MODIFICATA -->
+
+	<div class="alert alert-warning" style="text-align: center;"
+		role="alert">C'è stato un problema! Le password non coincidono,
+		riprova.</div>
 	<% } %>
-	
-		<!-- FORM PASSWORD -->
-	<form method="post">
-		<input name="newPass" type="text">
-		<input type="submit" formaction="http://localhost/YouLearn/CambiaPassServlet">	
-	</form>
-	
+
+	<!-- FORM PASSWORD -->
+	<!-- <form method="post">
+		<input name="newPass" type="text"> <input type="submit"
+			formaction="http://localhost/YouLearn/CambiaPassServlet">
+	</form> -->
+
 	<%
 		Boolean cartaModificata=(Boolean)request.getSession().getAttribute("cartaModificata");
 		if(cartaModificata!=null){
@@ -88,7 +107,7 @@
 	%>
 	<!-- QUI VA MESSAGGIO CARTA MODIFICATA -->
 	<% } %>
-	
+
 	<%
 		Boolean cartaNonModificata=(Boolean)request.getSession().getAttribute("cartaNonModificata");
 		if(cartaNonModificata!=null){
@@ -96,133 +115,294 @@
 	%>
 	<!-- QUI VA MESSAGGIO CARTA NON MODIFICATA -->
 	<% } %>
-	
+
 	<!-- INSERIRE FORM CARTA
 		OGNI LABEL AVRA' NOME UGUALE AL CAMPO NEL DATABASE, cioe name="nomeTabella"
 	 -->
+
+
+	<div class="container-fluid">
 	
-	
-    <div class="container-fluid">
-        <div class="row " >
-            <div class="utente-tab col-lg-3 position-fixed">
-                <img class="profile-img " src="Images/Image.jpg" alt="FAIL" srcset="" width="160" height="160">
-                <div class="card  mb-3 mx-auto">
-                    <div class="card-utente card-header">Nome:</div>
-                    <div class="card-b-utente card-body ">
-                        <h5 class="card-title">Pasquale</h5>
+		 <div class="row ">
+            <img style="float: left; margin: 25px 0px 0px 25px;" class="profile-img " src="Images/Image.jpg" alt="FAIL" width="220"
+                height="220">
+            <div class="utente-tab  mx-auto w-75">
+            <%AccountBean account1 = (AccountBean)request.getSession().getAttribute("account"); 
+            %>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="card mb-3 mx-auto">
+                            <div class="card-utente card-header">Nome:</div>
+                            <div class="card-b-utente card-body ">
+                                <h5 class="card-title"><%=account1.getNome() %></h5>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="card mb-3 mx-auto">
-                    <div class="card-utente card-header">Cognome:</div>
-                    <div class="card-b-utente card-body">
-                        <h5 class="card-title">Ambrosio</h5>
+                    <div class="col-4">
+                        <div class="card mb-3 mx-auto">
+                            <div class="card-utente card-header">Cognome:</div>
+                            <div class="card-b-utente card-body ">
+                                <h5 class="card-title"><%=account1.getCognome() %></h5>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="card mb-3 mx-auto">
-                    <div class="card-utente card-header">Indirizzo E-mail:</div>
-                    <div class="card-b-utente card-body">
-                        <h5 class="card-title" style="font-size:1.1rem">pasquale.ambrosio112@gmail.com</h5>
+                    <div class="col-4">
+                        <div class="card mb-3 mx-auto">
+                            <div class="card-utente card-header">E-mail:</div>
+                            <div class="card-b-utente card-body ">
+                                <h5 class="card-title"><%=account1.getMail() %></h5>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
 
 
-                <button type="button" id="btn-utente" class="btn btn-light btn-lg btn-block">Modifica E-mail</button>
-                <button type="button" id="btn-utente" class="btn btn-light btn-lg btn-block">Modifica Password</button>
-                <button type="button" id="btn-utente" class="btn btn-light btn-lg btn-block">Modifica Carta</button>
+
+                <div class="row">
+					<div class="col-4">
+						<a id="btn-utente" class="btn btn-primary btn btn-lg btn-block"
+							data-toggle="collapse" href="#collapseModEmail" role="button"
+							aria-expanded="false" aria-controls="collapseModEmail">
+							Modifica E-mail</a>
+
+
+						<div class="collapse" id="collapseModEmail">
+							<form name="changeMailForm" id="changeMailForm" onsubmit="return validateMail(changeMailForm)">
+								<div class="card card-body"
+									style="margin-bottom: 10px; text-align: center;">
+									<input type="email" name="newMail" class="form-control"
+										id="inputEmailDimenticata" aria-describedby="emailHelp"
+										placeholder="Inserisci la tua nuova e-mail">
+								</div>
+								<button type="submit" class="btn btn-info btn-lg btn-block"
+									formaction="http://localhost:8080/YouLearn/CambiaMailServlet">Conferma</button>
+							</form>
+						</div>
+					</div>
+					<div class="col-4">
+
+                            <a id="btn-utente" class="btn btn-primary btn-lg btn-block" data-toggle="collapse" href="#collapseModPass" role="button"
+                            aria-expanded="false" aria-controls="collapseExample"> Modifica Password</a>
+        
+                        
+                            <div class="collapse" id="collapseModPass">
+                                <div class="card card-body" style="margin-bottom: 10px; text-align: center;">
+                                <form method="post" name="changePswForm" id="changePswForm" onsubmit="return validatePsw(changePswForm)">
+                                    <input type="password" name="newPass" id="newPass" class="form-control" placeholder="Inserisci la tua nuova password">
+                                    <input type="password" name="oldPass" id="oldPass" class="form-control" placeholder="Conferma tua nuova password">
+                                    <button type="submit" class="btn btn-info btn-lg btn-block"
+									formaction="http://localhost:8080/YouLearn/CambiaPassServlet">Conferma</button>
+                                    </form>
+                                </div>
+                                
+                            </div>
+                        
+
+                    </div>
+                    <div class="col-4">
+
+                            <a id="btn-utente" class="btn btn-primary btn-lg btn-block" data-toggle="collapse" href="#collapseModCarta" role="button"
+                            aria-expanded="false" aria-controls="collapseExample"> Modifica Carta</a>
+
+						<form method="post" onsubmit="return checkCreditCard(cardnumber, cardname)">
+							<div class="collapse" id="collapseModCarta">
+								<div class="card card-body"
+									style="margin-bottom: 10px; text-align: center;">
+									<input type="text" name="cardnumber" class="form-control"
+										placeholder="Inserisci il numero della nuova carta"> <input
+										type="text" class="form-control"
+										placeholder="Inserisci il nome dell'intestatario">
+									<div class="dropdown  d-inline">
+										<select name="cardname" class="form-control1" name="scadenzaAnno">
+											<option value="Visa">Visa</option>
+											<option value="MasterCard">MasterCard</option>
+											<option value="Maestro">Maestro</option>
+										</select>
+									</div>
+
+								</div>
+								<button type="submit" class="btn btn-info btn-lg btn-block"
+									formaction="#">Conferma</button>
+							</div>
+						</form>
+
+					</div>
+                </div>
+                <!-- <button type="button" id="btn-utente" class="btn btn-light btn-lg btn-block">Modifica E-mail</button>-->
+
+
+                <!-- Form modifica password -->
+               
+                <!-- Form modifica carta -->
+               
 
 
             </div>
-            <div class="col-lg-9 div-scroll" ><!-- style=" position: fixed!important; right:0;
-            overflow: auto!important;
-            width: 100%;
-            height:700px;" -->
+        </div>
 
-                <div id="carouselSlider" class="carousel slide" data-interval="5000" data-ride="carousel">
-                    <ol class="carousel-indicators">
-                        <li data-target="#carouselSlider" data-slide-to="0" class="active"></li>
-                        <li data-target="#carouselSlider" data-slide-to="1"></li>
-                    </ol>
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="Images/Img-Slider1.jpg" class="w-100 img-slider" alt="...">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Images/Img-Slider2.jpg" class="w-100 img-slider" alt="...">
-                        </div>
-                    </div>
-                </div>
+	<div id="carouselSlider" class="carousel slide" data-interval="5000"
+		data-ride="carousel">
+		<ol class="carousel-indicators">
+			<li data-target="#carouselSlider" data-slide-to="0" class="active"></li>
+			<li data-target="#carouselSlider" data-slide-to="1"></li>
+		</ol>
+		<div class="carousel-inner">
+			<div class="carousel-item active">
+				<img src="Images/Img-Slider1.jpg" class="w-100 img-slider" alt="...">
+			</div>
+			<div class="carousel-item">
+				<img src="Images/Img-Slider2.jpg" class="w-100 img-slider" alt="...">
+			</div>
+		</div>
+	</div>
 
-                <div class="row">
-                    <div class="three-infromazioni col-lg-4">ROBA DA SCRIVERE </div>
-                    <div class="three-infromazioni col-lg-4">ROBA DA SCRIVERE </div>
-                    <div class="three-infromazioni col-lg-4">ROBA DA SCRIVERE </div>
-                </div>
+	<div class="row">
+		<div class="three-infromazioni col-lg-4">ROBA DA SCRIVERE</div>
+		<div class="three-infromazioni col-lg-4">ROBA DA SCRIVERE</div>
+		<div class="three-infromazioni col-lg-4">ROBA DA SCRIVERE</div>
+	</div>
 
-			<!-- INIZIO CORSI SEGUITI -->
-			
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="corsi-seguiti card">
-                            <h5 class="card-h-corsi card-header">CORSI SEGUITI</h5>
-                         <%
+	<!-- INIZIO CORSI SEGUITI -->
+
+
+	<div class="corsi-seguiti card w-75 mx-auto">
+		<h5 class="card-h-corsi card-header">CORSI SEGUITI</h5>
+		<%
                          	AccountBean a=(AccountBean)request.getSession().getAttribute("account");
                          	LinkedList<IscrizioneBean> corsi=(LinkedList<IscrizioneBean>) a.getIscrizioni();
                     		if(corsi.isEmpty()){
                          %>
-                         <div class="card-b-corsi card-body">
-                                Non ci sono corsi seguiti....Corri ad iscriverti!
-                            </div>
-                         <%}
+		<div class="card-b-corsi card-body">Non ci sono corsi
+			seguiti....Corri ad iscriverti!</div>
+		<%}
                     		else{
                     			for(IscrizioneBean i: corsi){
                     		%>
-                            	<div class="card-b-corsi card-body">
-                                	<a href="http://localhost/YouLearn/Corso.jsp?idCorso=<%=i.getCorso().getIdCorso()%>"><%=i.getCorso().getNome()%></a>
-                            	</div>
-                            <%} 
-                            }%>
-                        </div>
-                    </div>
+                    		
+                    		<div class="card-body">
+                        <img class="img-corsi-attesa rounded float-left" src="Images/Image.jpg" alt="FAIL" srcset="">
+                        <ul class="informazioni-corso rounded float-left">
+                            <li>NOME CORSO:</li>
+                            <li>NUMERO ISCRITTI:</li>
+                            <li>SCADENZA ISCRIZIONI:</li>
 
-                </div>
-			<!-- INIZIO CORSI TENUTI -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card">
-                            <h5 class="card-h-corsi card-header">CORSI TENUTI</h5>
-                            <%
+                        </ul>
+                        <div class="float-lg-right ">
+                            <button type="button" class="btn btn-primary btn-lg d-lg-block w-100">Vai al corso</button>
+                            <button type="button" class="btn btn-success btn-lg d-lg-block w-100">Conferma</button>
+                            <button type="button" class="btn btn-danger btn-lg d-lg-block w-100">Rifiuta</button>
+                        </div>
+
+
+                    </div>
+		<div class="card-b-corsi card-body">
+			<a
+				href="http://localhost/YouLearn/Corso.jsp?idCorso=<%=i.getCorso().getIdCorso()%>">
+				<%=i.getCorso().getNome()%></a>
+		</div>
+		<%} 
+                            }%>
+	</div>
+
+	<!-- INIZIO CORSI TENUTI -->
+
+	<div class="card w-75 mx-auto">
+		<h5 class="card-h-corsi card-header">CORSI TENUTI</h5>
+		<%
                          	LinkedList<CorsoBean> corsiTenuti=(LinkedList<CorsoBean>) a.getCorsiTenuti();
                     		if(corsiTenuti.isEmpty()){
                          %>
-                         <div class="card-b-corsi card-body">
-                                Non ci sono corsi Tenuti....M'occ a mammt
-                            </div>
-                         <%}
+		<div class="card-b-corsi card-body">Non ci sono corsi
+			Tenuti....M'occ a mammt</div>
+		<%}
                     		else{
                     			for(CorsoBean i: corsiTenuti){
                     		%>
-                            	<div class="card-b-corsi card-body">
-                                	<a href="http://localhost/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><%=i.getNome()%></a>
-                            	</div>
-                            <%} 
-                            }%>
-                           
+                    		<div class="card-body">
+                    		
+                        <a href="http://localhost/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><img class="img-corsi-attesa rounded float-left" src=<%=i.getCopertina() %> alt="FAIL" width="170" height="170" ></a>
+                        <ul class="informazioni-corso rounded float-left">
+                            <li>NOME CORSO: <a href="http://localhost/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><%=i.getNome()%></a></li>
+                            <li>NUMERO ISCRITTI: <%=i.getnIscritti() %></li>
+                            <li>SCADENZA ISCRIZIONI: <%=i.getDataFine() %></li>
+                            <li>STATO: <%=i.getStato() %></li>
+
+                        </ul>
+                       	<%if(i.getStato().equals("Attivo") || i.getStato().equals("Disattivo"));
+                       		if(i.getStato().equals("In Attesa")){
+                       	%>	
+                       	<div class="float-lg-right ">
+                       		<button type="button" class="btn btn-danger btn-lg  ">Elimina Corso</button>
                         </div>
-                    </div>
+                       		
+                       	<%} else {%>
+                        <div class="float-lg-right ">
+                       		<button type="button" class="btn btn-success btn-lg ">Conferma</button>
+                            <button type="button" class="btn btn-outline-secondary btn-lg ">Modifica</button>
+                            <button type="button" class="btn btn-outline-secondary btn-lg  ">Gestisci lezioni</button>
+                            <button type="button" class="btn btn-danger btn-lg  ">Elimina Corso</button>
+                        </div>
+                    		
+		<%}
+                            }}%>
 
-                </div>
-			<!-- FINE -->
-            </div>
-            
-        </div>
-  
-   	</div>
-  
-    
-    
-    
+	</div>
 
+	<!-- FINE -->
+	</div>
+	</div>
+
+<script type="text/javascript">
+
+
+
+function validateUsr(changeUsrForm){
+    var usrValidator = /^(\w+[_\.\-]*\w*){4,}$/;
+    var newUsr= changeUsrForm.newUser.value;
+
+    if(!newUsr.match(usrValidator)) {
+      alert("Username non valido");
+      return false;
+    } else return true;
+}
+
+
+
+
+function validatePsw(changePswForm){
+	console.log("Password ok")
+    var pswValidator = /^[a-zA-Z 0-9 \@\._\!\?\-]{8,}$/;
+    var newPsw= changePswForm.newPass.value;
+    var oldPsw= changePswForm.oldPass.value;
+   
+
+	if(!newPsw.match(oldPsw)){
+		alert("Le password non coincidono");
+	      return false;
+		}
+	
+
+    if(!newPsw.match(pswValidator)){
+      alert("La password deve contenere almeno 8 caratteri tra lettere, numeri e simboli");
+      return false;
+    } 
+     else return true;
+}
+
+
+
+
+function validateMail(changeMailForm){
+    var mailValidator = /^\w+([\._\-]?\w+)*@\w+([\.\-]?\w+)*(\.\w+)+$/;
+    var newMail= changeMailForm.newMail.value;
+
+    if(!newMail.match(mailValidator)){
+      alert("Email non valida");
+      return false;
+    } else return true;
+}
+</script>
 </body>
 
 </html>
