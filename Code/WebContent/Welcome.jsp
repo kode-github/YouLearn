@@ -185,9 +185,9 @@
                     <label for="tipoCarta">Tipo Carta</label>
                     <div class="dropdown">
                         <select class="form-control" name="tipoCarta">
-                            <option value="paypal">PayPal</option>
                             <option value="visa">Visa</option>
                             <option value="mastercard">MasterCard</option>
+                            <option value="americanexpress">AmericanExpress</option>
                         </select>
                     </div>
                 </div>
@@ -353,6 +353,8 @@ function validateMail(changeMailForm){
       return false;
     } else return true;
 }
+
+
 
 
 

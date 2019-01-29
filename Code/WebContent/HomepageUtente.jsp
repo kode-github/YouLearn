@@ -1,3 +1,4 @@
+<%@page import="org.apache.jasper.tagplugins.jstl.core.ForEach"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@page import="bean.*,java.util.LinkedList"%>
@@ -159,7 +160,7 @@
 
 
 
-                <div class="row">
+				<div class="row">
 					<div class="col-4">
 						<a id="btn-utente" class="btn btn-primary btn btn-lg btn-block"
 							data-toggle="collapse" href="#collapseModEmail" role="button"
@@ -168,7 +169,8 @@
 
 
 						<div class="collapse" id="collapseModEmail">
-							<form name="changeMailForm" id="changeMailForm" onsubmit="return validateMail(changeMailForm)">
+							<form name="changeMailForm" id="changeMailForm"
+								onsubmit="return validateMail(changeMailForm)">
 								<div class="card card-body"
 									style="margin-bottom: 10px; text-align: center;">
 									<input type="email" name="newMail" class="form-control"
@@ -182,54 +184,104 @@
 					</div>
 					<div class="col-4">
 
-                            <a id="btn-utente" class="btn btn-primary btn-lg btn-block" data-toggle="collapse" href="#collapseModPass" role="button"
-                            aria-expanded="false" aria-controls="collapseExample"> Modifica Password</a>
-        
-                        
-                            <div class="collapse" id="collapseModPass">
-                                <div class="card card-body" style="margin-bottom: 10px; text-align: center;">
-                                <form method="post" name="changePswForm" id="changePswForm" onsubmit="return validatePsw(changePswForm)">
-                                    <input type="password" name="newPass" id="newPass" class="form-control" placeholder="Inserisci la tua nuova password">
-                                    <input type="password" name="oldPass" id="oldPass" class="form-control" placeholder="Conferma tua nuova password">
-                                    <button type="submit" class="btn btn-info btn-lg btn-block"
-									formaction="http://localhost:8080/YouLearn/CambiaPassServlet">Conferma</button>
-                                    </form>
-                                </div>
-                                
-                            </div>
-                        
+						<a id="btn-utente" class="btn btn-primary btn-lg btn-block"
+							data-toggle="collapse" href="#collapseModPass" role="button"
+							aria-expanded="false" aria-controls="collapseExample">
+							Modifica Password</a>
 
-                    </div>
-                    <div class="col-4">
 
-                            <a id="btn-utente" class="btn btn-primary btn-lg btn-block" data-toggle="collapse" href="#collapseModCarta" role="button"
-                            aria-expanded="false" aria-controls="collapseExample"> Modifica Carta</a>
+						<div class="collapse" id="collapseModPass">
+							<div class="card card-body"
+								style="margin-bottom: 10px; text-align: center;">
+								<form method="post" name="changePswForm" id="changePswForm"
+									onsubmit="return validatePsw(changePswForm)">
+									<div class="form-group"><input type="password" name="newPass" id="newPass"
+										class="form-control"
+										placeholder="Inserisci la tua nuova password"> </div>
+									<div class="form-group"><input
+										type="password" name="oldPass" id="oldPass"
+										class="form-control" placeholder="Conferma tua nuova password"></div>
+									
+									
+								</form>
+							</div>
+							<button type="submit" class="btn btn-info btn-lg btn-block"
+										formaction="http://localhost:8080/YouLearn/CambiaPassServlet">Conferma</button>
+						</div>
 
-						<form method="post" onsubmit="return checkCreditCard(cardnumber, cardname)">
+
+					</div>
+					<div class="col-4">
+
+						<a id="btn-utente" class="btn btn-primary btn-lg btn-block"
+							data-toggle="collapse" href="#collapseModCarta" role="button"
+							aria-expanded="false" aria-controls="collapseExample">
+							Modifica Carta</a>
+
+						
 							<div class="collapse" id="collapseModCarta">
+							<form method="post" name="modCarta"
+							onsubmit="return cardnumberTest()">
 								<div class="card card-body"
 									style="margin-bottom: 10px; text-align: center;">
+									<div class="form-group">
 									<input type="text" name="cardnumber" class="form-control"
-										placeholder="Inserisci il numero della nuova carta"> <input
-										type="text" class="form-control"
-										placeholder="Inserisci il nome dell'intestatario">
-									<div class="dropdown  d-inline">
-										<select name="cardname" class="form-control1" name="scadenzaAnno">
+										placeholder="Inserisci il numero della nuova carta"> 
+										</div>
+										<div class="form-group">
+										<input	type="text" class="form-control" name="nomeIntestatario"	placeholder="Inserisci il nome dell'intestatario">
+										</div>
+										<div class="form-group">
+										
+										<div class="dropdown  d-inline">
+										<label for="tipoCarta">Tipo Carta</label>	
+										<select name="cardname" class="form-control"
+											>
 											<option value="Visa">Visa</option>
 											<option value="MasterCard">MasterCard</option>
 											<option value="Maestro">Maestro</option>
 										</select>
 									</div>
+										</div>
+									
+									
+									<div class="form-group">
+										<label for="scadenzaCarta">Scadenza Carta</label>
+										<div class="dropdown  d-inline">
+											<select class="form-control1 d-inline" name="scadenzaMese">
+												<option value="">1</option>
+												<option value="">2</option>
+												<option value="">3</option>
+												<option value="">4</option>
+												<option value="">7</option>
+												<option value="">8</option>
+												<option value="">9</option>
+												<option value="">10</option>
+												<option value="">11</option>
+												<option value="">12</option>
+											</select>
+										</div>
+										/
+										<div class="dropdown  d-inline">
+											<select class="form-control1 d-inline" name="scadenzaAnno">
+												<%for(int i=2019; i<=2040;i++){ %>
+												<option value=<%=i %>><%=i %></option>
+												<%} %>
+											</select>
+										</div>
+
+									</div>
 
 								</div>
 								<button type="submit" class="btn btn-info btn-lg btn-block"
 									formaction="#">Conferma</button>
+							</form>
 							</div>
-						</form>
+						
 
 					</div>
-                </div>
-                <!-- <button type="button" id="btn-utente" class="btn btn-light btn-lg btn-block">Modifica E-mail</button>-->
+				</div>
+				<!-- <button type="button" id="btn-utente" class="btn btn-light btn-lg btn-block">Modifica E-mail</button>-->
 
 
                 <!-- Form modifica password -->
@@ -402,6 +454,67 @@ function validateMail(changeMailForm){
       return false;
     } else return true;
 }
+
+function cardnumberTest()
+{
+	
+	var name = document.modCarta.nomeIntestatario;
+	var x = document.modCarta.cardname;
+	console.log(x.value + "dovrebbe esserci la carta");
+	var inputtxt = document.modCarta.cardnumber;
+	console.log(inputtxt.value + "dovrebbe esserci la carta");
+
+	
+	
+
+	if (x.value === "Visa") {
+			var cardno = /^(?:4[0-9]{12}(?:[0-9]{3})?)$/;
+
+			if (inputtxt.value.match(cardno)) {
+				allLetter(name.value)
+				return true;
+			} else {
+				alert("Not a valid Visa credit card number!");
+				return false;
+			}
+		} else if (x.value === "MasterCard") {
+
+			var cardno = /^(?:5[1-5][0-9]{14})$/;
+			if (inputtxt.value.match(cardno)) {
+				if(allLetter(name) == false) return false;
+				alert('Abbiamo vinto')
+				return true;
+			} else {
+				alert("Not a valid Mastercard number!");
+				return false;
+			}
+
+		} else if (x.value === "AmericanExpress") {
+
+			var cardno = /^(?:3[47][0-9]{13})$/;
+			if (inputtxt.value.match(cardno)) {
+				return true;
+			} else {
+				alert("Not a valid Amercican Express credit card number!");
+				return false;
+			}
+		} else {
+
+			alert("Numero di carta non valido!");
+
+		}
+	}
+
+	function allLetter(name) {
+		var letters = /^[A-Za-z]+$/;
+		if (name.value.match(letters)) {
+			return true;
+		} else {
+			alert('Username must have alphabet characters only');
+			
+			return false;
+		}
+	}
 </script>
 </body>
 
