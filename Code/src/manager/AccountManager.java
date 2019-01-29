@@ -314,27 +314,32 @@ public class AccountManager {
 	 * Recupero il supervisore con il minor numero di corsi da supervisionare
 	 * @return
 	 * @throws SQLException
+	 * @throws NotFoundException 
 	 */
-	public AccountBean retrieveLessUsedSupervisor() throws SQLException {
+	public AccountBean retrieveLessUsedSupervisor() throws SQLException, NotFoundException {
 		Connection connection=null;
 		PreparedStatement statement=null;
 		AccountBean temp= new AccountBean();
 		
 		String sql="select * from(\r\n" + 
 				"	select email,account.nome,cognome,tipo,verificato,count(idCorso) as numero\r\n" + 
-				"	from account,corso	\r\n" + 
-				"	where tipo='Supervisore' AND email=accountSupervisore\r\n" + 
+				"	from account left join corso on email=accountSupervisore	\r\n" + 
+				"	where tipo='Supervisore'\r\n" + 
 				"	group by email) as t\r\n" + 
 				"	where numero=(select min(numero2) \r\n" + 
 				"			  from (\r\n" + 
 				"					select email,count(idCorso) as numero2\r\n" + 
-				"					from account ,corso	\r\n" + 
-				"					where tipo='Supervisore' AND email=accountSupervisore \r\n" + 
+				"					from account left join corso on email=accountSupervisore\r\n" + 
+				"					where tipo='Supervisore' \r\n" + 
 				"                    group by email) as v) ";
 		try {
 			connection=dataSource.getConnection();
 			statement=connection.prepareStatement(sql);
+			System.out.println("retrieveLessUsedSupervisor: "+statement.toString());
 			ResultSet rs=statement.executeQuery();
+			
+			if(!rs.next()) throw new NotFoundException("Non esistono supervisori");
+			
 			temp.setNome(rs.getString("Nome"));
 			temp.setCognome(rs.getString("Cognome"));
 			temp.setTipo(Ruolo.valueOf(rs.getString("tipo")));

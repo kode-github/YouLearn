@@ -1,3 +1,4 @@
+<%@page import="bean.CorsoBean.Stato"%>
 <%@page import="org.apache.jasper.tagplugins.jstl.core.ForEach"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
@@ -350,7 +351,7 @@
                     </div>
 		<div class="card-b-corsi card-body">
 			<a
-				href="http://localhost/YouLearn/Corso.jsp?idCorso=<%=i.getCorso().getIdCorso()%>">
+				href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getCorso().getIdCorso()%>">
 				<%=i.getCorso().getNome()%></a>
 		</div>
 		<%} 
@@ -360,7 +361,8 @@
 	<!-- INIZIO CORSI TENUTI -->
 
 	<div class="card w-75 mx-auto">
-		<h5 class="card-h-corsi card-header">CORSI TENUTI</h5>
+		<h5 class="card-h-corsi card-header">CORSI TENUTI   
+		<a href="http://localhost:8080/YouLearn/SettingCorso.jsp">+</a></h5>
 		<%
                          	LinkedList<CorsoBean> corsiTenuti=(LinkedList<CorsoBean>) a.getCorsiTenuti();
                     		if(corsiTenuti.isEmpty()){
@@ -372,33 +374,30 @@
                     			for(CorsoBean i: corsiTenuti){
                     		%>
                     		<div class="card-body">
-                    		
-                        <a href="http://localhost/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><img class="img-corsi-attesa rounded float-left" src=<%=i.getCopertina() %> alt="FAIL" width="170" height="170" ></a>
+                    		<form method="post">
+                        <a href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><img class="img-corsi-attesa rounded float-left" src=<%=i.getCopertina() %> alt="FAIL" width="170" height="170" ></a>
                         <ul class="informazioni-corso rounded float-left">
-                            <li>NOME CORSO: <a href="http://localhost/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><%=i.getNome()%></a></li>
+                            <li>NOME CORSO: <a href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><%=i.getNome()%></a></li>
                             <li>NUMERO ISCRITTI: <%=i.getnIscritti() %></li>
                             <li>SCADENZA ISCRIZIONI: <%=i.getDataFine() %></li>
                             <li>STATO: <%=i.getStato() %></li>
 
                         </ul>
-                       	<%if(i.getStato().equals("Attivo") || i.getStato().equals("Disattivo"));
-                       		if(i.getStato().equals("In Attesa")){
+                       	<%if(i.getStato().equals(Stato.Completamento)){
                        	%>	
-                       	<div class="float-lg-right ">
-                       		<button type="button" class="btn btn-danger btn-lg  ">Elimina Corso</button>
-                        </div>
-                       		
-                       	<%} else {%>
                         <div class="float-lg-right ">
-                       		<button type="button" class="btn btn-success btn-lg ">Conferma</button>
-                            <button type="button" class="btn btn-outline-secondary btn-lg ">Modifica</button>
-                            <button type="button" class="btn btn-outline-secondary btn-lg  ">Gestisci lezioni</button>
-                            <button type="button" class="btn btn-danger btn-lg  ">Elimina Corso</button>
+                       		<button type="submit" formaction="http://localhost:8080/YouLearn/ConfermaCorsoServlet?idCorso=<%=i.getIdCorso() %>" 
+                       		class="btn btn-success btn-lg ">Conferma</button>
+                            <button type="submit" class="btn btn-outline-secondary btn-lg ">Modifica</button>
+                            <button type="submit" class="btn btn-outline-secondary btn-lg  ">Gestisci lezioni</button>
+                            <button type="submit"
+                       		 formaction="http://localhost:8080/YouLearn/CancCorsoServlet?idCorso=<%=i.getIdCorso() %>" 
+                       		 class="btn btn-danger btn-lg  ">Elimina Corso</button>
                         </div>
                     		
 		<%}
                             }}%>
-
+			</form>
 	</div>
 
 	<!-- FINE -->

@@ -26,6 +26,8 @@
 </head>
 <body>
 
+	  <%@ include file="Navbar.jsp" %>
+
  <div class="card card-5 w-50 mx-auto">
         <div class="card-header text-center " style="font-size: 30px;">CREAZIONE CORSO</div>
         <div class="card-body">

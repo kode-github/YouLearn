@@ -196,7 +196,6 @@ public class LezioneManager {
 
 		try {
 			connection = dataSource.getConnection();
-			connection.setAutoCommit(false);
 			preparedStatement = connection.prepareStatement(deleteSQL);
 			preparedStatement.setInt(1, idLezione);
 			System.out.println("doDelete: "+ preparedStatement.toString());

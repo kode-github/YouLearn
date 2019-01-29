@@ -218,7 +218,7 @@ public class CorsoManager {
 			preparedStatement.setString(8, corso.getCopertina());
 			preparedStatement.setInt(9, corso.getPrezzo());
 			preparedStatement.setString(10, corso.getStato().toString());
-			preparedStatement.setString(11, corso.getDescrizione());
+			preparedStatement.setString(11, corso.getCopertina().toString());
 			preparedStatement.setInt(12, corso.getIdCorso());
 			preparedStatement.executeUpdate();
 			connection.commit();
@@ -248,6 +248,33 @@ public class CorsoManager {
 																								+ "completamento");
 		
 		doUpdate(corso);
+	}
+	
+	public void removeCorso(int idCorso) throws SQLException, NotFoundException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		String deleteSQL = "DELETE FROM Corso WHERE idCorso=? AND stato=?";
+
+		try {
+			connection = dataSource.getConnection();
+			preparedStatement = connection.prepareStatement(deleteSQL);
+			preparedStatement.setInt(1, idCorso);
+			preparedStatement.setString(2, Stato.Completamento.toString());
+			System.out.println("doDelete: "+ preparedStatement.toString());
+			int result=preparedStatement.executeUpdate();
+			
+			if(result==0) throw new NotFoundException("Il corso non esiste oppure non è in completamento");
+			
+			
+		} finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+			} finally {
+				connection.close();
+			}
+		}
 	}
 	
 
@@ -281,7 +308,7 @@ public class CorsoManager {
 	 * @throws SQLException
 	 */
 	public void confermaCorso(CorsoBean corso) throws NotWellFormattedException, NotFoundException, NoPermissionException, SQLException {
-		if(!isWellFormatted(corso) || corso.getIdCorso()==null) throw new NotWellFormattedException("Il corso non è ben formattato");
+		if(corso==null || !isWellFormatted(corso) || corso.getIdCorso()==null) throw new NotWellFormattedException("Il corso non è ben formattato");
 		if(!checkCorso(corso)) throw new NotFoundException("Il corso non esiste");
 		if(!corso.getStato().equals(Stato.Completamento)) throw new NoPermissionException("Non si può confermare un corso non in completamento");
 		
@@ -327,6 +354,7 @@ public class CorsoManager {
 				 corso.setNome(rs.getString("nome"));
 				 corso.setDescrizione(rs.getString("Descrizione"));
 				 corso.setCopertina(rs.getString("copertina"));
+				 corso.setPrezzo(rs.getInt("prezzo"));
 				 corso.setStato(Stato.valueOf(rs.getString("stato")));
 				 corso.setDataCreazione(rs.getDate("dataCreazione"));
 				 corso.setDataFine(rs.getDate("DataFine"));
@@ -364,7 +392,7 @@ public class CorsoManager {
 		lezioneManager= new LezioneManager();
 		if(!accountManager.isWellFormatted(account)) throw new NotWellFormattedException("L'account non è ben formattato");
 		if(!accountManager.checkAccount(account)) throw new NotFoundException("Questo account non esiste");
-		if(!account.getTipo().equals(Ruolo.Utente)) throw new NoPermissionException("Questo utente non può avere corsi creati");
+		if(!account.getTipo().equals(Ruolo.Supervisore)) throw new NoPermissionException("Questo utente non può avere corsi da supervisionare");
 		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
@@ -418,8 +446,8 @@ public class CorsoManager {
 		Connection connection=null;
 		PreparedStatement statement=null;
 		
-		String sql="Select idcorso from corso where idCorso=?, nome=?, descrizione=?,dataCreazione=?,dataFine=?,"
-				+ " copertina=?, prezzo=?, stato=?, categoria=?, nLezioni=?, nIscritti=?, accountCreatore=?, accountSupervisore=? ";
+		String sql="Select idcorso from corso where idCorso=? AND nome=? AND descrizione=? AND dataCreazione=? AND dataFine=? AND"
+				+ " copertina=? AND prezzo=? AND stato=? AND categoria=? AND nLezioni=? AND nIscritti=? AND accountCreatore=?";
 		
 		try {
 			connection=dataSource.getConnection();
@@ -436,7 +464,7 @@ public class CorsoManager {
 			statement.setInt(10, corso.getnLezioni());
 			statement.setInt(11, corso.getnIscritti());
 			statement.setString(12, corso.getDocente().getMail());
-			statement.setString(13, corso.getSupervisore().getMail());
+			System.out.println("CheckCorso: "+statement.toString());
 			return (statement.executeQuery()).next();
 			
 		}finally {

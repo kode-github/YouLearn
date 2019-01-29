@@ -322,6 +322,22 @@ public class AccountBean{
 		
 	}
 	
+	/**
+	 * Retrieve di un corso tenuto 
+	 * @param id id del corso
+	 * @return il corso, null se non esiste o l'id del corso è null
+	 */
+	public CorsoBean getCorsoTenuto(int id) {
+		if(corsiTenuti==null) return null;
+		Iterator<CorsoBean> i=corsiTenuti.iterator();
+		while(i.hasNext()) {
+			CorsoBean corso=i.next();
+			if(corso.getIdCorso()!=null && corso.getIdCorso()==id)
+				return corso;
+		}
+		return null;
+	}
+	
 
 	/**
 	 * Rimuove l'associazione tra il docente e il suo corso, questo metodo viene richiamato ad esempio quando un corso viene rifiutato.

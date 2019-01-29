@@ -61,18 +61,18 @@
                     	AccountBean account=(AccountBean)request.getSession().getAttribute("account");
                     	if(account.getTipo().equals(Ruolo.Utente)){
                     %>
-                    <a class="nav-link" href="http://localhost/YouLearn/HomepageUtente.jsp" style="float:right">Homepage <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="http://localhost:8080/YouLearn/HomepageUtente.jsp" style="float:right">Homepage <span class="sr-only">(current)</span></a>
                 	<% }
                     	else{
                     %>
-                	<a class="nav-link" href="http://localhost/YouLearn/HomepageSupervisore.jsp" style="float:right">Homepage <span class="sr-only">(current)</span></a>
+                	<a class="nav-link" href="http://localhost:8080/YouLearn/HomepageSupervisore.jsp" style="float:right">Homepage <span class="sr-only">(current)</span></a>
                 	<%} %>
               
                 </li>
                 
                 <li class="nav-item active">
                     <i class="fas fa-sign-out-alt fa-2x"style="float:left"></i>
-                    <a class="nav-link" href="http://localhost/YouLearn/LogoutServlet"style="float:right">Logout</a>
+                    <a class="nav-link" href="http://localhost:8080/YouLearn/LogoutServlet"style="float:right">Logout</a>
                 </li>
             </ul>
         </div>
