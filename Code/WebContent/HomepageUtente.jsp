@@ -361,8 +361,10 @@
 	<!-- INIZIO CORSI TENUTI -->
 
 	<div class="card w-75 mx-auto">
-		<h5 class="card-h-corsi card-header">CORSI TENUTI   
-		<a href="http://localhost:8080/YouLearn/SettingCorso.jsp">+</a></h5>
+		<div class="card-header"><h5 class="card-h-corsi">CORSI TENUTI</h5>	<a class="float-right position-absolute" style="text-decoration: none!important; color: green; right: 0px;right: 9px;top: 8px;font-size: 20px; font-weight: bold;" 
+		href="http://localhost:8080/YouLearn/SettingCorso.jsp"><button style="font-family:'Ubuntu', sans-serif; border-color:#f8f9fa!important; font-size:22px!important;" type="button" class="btn btn-outline-success"><i class="fas fa-plus-circle"></i> Crea un corso!</button></a>
+		</div>
+		
 		<%
                          	LinkedList<CorsoBean> corsiTenuti=(LinkedList<CorsoBean>) a.getCorsiTenuti();
                     		if(corsiTenuti.isEmpty()){
@@ -388,7 +390,9 @@
                         <div class="float-lg-right ">
                        		<button type="submit" formaction="http://localhost:8080/YouLearn/ConfermaCorsoServlet?idCorso=<%=i.getIdCorso() %>" 
                        		class="btn btn-success btn-lg ">Conferma</button>
-                            <button type="submit" class="btn btn-outline-secondary btn-lg ">Modifica</button>
+                            <button type="submit"
+                            formaction="http://localhost:8080/YouLearn/ModCorsoServlet?idCorso=<%=i.getIdCorso() %>"
+                             class="btn btn-outline-secondary btn-lg ">Modifica</button>
                             <button type="submit" class="btn btn-outline-secondary btn-lg  ">Gestisci lezioni</button>
                             <button type="submit"
                        		 formaction="http://localhost:8080/YouLearn/CancCorsoServlet?idCorso=<%=i.getIdCorso() %>" 
