@@ -24,7 +24,7 @@ public class DriverManagerConnecitonPoolTest extends TestCase {
 	public void testReleaseConnessione() throws SQLException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException {
 		Connection connection=(Connection) PrivilegedAccessor.invokeMethod(DriverManagerConnectionPool.class, "createDBConnection()");
 		DriverManagerConnectionPool.releaseConnection(connection);
-		assertEquals("la connessione creata non è valida",1, ((List<Connection>)(PrivilegedAccessor.getValue(DriverManagerConnectionPool.class, "freeDbConnections"))).size());
+		assertEquals("la connessione creata non ï¿½ valida",1, ((List<Connection>)(PrivilegedAccessor.getValue(DriverManagerConnectionPool.class, "freeDbConnections"))).size());
 	}
 	
 	@Test
