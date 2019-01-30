@@ -5,25 +5,23 @@ body {
 
 }
 
-.informazioni-utente-p {
-
-    display: block;
-    text-align: left;
-    font-size: 25px;
-
-}
 
 .top {
     margin-top: 15px;
 
 }
 
+.container-fluid{
+	
+	padding: 0px 35px!important;
+	
+}
+
 .utente-tab {
 
-    padding: 40px 0px;
+    /*padding: 40px 0px;*/
     text-align: center;
-    width: 340px;
-    height: 100%;
+   padding:50px 40px;
 
 }
 
@@ -44,29 +42,55 @@ body {
 
 .card-utente{
 
-    padding: 5px 0px;
-    background-color: #00adb5;
+    padding:2px!important;
+    background-color: #00adb5!important;
     color: #222831;
     font-weight: bolder;
 }
 
 .card-b-utente{
-
-    padding: 5px 0px;
-    background-color: #393e46;
-    color: #eeeeee;
+   padding:2px!important;
+    background-color: #393e46!important;
+    color: #eeeeee!important;
 
 }
-
-
 .card{
 
     margin-top: 20px;
-    max-height: 900px;
-   overflow: auto;
-
 
 }
+
+.card-h-corsi{
+
+    text-align: center;
+    font-size: 30px;
+    font-weight: bolder;
+
+}
+
+.card-title{
+	
+	margin-bottom:0.2rem!important;
+	
+}
+
+#btn-utente {
+
+    background-color: #00adb5;
+    font-weight: bolder;
+    color: black;
+
+}
+
+.informazioni-corso {
+
+  	margin-top: 17px;
+    margin-left: 10px;
+    text-align: left;
+    font-size: 25px;
+
+}
+
 
 .card-body{
 
@@ -82,18 +106,6 @@ body {
 
 }
 
-.corsi-tab{
-
-    margin-left: 382px;
-
-}
-.btn-utente {
-
-    background-color: #00adb5;
-    font-weight: bolder;
-    color: black;
-
-}
 
 ul{
 

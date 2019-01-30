@@ -52,14 +52,15 @@
 				class="profile-img " src="Images/Image.jpg" alt="FAIL" width="220"
 				height="220">
 			<div class="utente-tab  mx-auto w-75">
-				<%AccountBean account1 = (AccountBean)request.getSession().getAttribute("account"); 
-            %>
+				<%
+					AccountBean account1 = (AccountBean) request.getSession().getAttribute("account");
+				%>
 				<div class="row">
 					<div class="col-4">
 						<div class="card mb-3 mx-auto">
 							<div class="card-utente card-header">Nome:</div>
 							<div class="card-b-utente card-body ">
-								<h5 class="card-title"><%=account1.getNome() %></h5>
+								<h5 class="card-title"><%=account1.getNome()%></h5>
 							</div>
 						</div>
 					</div>
@@ -67,7 +68,7 @@
 						<div class="card mb-3 mx-auto">
 							<div class="card-utente card-header">Cognome:</div>
 							<div class="card-b-utente card-body ">
-								<h5 class="card-title"><%=account1.getCognome() %></h5>
+								<h5 class="card-title"><%=account1.getCognome()%></h5>
 							</div>
 						</div>
 					</div>
@@ -75,7 +76,7 @@
 						<div class="card mb-3 mx-auto">
 							<div class="card-utente card-header">E-mail:</div>
 							<div class="card-b-utente card-body ">
-								<h5 class="card-title"><%=account1.getMail() %></h5>
+								<h5 class="card-title"><%=account1.getMail()%></h5>
 							</div>
 						</div>
 					</div>
@@ -147,115 +148,48 @@
 		<div class="card w-75 mx-auto">
 			<h5 class="card-h-corsi card-header">CORSI DA SUPERVISIONARE</h5>
 			<%
-                         	LinkedList<CorsoBean> corsiDaSupervsionare = (LinkedList<CorsoBean>) account1.getCorsiDaSupervisionare();
-                    		if(corsiDaSupervsionare.isEmpty()){
-                         %>
-			<div class="card-b-corsi card-body">Non ci sono corsi da supervisionare fate proprio schifo...</div>
-			<%}
-                    		else{
-                    			for(CorsoBean i: corsiDaSupervsionare){
-                    		%>
+				LinkedList<CorsoBean> corsiDaSupervsionare = (LinkedList<CorsoBean>) account1.getCorsiDaSupervisionare();
+				if (corsiDaSupervsionare.isEmpty()) {
+			%>
+			<div class="card-b-corsi card-body">Non ci sono corsi da
+				supervisionare fate proprio schifo...</div>
+			<%
+				} else {
+					for (CorsoBean i : corsiDaSupervsionare) {
+			%>
 			<div class="card-body">
 
 				<a
 					href="http://localhost/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><img
 					class="img-corsi-attesa rounded float-left"
-					src=<%=i.getCopertina() %> alt="FAIL" width="170" height="170"></a>
+					src=<%=i.getCopertina()%> alt="FAIL" width="170" height="170"></a>
 				<ul class="informazioni-corso rounded float-left">
 					<li>NOME CORSO: <a
 						href="http://localhost/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><%=i.getNome()%></a></li>
-					<li>NUMERO ISCRITTI: <%=i.getnIscritti() %></li>
-					<li>SCADENZA ISCRIZIONI: <%=i.getDataFine() %></li>
+					<li>NUMERO ISCRITTI: <%=i.getnIscritti()%></li>
+					<li>SCADENZA ISCRIZIONI: <%=i.getDataFine()%></li>
 
 				</ul>
-				
+
 				<div class="float-right ">
 					<button type="button" class="btn btn-success btn-lg ">Conferma</button>
-					<button type="button" class="btn btn-outline-secondary btn-lg ">Vai al corso</button>
+					<button type="button" class="btn btn-outline-secondary btn-lg ">Vai
+						al corso</button>
 					<button type="button" class="btn btn-danger btn-lg">Rifiuta</button>
-					
+
 				</div>
 
-				<%}
-                            }%>
+				<%
+					}
+					}
+				%>
 
 			</div>
 
 			<!-- FINE -->
 		</div>
-		<div class="card mx-auto w-100">
-			<h5 class="card-lista-attesa card-header">LISTA CORSI</h5>
-			<div class="card-body">
-				<img class="img-corsi-attesa rounded float-left"
-					src="Images/Image.jpg" alt="FAIL" srcset="">
-				<ul class="informazioni-corso rounded float-left">
-					<li>NOME CORSO:</li>
-					<li>NUMERO ISCRITTI:</li>
-					<li>SCADENZA ISCRIZIONI:</li>
-
-				</ul>
-				<div class="float-lg-right ">
-					<button type="button"
-						class="btn btn-primary btn-lg d-lg-block w-100">Vai al
-						corso</button>
-					<button type="button"
-						class="btn btn-success btn-lg d-lg-block w-100">Conferma</button>
-					<button type="button"
-						class="btn btn-danger btn-lg d-lg-block w-100">Rifiuta</button>
-				</div>
 
 
-			</div>
-			<div class="card-body">
-				<img class="img-corsi-attesa rounded float-left"
-					src="Images/Image.jpg" alt="FAIL" srcset="" width="150"
-					height="150">
-				<ul class="informazioni-corso rounded float-left">
-					<li>NOME CORSO:</li>
-					<li>NUMERO ISCRITTI:</li>
-					<li>SCADENZA ISCRIZIONI:</li>
-
-
-				</ul>
-
-				<div class="float-lg-right ">
-					<button type="button"
-						class="btn btn-primary btn-lg d-lg-block w-100">Vai al
-						corso</button>
-					<button type="button"
-						class="btn btn-success btn-lg d-lg-block w-100">Conferma</button>
-					<button type="button"
-						class="btn btn-danger btn-lg d-lg-block w-100">Rifiuta</button>
-				</div>
-
-			</div>
-			<div class="card-body">
-				<img class="img-corsi-attesa rounded float-left"
-					src="Images/Image.jpg" alt="FAIL" srcset="" width="150"
-					height="150">
-				<ul class="informazioni-corso rounded float-left">
-					<li>NOME CORSO:</li>
-					<li>NUMERO ISCRITTI:</li>
-					<li>SCADENZA ISCRIZIONI:</li>
-
-
-				</ul>
-
-				<div class="float-lg-right ">
-					<button type="button"
-						class="btn btn-primary btn-lg d-lg-block w-100">Vai al
-						corso</button>
-					<button type="button"
-						class="btn btn-success btn-lg d-lg-block w-100">Conferma</button>
-					<button type="button"
-						class="btn btn-danger btn-lg d-lg-block w-100">Rifiuta</button>
-				</div>
-
-			</div>
-
-		</div>
-
-	</div>
 	</div>
 
 

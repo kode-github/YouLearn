@@ -1,3 +1,6 @@
+<%@page import="bean.IscrizioneBean"%>
+<%@page import="bean.CorsoBean"%>
+<%@page import="java.util.LinkedList"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
@@ -38,19 +41,105 @@
 	
 	 -->
 	
-	
+	<%@ include file="Navbar.jsp" %>
 
 <% 	
-		//String idCorso = request.getParameter("idCorso");
-		//if(idCorso==null){}
-			//Manda su Homepage
+		String idCorso = request.getParameter("idCorso");
+		if(idCorso==null){}
+		//Manda su Homepage
+		AccountBean a1 = (AccountBean) request.getSession().getAttribute("account");
+		LinkedList<CorsoBean> listaCorsiTenuti = (LinkedList<CorsoBean>) a1.getCorsiTenuti();
+		LinkedList<IscrizioneBean> listaCorsiSeguiti = (LinkedList<IscrizioneBean>) a1.getIscrizioni();
+		LinkedList<CorsoBean> listaCorsiDaSupervisionare = (LinkedList<CorsoBean>) a1.getCorsiDaSupervisionare();
+
+		if(listaCorsiTenuti.isEmpty() && listaCorsiSeguiti.isEmpty() && listaCorsiDaSupervisionare.isEmpty())
+			System.out.println("Devo acquistare il corso!");	
+		else{
+			
+			CorsoBean corso = (CorsoBean) a1.getCorsoTenuto(Integer.parseInt(idCorso));
+			%>
+
+	<h1 id="titolo-pagina" class="display-3"><%=corso.getNome() %></h1>
+	<div class="container-fluid">
+		<div class="row">
+			<div id="" class="div-container col-lg-6" style="text-align: center;">
+				<img id="img-corso" src="Images/Image.jpg" alt="" srcset=""
+					width="250px" height="250px">
+			</div>
+			<div id="" class="div-container col-lg-6"
+				style="display: flex; align-items: center; justify-content: center">
+				<p id="p-info-corso"><%=corso.getDescrizione()%></p>
+			</div>
+		</div>
+		<div class="row">
+			<div id="" class="div-container col-12">
+				<table class="table table-striped w-50 mx-auto">
+					<thead>
+						<tr>
+							<th colspan="2" scope="col"><i class="fas fa-info fa-3x"></i>
+								INFO SUL CORSO</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td scope="row">Numero iscritti</td>
+							<td><%=corso.getnIscritti() %></td>
+
+
+
+						</tr>
+						<tr>
+							<th scope="row">Numero Lezioni</th>
+							<td><%=corso.getnLezioni() %></td>
+
+						</tr>
+						<tr>
+							<th scope="row">Data scadenza iscrizioni</th>
+							<td><%=corso.getDataFine() %> </td>
+
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div style="margin-top: 50px;" class="card w-50 mx-auto">
+			<h5 class="card-h-corsi card-header">LEZIONI</h5>
+
+
+			<!-- <div class="card-b-corsi card-body">Non ci sono corsi
+			Tenuti....M'occ a mammt</div>  -->
+
+			<div class="mx-auto card-b-corsi card-body">
+				<a href="http://localhost/YouLearn/Corso.jsp?idCorso="><img
+					class="img-corsi-attesa rounded float-left" src="Images/Image.jpg"
+					alt="FAIL" width="170" height="170"></a>
+				<ul class="informazioni-corso rounded float-left">
+					<li>NOME LEZIONE <a href="#"></a></li>
+					<li>VIEWS:</li>
+
+
+				</ul>
+			</div>
+
+
+		</div>
+	</div>
+
+
+
+
+	<%
+		}
+
 		//recupera il corso da Account, prima su CorsiTenuti e poi su Iscrizioni
 		//Se il corso è in CorsiTenuti, account è un docente e quindi visualizza interamente
 		//Se il corso è in Iscrizioni, account è uno studente del corso
 		//Altrimenti, non mostrare le lezioni e mostra pulsante di Acquisto
 	%>
+	 
 	
-	<h1 id="titolo-pagina" class="display-3">NOME CORSO</h1>
+	<!-- <h1 id="titolo-pagina" class="display-3">NOME CORSO</h1>
 	<div class="container-fluid">
 		<div class="row">
 			<div id="" class="div-container col-lg-6" style="text-align: center;">
@@ -104,12 +193,12 @@
 				</table>
 			</div>
 		</div>
-		<div class="card w-50 mx-auto">
+		<div style="margin-top:50px;" class="card w-50 mx-auto">
 		<h5 class="card-h-corsi card-header">LEZIONI</h5>
 	
                          	
 		<!-- <div class="card-b-corsi card-body">Non ci sono corsi
-			Tenuti....M'occ a mammt</div>  -->
+			Tenuti....M'occ a mammt</div>  
 	
                     	<div class="mx-auto card-b-corsi card-body">
                         <a href="http://localhost/YouLearn/Corso.jsp?idCorso="><img class="img-corsi-attesa rounded float-left" src="Images/Image.jpg" alt="FAIL" width="170" height="170" ></a>
@@ -123,9 +212,9 @@
 		
 
 	</div>
-
+</div>-->
 	<!-- FINE -->
-	</div>
+	
 		
 
 </body>

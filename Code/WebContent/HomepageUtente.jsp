@@ -40,8 +40,8 @@
 	src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
 	integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
 	crossorigin="anonymous"></script>
-	
-	
+
+
 
 
 <title>YouLearn</title>
@@ -50,7 +50,7 @@
 <body>
 
 	  <%@ include file="Navbar.jsp" %>
-	
+
 
 	<!-- IL NOME DEL CAMPO PER LA NUOVA MAIL HA name="newMail" -->
 
@@ -61,17 +61,17 @@
 	%>
 	<div id="alert" class="alert alert-success" style="text-align: center;"
 		role="alert">E-mail modificata con successo!</div>
-		
-	
+
+
 	<% } %>
-	
+
 	<%
 		Boolean emailGiaEsistente=(Boolean)request.getSession().getAttribute("emailGiaEsistente");
 		if(emailGiaEsistente!=null){
 			request.getSession().removeAttribute("emailGiaEsistente");
 	%>
 	<div class="alert alert-warning" style="text-align: center;"
-		role="alert">Ci dispiace! L'e-mail è già in uso. Prova con
+		role="alert">Ci dispiace! L'e-mail ï¿½ giï¿½ in uso. Prova con
 		un'altra!</div>
 	<% } %>
 
@@ -92,7 +92,7 @@
 	%>
 
 	<div class="alert alert-warning" style="text-align: center;"
-		role="alert">C'è stato un problema! Le password non coincidono,
+		role="alert">C'ï¿½ stato un problema! Le password non coincidono,
 		riprova.</div>
 	<% } %>
 
@@ -124,12 +124,12 @@
 
 
 	<div class="container-fluid">
-	
+
 		 <div class="row ">
             <img style="float: left; margin: 25px 0px 0px 25px;" class="profile-img " src="Images/Image.jpg" alt="FAIL" width="220"
                 height="220">
             <div class="utente-tab  mx-auto w-75">
-            <%AccountBean account1 = (AccountBean)request.getSession().getAttribute("account"); 
+            <%AccountBean account1 = (AccountBean)request.getSession().getAttribute("account");
             %>
                 <div class="row">
                     <div class="col-4">
@@ -202,8 +202,8 @@
 									<div class="form-group"><input
 										type="password" name="oldPass" id="oldPass"
 										class="form-control" placeholder="Conferma tua nuova password"></div>
-									
-									
+
+
 								</form>
 							</div>
 							<button type="submit" class="btn btn-info btn-lg btn-block"
@@ -219,7 +219,7 @@
 							aria-expanded="false" aria-controls="collapseExample">
 							Modifica Carta</a>
 
-						
+
 							<div class="collapse" id="collapseModCarta">
 							<form method="post" name="modCarta"
 							onsubmit="return cardnumberTest()">
@@ -227,15 +227,15 @@
 									style="margin-bottom: 10px; text-align: center;">
 									<div class="form-group">
 									<input type="text" name="cardnumber" class="form-control"
-										placeholder="Inserisci il numero della nuova carta"> 
+										placeholder="Inserisci il numero della nuova carta">
 										</div>
 										<div class="form-group">
 										<input	type="text" class="form-control" name="nomeIntestatario"	placeholder="Inserisci il nome dell'intestatario">
 										</div>
 										<div class="form-group">
-										
+
 										<div class="dropdown  d-inline">
-										<label for="tipoCarta">Tipo Carta</label>	
+										<label for="tipoCarta">Tipo Carta</label>
 										<select name="cardname" class="form-control"
 											>
 											<option value="Visa">Visa</option>
@@ -244,8 +244,8 @@
 										</select>
 									</div>
 										</div>
-									
-									
+
+
 									<div class="form-group">
 										<label for="scadenzaCarta">Scadenza Carta</label>
 										<div class="dropdown  d-inline">
@@ -278,7 +278,7 @@
 									formaction="#">Conferma</button>
 							</form>
 							</div>
-						
+
 
 					</div>
 				</div>
@@ -286,9 +286,9 @@
 
 
                 <!-- Form modifica password -->
-               
+
                 <!-- Form modifica carta -->
-               
+
 
 
             </div>
@@ -332,7 +332,7 @@
                     		else{
                     			for(IscrizioneBean i: corsi){
                     		%>
-                    		
+
                     		<div class="card-body">
                         <img class="img-corsi-attesa rounded float-left" src="Images/Image.jpg" alt="FAIL" srcset="">
                         <ul class="informazioni-corso rounded float-left">
@@ -354,15 +354,17 @@
 				href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getCorso().getIdCorso()%>">
 				<%=i.getCorso().getNome()%></a>
 		</div>
-		<%} 
+		<%}
                             }%>
 	</div>
 
 	<!-- INIZIO CORSI TENUTI -->
 
 	<div class="card w-75 mx-auto">
-		<h5 class="card-h-corsi card-header">CORSI TENUTI   
-		<a href="http://localhost:8080/YouLearn/SettingCorso.jsp">+</a></h5>
+		<div class="card-header"><h5 class="card-h-corsi">CORSI TENUTI</h5>	<a class="float-right position-absolute" style="text-decoration: none!important; color: green; right: 0px;right: 9px;top: 8px;font-size: 20px; font-weight: bold;"
+		href="http://localhost:8080/YouLearn/SettingCorso.jsp"><button style="font-family:'Ubuntu', sans-serif; border-color:#f8f9fa!important; font-size:22px!important;" type="button" class="btn btn-outline-success"><i class="fas fa-plus-circle"></i> Crea un corso!</button></a>
+		</div>
+
 		<%
                          	LinkedList<CorsoBean> corsiTenuti=(LinkedList<CorsoBean>) a.getCorsiTenuti();
                     		if(corsiTenuti.isEmpty()){
@@ -384,19 +386,19 @@
 
                         </ul>
                        	<%if(i.getStato().equals(Stato.Completamento)){
-                       	%>	
+                       	%>
                         <div class="float-lg-right ">
-                       		<button type="submit" formaction="http://localhost:8080/YouLearn/ConfermaCorsoServlet?idCorso=<%=i.getIdCorso() %>" 
+                       		<button type="submit" formaction="http://localhost:8080/YouLearn/ConfermaCorsoServlet?idCorso=<%=i.getIdCorso() %>"
                        		class="btn btn-success btn-lg ">Conferma</button>
                             <button type="submit"
                              formaction="http://localhost:8080/YouLearn/SettingCorso.jsp?idCorso=<%=i.getIdCorso() %>"
-                              formtarget="_blank" class="btn btn-outline-secondary btn-lg ">Modifica</button>
+                             class="btn btn-outline-secondary btn-lg ">Modifica</button>
                             <button type="submit" class="btn btn-outline-secondary btn-lg  ">Gestisci lezioni</button>
                             <button type="submit"
-                       		 formaction="http://localhost:8080/YouLearn/CancCorsoServlet?idCorso=<%=i.getIdCorso() %>" 
+                       		 formaction="http://localhost:8080/YouLearn/CancCorsoServlet?idCorso=<%=i.getIdCorso() %>"
                        		 class="btn btn-danger btn-lg  ">Elimina Corso</button>
                         </div>
-                    		
+
 		<%}
                             }}%>
 			</form>
@@ -428,18 +430,18 @@ function validatePsw(changePswForm){
     var pswValidator = /^[a-zA-Z 0-9 \@\._\!\?\-]{8,}$/;
     var newPsw= changePswForm.newPass.value;
     var oldPsw= changePswForm.oldPass.value;
-   
+
 
 	if(!newPsw.match(oldPsw)){
 		alert("Le password non coincidono");
 	      return false;
 		}
-	
+
 
     if(!newPsw.match(pswValidator)){
       alert("La password deve contenere almeno 8 caratteri tra lettere, numeri e simboli");
       return false;
-    } 
+    }
      else return true;
 }
 
@@ -458,15 +460,15 @@ function validateMail(changeMailForm){
 
 function cardnumberTest()
 {
-	
+
 	var name = document.modCarta.nomeIntestatario;
 	var x = document.modCarta.cardname;
 	console.log(x.value + "dovrebbe esserci la carta");
 	var inputtxt = document.modCarta.cardnumber;
 	console.log(inputtxt.value + "dovrebbe esserci la carta");
 
-	
-	
+
+
 
 	if (x.value === "Visa") {
 			var cardno = /^(?:4[0-9]{12}(?:[0-9]{3})?)$/;
@@ -512,7 +514,7 @@ function cardnumberTest()
 			return true;
 		} else {
 			alert('Username must have alphabet characters only');
-			
+
 			return false;
 		}
 	}
