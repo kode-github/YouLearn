@@ -35,7 +35,7 @@ public class IscrizioneManager {
 		accountManager= new AccountManager();
 		corsoManager= new CorsoManager();
 		
-		String sql="SELECT* FROM Iscrizione WHERE accountmail=? AND corsoIdCorso=?";		
+		String sql="SELECT* FROM iscrizione WHERE accountmail=? AND corsoIdCorso=?";		
 		try {
 			connection=dataSource.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
@@ -43,7 +43,7 @@ public class IscrizioneManager {
 			preparedStatement.setInt(2, id);
 			ResultSet rs= preparedStatement.executeQuery();
 			
-			if(!rs.next()) throw new NotFoundException("L'iscrizione non è stato trovata"); //controllo che esista l'iscrizione
+			if(!rs.next()) throw new NotFoundException("L'iscrizione non ï¿½ stato trovata"); //controllo che esista l'iscrizione
 	
 			iscrizione.setDataPagamento(rs.getDate("DataPagamento"));
 			iscrizione.setFattura(rs.getString("fattura"));
@@ -62,7 +62,7 @@ public class IscrizioneManager {
 	}
 	
 	/**
-	 * Recupera tutti i corsi a cui è iscritto un Utente
+	 * Recupera tutti i corsi a cui ï¿½ iscritto un Utente
 	 * @param account
 	 * @return
 	 * @throws SQLException
@@ -75,13 +75,13 @@ public class IscrizioneManager {
 		lezioneManager= new LezioneManager();
 		corsoManager=new CorsoManager();
 		if(!accountManager.checkAccount(account)) throw new NotFoundException("Questo account non esiste");
-		if(!account.getTipo().equals(Ruolo.Utente)) throw new NoPermissionException("Questo utente non può avere corsi creati");
+		if(!account.getTipo().equals(Ruolo.Utente)) throw new NoPermissionException("Questo utente non puï¿½ avere corsi creati");
 		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		Collection<IscrizioneBean> collection= new LinkedList<IscrizioneBean>();
 		
-		String sql="SELECT* FROM Iscrizione WHERE accountMail=?";
+		String sql="SELECT* FROM iscrizione WHERE accountMail=?";
 		
 		try {
 			connection=dataSource.getConnection();
@@ -126,13 +126,13 @@ public class IscrizioneManager {
 		accountManager= new AccountManager();
 		lezioneManager= new LezioneManager();
 		corsoManager=new CorsoManager();
-		if(!corsoManager.checkCorso(corso)) throw new NotFoundException("Questo account non esiste");
+		if(!corsoManager.checkCorso(corso)) throw new NotFoundException("Questo corso non esiste");
 		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		Collection<IscrizioneBean> collection= new LinkedList<IscrizioneBean>();
 		
-		String sql="SELECT* FROM Iscrizione WHERE corsoIdCorso=?";
+		String sql="SELECT* FROM iscrizione WHERE corsoIdCorso=?";
 		
 		try {
 			connection=dataSource.getConnection();
@@ -168,7 +168,7 @@ public class IscrizioneManager {
 	 * @param iscrizione la nuova iscrizione
 	 * @throws SQLException
 	 * @throws NotFoundException L'account o il corso non esistono
-	 * @throws AlreadyExistingException L'iscrizione esiste già
+	 * @throws AlreadyExistingException L'iscrizione esiste giï¿½
 	 * @throws NoPermissionException 
 	 * @throws NotWellFormattedException 
 	 */
@@ -176,7 +176,7 @@ public class IscrizioneManager {
 		accountManager=new AccountManager();
 		corsoManager= new CorsoManager();
 		if(checkIscrizione(iscrizione.getCorso().getIdCorso(),iscrizione.getAccount().getMail())) 
-												throw new AlreadyExistingException("L'iscrizione esiste già");
+												throw new AlreadyExistingException("L'iscrizione esiste giï¿½");
 		if(!corsoManager.checkCorso(iscrizione.getCorso())) throw new NotFoundException("Il corso non esiste");
 		if(!accountManager.checkAccount(iscrizione.getAccount())) throw new NotFoundException("L'account non esiste");
 		

@@ -45,7 +45,7 @@ public class CartaDiCreditoManager {
 			System.out.println("Query: " + preparedStatement.toString());
 			ResultSet rs= preparedStatement.executeQuery();
 			
-			if(!rs.next()) throw new NotFoundException("La carta non è stato trovata"); //controllo che esista la carta
+			if(!rs.next()) throw new NotFoundException("La carta non ï¿½ stato trovata"); //controllo che esista la carta
 	
 			temp.setNomeIntestatario(rs.getString("NomeIntestatario"));
 			temp.setNumeroCarta(rs.getString("NumeroCarta"));
@@ -72,13 +72,13 @@ public class CartaDiCreditoManager {
 	 * Inserisce una nuova carta nel db
 	 * @param carta
 	 * @throws SQLException
-	 * @throws NotWellFormattedException La carta non è formattata bene
-	 * @throws AlreadyExistingException La carta esiste già
+	 * @throws NotWellFormattedException La carta non ï¿½ formattata bene
+	 * @throws AlreadyExistingException La carta esiste giï¿½
 	 * @throws NoPermissionException 
 	 */
 	public void registerCard(CartaDiCreditoBean carta) throws SQLException, NotWellFormattedException, AlreadyExistingException, NoPermissionException {
-		if(!isWellFormatted(carta)) throw new NotWellFormattedException("La carta non è formattata bene");
-		if(checkCarta(carta.getNumeroCarta())) throw new AlreadyExistingException("La carta esiste già");
+		if(!isWellFormatted(carta)) throw new NotWellFormattedException("La carta non ï¿½ formattata bene");
+		if(checkCarta(carta.getNumeroCarta())) throw new AlreadyExistingException("La carta esiste giï¿½");
 		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
@@ -121,9 +121,9 @@ public class CartaDiCreditoManager {
 	 * @throws Exception
 	 */
 	public void modifyCard(CartaDiCreditoBean newCarta,String numeroCarta) throws SQLException, NotFoundException, AlreadyExistingException, NoPermissionException, NotWellFormattedException {
-		if(!isWellFormatted(newCarta)) throw new NotWellFormattedException("La carta non è ben formattata");
+		if(!isWellFormatted(newCarta)) throw new NotWellFormattedException("La carta non ï¿½ ben formattata");
 		if(!checkCarta(numeroCarta)) throw new NotFoundException("La carta da modificare non esiste");
-		if(checkCarta(newCarta.getNumeroCarta())) throw new AlreadyExistingException("La carta inserita esiste già");
+		if(checkCarta(newCarta.getNumeroCarta())) throw new AlreadyExistingException("La carta inserita esiste giï¿½");
 		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
@@ -180,6 +180,7 @@ public class CartaDiCreditoManager {
 				if(preparedStatement!=null)
 					preparedStatement.close();
 			}finally {
+				if(connection != null)
 				connection.close();
 			}
 		}
@@ -188,16 +189,16 @@ public class CartaDiCreditoManager {
 	
 	/**
 	 * Recupera una carta di credito in base ad una mail
-	 * @param email Account a cui è associata alla mail
+	 * @param email Account a cui ï¿½ associata alla mail
 	 * @return La carta associata all'account
 	 * @throws SQLException 
 	 * @throws NotFoundException Non esiste l'account o la carta associata
-	 * @throws NoPermissionException L'account è un supervisore
+	 * @throws NoPermissionException L'account ï¿½ un supervisore
 	 */
 	public CartaDiCreditoBean retrieveByAccount(AccountBean account) throws SQLException, NotFoundException, NoPermissionException {
 		accountManager=new AccountManager();
 		if(!accountManager.checkAccount(account)) throw new NotFoundException("Questo account non esiste");
-		if(!account.getTipo().equals(Ruolo.Utente)) throw new NoPermissionException("Questo utente non può avere corsi creati");
+		if(!account.getTipo().equals(Ruolo.Utente)) throw new NoPermissionException("Questo utente non puï¿½ avere corsi creati");
 		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
@@ -211,7 +212,7 @@ public class CartaDiCreditoManager {
 			System.out.println("Query: " + preparedStatement.toString());
 			ResultSet rs= preparedStatement.executeQuery();
 			
-			if(!rs.next()) throw new NotFoundException("La carta non è stato trovata"); //controllo che esista la carta
+			if(!rs.next()) throw new NotFoundException("La carta non ï¿½ stato trovata"); //controllo che esista la carta
 	
 			temp.setNomeIntestatario(rs.getString("NomeIntestatario"));
 			temp.setNumeroCarta(rs.getString("NumeroCarta"));
@@ -232,9 +233,9 @@ public class CartaDiCreditoManager {
 	}
 	
 	/**
-	 * Controlla se una carta è well formed
+	 * Controlla se una carta ï¿½ well formed
 	 * @param carta La carta da controllare
-	 * @return true se è ben formattata, false altrimenti
+	 * @return true se ï¿½ ben formattata, false altrimenti
 	 */
 	public boolean isWellFormatted(CartaDiCreditoBean carta) {
 		String nome=carta.getNomeIntestatario();
