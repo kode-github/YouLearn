@@ -33,7 +33,7 @@
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav id="nav" class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand title" href="#">
             <img class="logo" src="Images/Logo1.png" width="50px" height="50px" class="d-inline-block align-center" alt="">
            <p>YouLearn</p>

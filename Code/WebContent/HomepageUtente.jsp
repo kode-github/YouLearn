@@ -29,17 +29,7 @@
 
 
 <!-- Script-->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-	integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-	crossorigin="anonymous"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-	integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-	crossorigin="anonymous"></script>
-<script
-	src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-	integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-	crossorigin="anonymous"></script>
+
 
 
 
@@ -49,7 +39,7 @@
 
 <body>
 
-	  <%@ include file="Navbar.jsp" %>
+	<%@ include file="Navbar.jsp"%>
 
 
 	<!-- IL NOME DEL CAMPO PER LA NUOVA MAIL HA name="newMail" -->
@@ -59,7 +49,7 @@
 		if(emailModificata!=null){
 			request.getSession().removeAttribute("emailModificata");
 	%>
-	<div id="alert" class="alert alert-success" style="text-align: center;"
+	<div id="alert" class="alert alert-success d-none" style="text-align: center;"
 		role="alert">E-mail modificata con successo!</div>
 
 
@@ -70,8 +60,8 @@
 		if(emailGiaEsistente!=null){
 			request.getSession().removeAttribute("emailGiaEsistente");
 	%>
-	<div class="alert alert-warning" style="text-align: center;"
-		role="alert">Ci dispiace! L'e-mail ï¿½ giï¿½ in uso. Prova con
+	<div id="alert" class="alert alert-warning d-none" style="text-align: center;"
+		role="alert">Ci dispiace! L'e-mail è già in uso. Prova con
 		un'altra!</div>
 	<% } %>
 
@@ -81,7 +71,7 @@
 		if(passwordModificata!=null){
 			request.getSession().removeAttribute("passwordModificata");
 	%>
-	<div class="alert alert-success" style="text-align: center;"
+	<div id="alert" class="alert alert-success d-none"  style="text-align: center;"
 		role="alert">Password modificata con successo!</div>
 	<% } %>
 
@@ -91,9 +81,9 @@
 			request.getSession().removeAttribute("passwordNonModificata");
 	%>
 
-	<div class="alert alert-warning" style="text-align: center;"
-		role="alert">C'ï¿½ stato un problema! Le password non coincidono,
-		riprova.</div>
+	<div id="alert" class="alert alert-warning d-none" style="text-align: center;"
+		role="alert">C'è stato un problema! Le password non
+		coincidono, riprova.</div>
 	<% } %>
 
 	<!-- FORM PASSWORD -->
@@ -107,7 +97,8 @@
 		if(cartaModificata!=null){
 			request.getSession().removeAttribute("cartaModificata");
 	%>
-	<!-- QUI VA MESSAGGIO CARTA MODIFICATA -->
+		<div id="alert" class="alert alert-success d-none" style="text-align: center;"
+		role="alert">Complimenti! La tua carta è stata modificata con successo!</div>
 	<% } %>
 
 	<%
@@ -115,71 +106,76 @@
 		if(cartaNonModificata!=null){
 			request.getSession().removeAttribute("cartaNonModificata");
 	%>
-	<!-- QUI VA MESSAGGIO CARTA NON MODIFICATA -->
+		<div id="alert" class="alert alert-warning d-none" style="text-align: center;"
+		role="alert">C'è stato un problema! La carta inserita è già in uso, riprova.</div>
 	<% } %>
 
 	<!-- INSERIRE FORM CARTA
 		OGNI LABEL AVRA' NOME UGUALE AL CAMPO NEL DATABASE, cioe name="nomeTabella"
 	 -->
 
-
+	<div id="alert" class="d-none" style="text-align: center;"
+		role="alert"></div>
 	<div class="container-fluid">
 
-		 <div class="row ">
-            <img style="float: left; margin: 25px 0px 0px 25px;" class="profile-img " src="Images/Image.jpg" alt="FAIL" width="220"
-                height="220">
-            <div class="utente-tab  mx-auto w-75">
-            <%AccountBean account1 = (AccountBean)request.getSession().getAttribute("account");
+		<div class="row ">
+			<img style="float: left; margin: 25px 0px 0px 25px;"
+				class="profile-img " src="Images/Image.jpg" alt="FAIL" width="220"
+				height="220">
+			<div class="utente-tab  mx-auto w-75">
+				<%AccountBean account1 = (AccountBean)request.getSession().getAttribute("account");
             %>
-                <div class="row">
-                    <div class="col-4">
-                        <div class="card mb-3 mx-auto">
-                            <div class="card-utente card-header">Nome:</div>
-                            <div class="card-b-utente card-body ">
-                                <h5 class="card-title"><%=account1.getNome() %></h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="card mb-3 mx-auto">
-                            <div class="card-utente card-header">Cognome:</div>
-                            <div class="card-b-utente card-body ">
-                                <h5 class="card-title"><%=account1.getCognome() %></h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="card mb-3 mx-auto">
-                            <div class="card-utente card-header">E-mail:</div>
-                            <div class="card-b-utente card-body ">
-                                <h5 class="card-title"><%=account1.getMail() %></h5>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+				<div class="row">
+					<div class="col-4">
+						<div class="card mb-3 mx-auto">
+							<div class="card-utente card-header">Nome:</div>
+							<div class="card-b-utente card-body ">
+								<h5 class="card-title"><%=account1.getNome() %></h5>
+							</div>
+						</div>
+					</div>
+					<div class="col-4">
+						<div class="card mb-3 mx-auto">
+							<div class="card-utente card-header">Cognome:</div>
+							<div class="card-b-utente card-body ">
+								<h5 class="card-title"><%=account1.getCognome() %></h5>
+							</div>
+						</div>
+					</div>
+					<div class="col-4">
+						<div class="card mb-3 mx-auto">
+							<div class="card-utente card-header">E-mail:</div>
+							<div class="card-b-utente card-body ">
+								<h5 class="card-title"><%=account1.getMail() %></h5>
+							</div>
+						</div>
+					</div>
+				</div>
 
 
 
 
 				<div class="row">
 					<div class="col-4">
-						<a id="btn-utente" class="btn btn-primary btn btn-lg btn-block"
-							data-toggle="collapse" href="#collapseModEmail" role="button"
-							aria-expanded="false" aria-controls="collapseModEmail">
-							Modifica E-mail</a>
+						
+										<a id="btn-utente" class="btn btn-primary btn-lg btn-block" data-toggle="collapse"
+										href="#collapseModEmail" role="button" aria-expanded="false"
+										aria-controls="collapseModEmail"> Modifica E-mail </a>
+							
 
 
 						<div class="collapse" id="collapseModEmail">
 							<form name="changeMailForm" id="changeMailForm"
 								onsubmit="return validateMail(changeMailForm)">
-								<div class="card card-body"
-									style="margin-bottom: 10px; text-align: center;">
+								<div class="card card-body" style="margin-bottom: 10px; text-align: center;">
+								<div class="form-group">
 									<input type="email" name="newMail" class="form-control"
 										id="inputEmailDimenticata" aria-describedby="emailHelp"
-										placeholder="Inserisci la tua nuova e-mail">
-								</div>
-								<button type="submit" class="btn btn-info btn-lg btn-block"
+										placeholder="Inserisci la tua nuova e-mail"></div>
+										<button type="submit" class="btn btn-info btn-lg btn-block"
 									formaction="http://localhost:8080/YouLearn/CambiaMailServlet">Conferma</button>
+								</div>
+								
 							</form>
 						</div>
 					</div>
@@ -187,7 +183,7 @@
 
 						<a id="btn-utente" class="btn btn-primary btn-lg btn-block"
 							data-toggle="collapse" href="#collapseModPass" role="button"
-							aria-expanded="false" aria-controls="collapseExample">
+							aria-expanded="false" aria-controls="collapseModPass">
 							Modifica Password</a>
 
 
@@ -196,18 +192,22 @@
 								style="margin-bottom: 10px; text-align: center;">
 								<form method="post" name="changePswForm" id="changePswForm"
 									onsubmit="return validatePsw(changePswForm)">
-									<div class="form-group"><input type="password" name="newPass" id="newPass"
-										class="form-control"
-										placeholder="Inserisci la tua nuova password"> </div>
-									<div class="form-group"><input
-										type="password" name="oldPass" id="oldPass"
-										class="form-control" placeholder="Conferma tua nuova password"></div>
+									<div class="form-group">
+										<input type="password" name="newPass" id="newPass"
+											class="form-control"
+											placeholder="Inserisci la tua nuova password">
+									</div>
+									<div class="form-group">
+										<input type="password" name="oldPass" id="oldPass"
+											class="form-control"
+											placeholder="Conferma tua nuova password">
+									</div>
 
-								<button type="submit" class="btn btn-info btn-lg btn-block"
+									<button type="submit" class="btn btn-info btn-lg btn-block"
 										formaction="http://localhost:8080/YouLearn/CambiaPassServlet">Conferma</button>
 								</form>
 							</div>
-							
+
 						</div>
 
 
@@ -216,34 +216,35 @@
 
 						<a id="btn-utente" class="btn btn-primary btn-lg btn-block"
 							data-toggle="collapse" href="#collapseModCarta" role="button"
-							aria-expanded="false" aria-controls="collapseExample">
+							aria-expanded="false" aria-controls="collapseModCarta">
 							Modifica Carta</a>
 
 
-							<div class="collapse" id="collapseModCarta">
+						<div class="collapse" id="collapseModCarta">
 							<form method="post" name="modCarta"
-							onsubmit="return cardnumberTest()">
+								onsubmit="return cardnumberTest()">
 								<div class="card card-body"
 									style="margin-bottom: 10px; text-align: center;">
 									<div class="form-group">
-									<input type="text" name="cardnumber" class="form-control"
-										placeholder="Inserisci il numero della nuova carta">
-										</div>
-										<div class="form-group">
-										<input	type="text" class="form-control" name="nomeIntestatario"	placeholder="Inserisci il nome dell'intestatario">
-										</div>
-										<div class="form-group">
+										<input type="text" name="cardnumber" class="form-control"
+											placeholder="Inserisci il numero della nuova carta">
+									</div>
+									<div class="form-group">
+										<input type="text" class="form-control"
+											name="nomeIntestatario"
+											placeholder="Inserisci il nome dell'intestatario">
+									</div>
+									<div class="form-group">
 
 										<div class="dropdown  d-inline">
-										<label for="tipoCarta">Tipo Carta</label>
-										<select name="cardname" class="form-control"
-											>
-											<option value="Visa">Visa</option>
-											<option value="MasterCard">MasterCard</option>
-											<option value="Maestro">Maestro</option>
-										</select>
-									</div>
+											<label for="tipoCarta">Tipo Carta</label> <select
+												name="cardname" class="form-control">
+												<option value="Visa">Visa</option>
+												<option value="MasterCard">MasterCard</option>
+												<option value="Maestro">Maestro</option>
+											</select>
 										</div>
+									</div>
 
 
 									<div class="form-group">
@@ -277,7 +278,7 @@
 								<button type="submit" class="btn btn-info btn-lg btn-block"
 									formaction="#">Conferma</button>
 							</form>
-							</div>
+						</div>
 
 
 					</div>
@@ -285,240 +286,162 @@
 				<!-- <button type="button" id="btn-utente" class="btn btn-light btn-lg btn-block">Modifica E-mail</button>-->
 
 
-                <!-- Form modifica password -->
+				<!-- Form modifica password -->
 
-                <!-- Form modifica carta -->
+				<!-- Form modifica carta -->
 
 
 
-            </div>
-        </div>
-
-	<div id="carouselSlider" class="carousel slide" data-interval="5000"
-		data-ride="carousel">
-		<ol class="carousel-indicators">
-			<li data-target="#carouselSlider" data-slide-to="0" class="active"></li>
-			<li data-target="#carouselSlider" data-slide-to="1"></li>
-		</ol>
-		<div class="carousel-inner">
-			<div class="carousel-item active">
-				<img src="Images/Img-Slider1.jpg" class="w-100 img-slider" alt="...">
-			</div>
-			<div class="carousel-item">
-				<img src="Images/Img-Slider2.jpg" class="w-100 img-slider" alt="...">
 			</div>
 		</div>
-	</div>
 
-	<div class="row">
-		<div class="three-infromazioni col-lg-4">ROBA DA SCRIVERE</div>
-		<div class="three-infromazioni col-lg-4">ROBA DA SCRIVERE</div>
-		<div class="three-infromazioni col-lg-4">ROBA DA SCRIVERE</div>
-	</div>
+		<div id="carouselSlider" class="carousel slide" data-interval="5000"
+			data-ride="carousel">
+			<ol class="carousel-indicators">
+				<li data-target="#carouselSlider" data-slide-to="0" class="active"></li>
+				<li data-target="#carouselSlider" data-slide-to="1"></li>
+			</ol>
+			<div class="carousel-inner">
+				<div class="carousel-item active">
+					<img src="Images/Img-Slider1.jpg" class="w-100 img-slider"
+						alt="...">
+				</div>
+				<div class="carousel-item">
+					<img src="Images/Img-Slider2.jpg" class="w-100 img-slider"
+						alt="...">
+				</div>
+			</div>
+		</div>
 
-	<!-- INIZIO CORSI SEGUITI -->
+		<div class="row">
+			<div class="three-infromazioni col-lg-4">ROBA DA SCRIVERE</div>
+			<div class="three-infromazioni col-lg-4">ROBA DA SCRIVERE</div>
+			<div class="three-infromazioni col-lg-4">ROBA DA SCRIVERE</div>
+		</div>
+
+		<!-- INIZIO CORSI SEGUITI -->
 
 
-	<div class="corsi-seguiti card w-75 mx-auto">
-		<h5 class="card-h-corsi card-header">CORSI SEGUITI</h5>
-		<%
+		<div class="corsi-seguiti card w-75 mx-auto">
+			<h5 class="card-h-corsi card-header">CORSI SEGUITI</h5>
+			<%
                          	AccountBean a=(AccountBean)request.getSession().getAttribute("account");
                          	LinkedList<IscrizioneBean> corsi=(LinkedList<IscrizioneBean>) a.getIscrizioni();
                     		if(corsi.isEmpty()){
                          %>
-		<div class="card-b-corsi card-body">Non ci sono corsi
-			seguiti....Corri ad iscriverti!</div>
-		<%}
+			<div class="card-b-corsi card-body">Non ci sono corsi
+				seguiti....Corri ad iscriverti!</div>
+			<%}
                     		else{
                     			for(IscrizioneBean i: corsi){
                     		%>
 
-                    		<div class="card-body">
-                        <img class="img-corsi-attesa rounded float-left" src="Images/Image.jpg" alt="FAIL" srcset="">
-                        <ul class="informazioni-corso rounded float-left">
-                            <li>NOME CORSO:</li>
-                            <li>NUMERO ISCRITTI:</li>
-                            <li>SCADENZA ISCRIZIONI:</li>
+			<div class="card-body">
+				<img class="img-corsi-attesa rounded float-left"
+					src="Images/Image.jpg" alt="FAIL" srcset="">
+				<ul class="informazioni-corso rounded float-left">
+					<li>NOME CORSO:</li>
+					<li>NUMERO ISCRITTI:</li>
+					<li>SCADENZA ISCRIZIONI:</li>
 
-                        </ul>
-                        <div class="float-lg-right ">
-                            <button type="button" class="btn btn-primary btn-lg d-lg-block w-100">Vai al corso</button>
-                            <button type="button" class="btn btn-success btn-lg d-lg-block w-100">Conferma</button>
-                            <button type="button" class="btn btn-danger btn-lg d-lg-block w-100">Rifiuta</button>
-                        </div>
+				</ul>
+				<div class="float-lg-right ">
+					<button type="button"
+						class="btn btn-primary btn-lg d-lg-block w-100">Vai al
+						corso</button>
+					<button type="button"
+						class="btn btn-success btn-lg d-lg-block w-100">Conferma</button>
+					<button type="button"
+						class="btn btn-danger btn-lg d-lg-block w-100">Rifiuta</button>
+				</div>
 
 
-                    </div>
-		<div class="card-b-corsi card-body">
-			<a
-				href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getCorso().getIdCorso()%>">
-				<%=i.getCorso().getNome()%></a>
-		</div>
-		<%}
+			</div>
+			<div class="card-b-corsi card-body">
+				<a
+					href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getCorso().getIdCorso()%>">
+					<%=i.getCorso().getNome()%></a>
+			</div>
+			<%}
                             }%>
-	</div>
-
-	<!-- INIZIO CORSI TENUTI -->
-
-	<div class="card w-75 mx-auto">
-		<div class="card-header"><h5 class="card-h-corsi">CORSI TENUTI</h5>	<a class="float-right position-absolute" style="text-decoration: none!important; color: green; right: 0px;right: 9px;top: 8px;font-size: 20px; font-weight: bold;"
-		href="http://localhost:8080/YouLearn/SettingCorso.jsp"><button style="font-family:'Ubuntu', sans-serif; border-color:#f8f9fa!important; font-size:22px!important;" type="button" class="btn btn-outline-success"><i class="fas fa-plus-circle"></i> Crea un corso!</button></a>
 		</div>
 
-		<%
+		<!-- INIZIO CORSI TENUTI -->
+
+		<div class="card w-75 mx-auto">
+			<div class="card-header">
+				<h5 class="card-h-corsi">CORSI TENUTI</h5>
+				<a class="float-right position-absolute"
+					style="text-decoration: none !important; color: green; right: 0px; right: 9px; top: 8px; font-size: 20px; font-weight: bold;"
+					href="http://localhost:8080/YouLearn/SettingCorso.jsp"><button
+						style="font-family: 'Ubuntu', sans-serif; border-color: #f8f9fa !important; font-size: 22px !important;"
+						type="button" class="btn btn-outline-success">
+						<i class="fas fa-plus-circle"></i> Crea un corso!
+					</button></a>
+			</div>
+
+			<%
                          	LinkedList<CorsoBean> corsiTenuti=(LinkedList<CorsoBean>) a.getCorsiTenuti();
                     		if(corsiTenuti.isEmpty()){
                          %>
-		<div class="card-b-corsi card-body">Non ci sono corsi
-			Tenuti....M'occ a mammt</div>
-		<%}
+			<div class="card-b-corsi card-body">Non ci sono corsi
+				Tenuti....M'occ a mammt</div>
+			<%}
                     		else{
                     			for(CorsoBean i: corsiTenuti){
                     		%>
-                    		<div class="card-body">
-                    		<form method="post">
-                        <a href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><img class="img-corsi-attesa rounded float-left"  src="Resources\<%=i.getIdCorso()%>\<%=i.getCopertina()%>" alt="FAIL" width="170" height="170" ></a>
-                        <ul class="informazioni-corso rounded float-left">
-                            <li>NOME CORSO: <a href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><%=i.getNome()%></a></li>
-                            <li>NUMERO ISCRITTI: <%=i.getnIscritti() %></li>
-                            <li>SCADENZA ISCRIZIONI: <%=i.getDataFine() %></li>
-                            <li>STATO: <%=i.getStato() %></li>
+			<div class="card-body">
+				<form method="post">
+					<a
+						href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><img
+						class="img-corsi-attesa rounded float-left"
+						src="Resources\<%=i.getIdCorso()%>\<%=i.getCopertina()%>"
+						alt="FAIL" width="170" height="170"></a>
+					<ul class="informazioni-corso rounded float-left">
+						<li>NOME CORSO: <a
+							href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><%=i.getNome()%></a></li>
+						<li>NUMERO ISCRITTI: <%=i.getnIscritti() %></li>
+						<li>SCADENZA ISCRIZIONI: <%=i.getDataFine() %></li>
+						<li>STATO: <%=i.getStato() %></li>
 
-                        </ul>
-                       	<%if(i.getStato().equals(Stato.Completamento)){
+					</ul>
+					<%if(i.getStato().equals(Stato.Completamento)){
                        	%>
-                        <div class="float-lg-right ">
-                       		<button type="submit" formaction="http://localhost:8080/YouLearn/ConfermaCorsoServlet?idCorso=<%=i.getIdCorso() %>"
-                       		class="btn btn-success btn-lg ">Conferma</button>
-                            <button type="submit"
-                             formaction="http://localhost:8080/YouLearn/SettingCorso.jsp?idCorso=<%=i.getIdCorso() %>"
-                             class="btn btn-outline-secondary btn-lg ">Modifica</button>
-                            <button type="submit" class="btn btn-outline-secondary btn-lg  ">Gestisci lezioni</button>
-                            <button type="submit"
-                       		 formaction="http://localhost:8080/YouLearn/CancCorsoServlet?idCorso=<%=i.getIdCorso() %>"
-                       		 class="btn btn-danger btn-lg  ">Elimina Corso</button>
-                        </div>
+					<div class="float-lg-right ">
+						<button type="submit"
+							formaction="http://localhost:8080/YouLearn/ConfermaCorsoServlet?idCorso=<%=i.getIdCorso() %>"
+							class="btn btn-success btn-lg ">Conferma</button>
+						<button type="submit"
+							formaction="http://localhost:8080/YouLearn/SettingCorso.jsp?idCorso=<%=i.getIdCorso() %>"
+							class="btn btn-outline-secondary btn-lg ">Modifica</button>
+						<button type="submit" class="btn btn-outline-secondary btn-lg  ">Gestisci
+							lezioni</button>
+						<button type="submit"
+							formaction="http://localhost:8080/YouLearn/CancCorsoServlet?idCorso=<%=i.getIdCorso() %>"
+							class="btn btn-danger btn-lg  ">Elimina Corso</button>
+					</div>
 
-		<%}
+					<%}
                             }}%>
-			</form>
-	</div>
+				</form>
+			</div>
 
+		
+		</div>
+		
+	</div>
 	<!-- FINE -->
-	</div>
-	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+	integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+	crossorigin="anonymous"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+	integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+	crossorigin="anonymous"></script>
+<script src="JS/ValidationHome.js"></script>
 
-<script type="text/javascript">
-
-
-
-function validateUsr(changeUsrForm){
-    var usrValidator = /^(\w+[_\.\-]*\w*){4,}$/;
-    var newUsr= changeUsrForm.newUser.value;
-
-    if(!newUsr.match(usrValidator)) {
-      alert("Username non valido");
-      return false;
-    } else return true;
-}
-
-
-
-
-function validatePsw(changePswForm){
-	console.log("Password ok")
-    var pswValidator = /^[a-zA-Z 0-9 \@\._\!\?\-]{8,}$/;
-    var newPsw= changePswForm.newPass.value;
-    var oldPsw= changePswForm.oldPass.value;
-
-
-	if(!newPsw.match(oldPsw)){
-		alert("Le password non coincidono");
-	      return false;
-		}
-
-
-    if(!newPsw.match(pswValidator)){
-      alert("La password deve contenere almeno 8 caratteri tra lettere, numeri e simboli");
-      return false;
-    }
-     else return true;
-}
-
-
-
-
-function validateMail(changeMailForm){
-    var mailValidator = /^\w+([\._\-]?\w+)*@\w+([\.\-]?\w+)*(\.\w+)+$/;
-    var newMail= changeMailForm.newMail.value;
-
-    if(!newMail.match(mailValidator)){
-      alert("Email non valida");
-      return false;
-    } else return true;
-}
-
-function cardnumberTest()
-{
-
-	var name = document.modCarta.nomeIntestatario;
-	var x = document.modCarta.cardname;
-	console.log(x.value + "dovrebbe esserci la carta");
-	var inputtxt = document.modCarta.cardnumber;
-	console.log(inputtxt.value + "dovrebbe esserci la carta");
-
-
-
-
-	if (x.value === "Visa") {
-			var cardno = /^(?:4[0-9]{12}(?:[0-9]{3})?)$/;
-
-			if (inputtxt.value.match(cardno)) {
-				allLetter(name.value)
-				return true;
-			} else {
-				alert("Not a valid Visa credit card number!");
-				return false;
-			}
-		} else if (x.value === "MasterCard") {
-
-			var cardno = /^(?:5[1-5][0-9]{14})$/;
-			if (inputtxt.value.match(cardno)) {
-				if(allLetter(name) == false) return false;
-				alert('Abbiamo vinto')
-				return true;
-			} else {
-				alert("Not a valid Mastercard number!");
-				return false;
-			}
-
-		} else if (x.value === "AmericanExpress") {
-
-			var cardno = /^(?:3[47][0-9]{13})$/;
-			if (inputtxt.value.match(cardno)) {
-				return true;
-			} else {
-				alert("Not a valid Amercican Express credit card number!");
-				return false;
-			}
-		} else {
-
-			alert("Numero di carta non valido!");
-
-		}
-	}
-
-	function allLetter(name) {
-		var letters = /^[A-Za-z]+$/;
-		if (name.value.match(letters)) {
-			return true;
-		} else {
-			alert('Username must have alphabet characters only');
-
-			return false;
-		}
-	}
-</script>
 </body>
 
 </html>

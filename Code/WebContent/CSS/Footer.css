@@ -9,8 +9,25 @@
 
 .icon-footer {
 
-    padding: 40px 10px 10px;
+    padding: 30px 50px 30px;
     display:block;
 
 
+}
+
+.fa-2x{
+	
+	font-size:1.7rem!important;
+	
+}
+
+#p{
+	
+	font-family: 'Work Sans-Regular', sans-serif;
+	display: block;
+	font-weight:normal!important;
+	font-size:1.5rem;
+	color: #fff;
+
+	
 }
