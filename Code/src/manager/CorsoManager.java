@@ -1,5 +1,11 @@
 package manager;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,8 +13,10 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.UUID;
 
 import javax.naming.NoPermissionException;
+import javax.servlet.http.Part;
 
 import connection.ConfiguredDataSource;
 
@@ -218,7 +226,7 @@ public class CorsoManager {
 			preparedStatement.setString(8, corso.getCopertina());
 			preparedStatement.setInt(9, corso.getPrezzo());
 			preparedStatement.setString(10, corso.getStato().toString());
-			preparedStatement.setString(11, corso.getCopertina().toString());
+			preparedStatement.setString(11, corso.getCategoria().toString());
 			preparedStatement.setInt(12, corso.getIdCorso());
 			preparedStatement.executeUpdate();
 			connection.commit();
@@ -240,13 +248,34 @@ public class CorsoManager {
 	 * @throws NotWellFormattedException
 	 * @throws SQLException
 	 * @throws NoPermissionException 
+	 * @throws IOException 
 	 */
-	public void modificaCorso(CorsoBean corso) throws NotFoundException, NotWellFormattedException, SQLException, NoPermissionException {
+	public void modificaCorso(CorsoBean corso,Part file) throws NotFoundException, NotWellFormattedException, SQLException, NoPermissionException, IOException {
 		if(!checkCorso(corso.getIdCorso())) throw new NotFoundException("Il corso non esiste");
 		if(!isWellFormatted(corso) || corso.getIdCorso()==null) throw new NotWellFormattedException("Il corso non è ben formattato");
 		if(!corso.getStato().equals(Stato.Completamento)) throw new NoPermissionException("Non si può modificare un corso non in "
 																								+ "completamento");
-		
+		/* Salvo la copertina */
+		if(file!=null) {
+			Path path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
+					+ "YouLearn\\Code\\Resources\\"+corso.getIdCorso());
+			if(!Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS))
+					Files.createDirectories(path); 
+//			String filename=UUID.randomUUID().toString();
+			//Riuso il vecchio nome
+			String filename=corso.getCopertina().substring(corso.getCopertina().indexOf(corso.getIdCorso()+"\\")+2, corso.getCopertina().indexOf('.'));
+			String type=file.getSubmittedFileName().substring(file.getSubmittedFileName().indexOf('.'));
+			
+			if(!type.equals(".jpg") && !type.equals(".png") && !type.equals(".jpeg")) 
+				throw new NotWellFormattedException("La copertina non ha un formato adeguato");
+			
+			path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
+					+ "YouLearn\\Code\\Resources\\"+corso.getIdCorso()+File.separator+
+																				filename+type);
+			file.write(path.toString());
+			corso.setCopertina(path.toString()); //Assegno al corso la copertina appena salvata
+		}
+		/* Aggiorno il corso */
 		doUpdate(corso);
 	}
 	

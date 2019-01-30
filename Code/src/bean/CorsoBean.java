@@ -43,6 +43,26 @@ public class CorsoBean {
 	   lezioni=new LinkedList<>();
 	}
 	
+	public CorsoBean(Integer idCorso2, String nome2, String descrizione2, Date dataCreazione2, Date dataScadenza,
+			int prezzo2, Categoria categoria2, String copertina2, Stato stato2, int i, int j, 
+			Collection<IscrizioneBean> collection, AccountBean accountBean, AccountBean accountBean2,Collection<LezioneBean> lezioni) {
+		idCorso=idCorso2;
+		nome=nome2;
+		descrizione=descrizione2;
+		dataCreazione=dataCreazione2;
+		dataFine=dataScadenza;
+		prezzo=prezzo2;
+		categoria=categoria2;
+		copertina=copertina2;
+		stato=stato2;
+		nIscritti=i;
+		nLezioni=j;
+		iscrizioni=collection;
+		docente=accountBean;
+		supervisore=accountBean2;
+		this.lezioni=lezioni;
+	}
+
 	/**
 	 * Preleva il valore del nome del corso.
 	 * @return String : nome

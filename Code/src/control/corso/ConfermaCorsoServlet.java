@@ -11,7 +11,7 @@ import bean.AccountBean;
 import manager.CorsoManager;
 
 /**
- * Servlet implementation class ConfermaCorsoServlet
+ * Conferma un corso e lo mette in attesa di validazione
  */
 @WebServlet("/ConfermaCorsoServlet")
 public class ConfermaCorsoServlet extends HttpServlet {
@@ -24,9 +24,7 @@ public class ConfermaCorsoServlet extends HttpServlet {
         manager=new CorsoManager();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		AccountBean account=(AccountBean)request.getSession().getAttribute("account");
@@ -40,11 +38,8 @@ public class ConfermaCorsoServlet extends HttpServlet {
 		}
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

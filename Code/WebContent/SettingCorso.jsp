@@ -1,3 +1,5 @@
+<%@page import="bean.CorsoBean.Categoria"%>
+<%@page import="org.hamcrest.core.Is,bean.*"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
@@ -28,56 +30,81 @@
 
 	  <%@ include file="Navbar.jsp" %>
 
+<%
+	int idCorso=0;
+	CorsoBean corso=null;
+	if(request.getParameter("idCorso")!=null){
+		idCorso=Integer.parseInt(request.getParameter("idCorso"));
+		corso=account.getCorsoTenuto(idCorso);
+	}
+		
+%>
+ 
  <div class="card card-5 w-50 mx-auto">
-        <div class="card-header text-center " style="font-size: 30px;">CREAZIONE CORSO</div>
+        <div class="card-header text-center " style="font-size: 30px;"><h3>
+        <% if(corso==null){ %>
+        CREAZIONE CORSO
+        <% }else {%>MODIFICA CORSO <%} %></h3>
+        </div>
+        
+        
         <div class="card-body">
 
-            <form class="register">
+            <form class="register" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="InputName">TITOLO DEL CORSO</label>
-                    <input type="text" name="" class="form-control" id="InputName"
-                        placeholder="Titolo">
+                    <input type="text" name="nome" class="form-control" id="InputName"
+                        placeholder="Titolo" <%if(corso!=null) {%> value=<%=corso.getNome() %> <%} %>>
                 </div>
                 <div class="form-group">
                     <label for="InputCognome">DESCRIZIONE DEL CORSO</label>
-                    <textarea name="" id="" cols="30" rows="10" class="form-control" id="InputDescrizione"> </textarea>
+                    <textarea name="descrizione" id="" cols="30" rows="10"
+                     class="form-control" id="InputDescrizione"><%if(corso!=null){ %> <%=corso.getDescrizione() %> <%} %></textarea>
                 </div>
                 <div class="form-group">
                     <label for="InputCategoria">CATEGORIA</label>
                     <div class="dropdown">
-                        <select class="form-control">
-                            <option value="Informatica">Informatica</option>
-                            <option value="Elettronica">Visa</option>
-                            <option value="Musica">Musica</option>
-                            <option value="Fotografia">Fotografia</option>
-                            <option value="Danza">Danza</option>
+                        <select class="form-control" name="categoria">
+                            <option value="Informatica" <%if(corso!=null && corso.getCategoria().equals(Categoria.Informatica)){ %> selected <%} %>>Informatica</option>
+                            <option value="Elettronica" <%if(corso!=null && corso.getCategoria().equals(Categoria.Elettronica)){ %> selected <%} %>>Visa</option>
+                            <option value="Musica" <%if(corso!=null && corso.getCategoria().equals(Categoria.Musica)){ %> selected <%} %>>Musica</option>
+                            <option value="Fotografia" <%if(corso!=null && corso.getCategoria().equals(Categoria.Fotografia)){ %> selected <%} %>>Fotografia </option>
+                            <option value="Danza" <%if(corso!=null && corso.getCategoria().equals(Categoria.Danza)){ %> selected <%} %>>Danza</option>
                         </select>
                     </div>
                   </div>
                     <div class="form-group">
                         <label for="InputName">SCADENZA ISCRIZIONE CORSO</label>
-                        <input type="text" name="dataDiScadeza" class="form-control" id="InputGiorno" placeholder="GG/MM/AAAA">
+                        <input type="text" name="dataScadenza" class="form-control" 
+                        id="InputGiorno" placeholder="AAAA/MM/GG" <%if(corso!=null){ %> value="<%=corso.getDataFine().toString() %>" <%} %>>
 
                     </div>
                     <div class="form-group">
                         <label for="InputPrezzo">PREZZO</label>
-                        <input type="text" name="prezzo" class="form-control" id="InputPrezzo" placeholder="" >
+                        <input type="text" name="prezzo" class="form-control" 
+                        id="InputPrezzo" placeholder="Prezzo"  <%if(corso!=null){ %> value="<%=corso.getPrezzo()%>" <%} %>>
 
                     </div>
                 <div class="form-group">
                     <label for="InputImmCop">IMMAGINE DI COPERTINA</label>
-                    <input type="file" class="form-control" id="InputImmCop" placeholder="" name="CARICA FILE">
+                    <input type="file" accept=".jpg,.png" class="form-control" id="InputImmCop" placeholder="" name="CARICA FILE">
                 </div>
                 <div class="row">
-                    <div class="col-lg-6 col-sm-6"><button type="submit" class="btn btn-success btn-lg btn-block">CONFERMA</button></div>
-                    <div class="col-lg-6 col-sm-6"><button type="submit" class="btn btn-danger btn-lg btn-block">ANNULLA</button></div>
+                    <div class="col-lg-6 col-sm-6">
+                    <button type="submit" 
+                    <%if(corso!=null) 
+                    {%> 
+                    	formaction="http://localhost:8080/YouLearn/ModCorsoServlet?idCorso=<%=idCorso %>"
+                    <%}else{ %> formaction="http://localhost:8080/YouLearn/CreaCorsoServlet" <%} %>
+                    class="btn btn-success btn-lg btn-block">CONFERMA</button></div>
+                    <div class="col-lg-6 col-sm-6"><button type="submit" formaction="http://localhost:8080/YouLearn/HomepageUtente.jsp" class="btn btn-danger btn-lg btn-block">ANNULLA</button></div>
                 </div>
                
                 
             </form>
         </div>
         </div>
-    
+
 
 </body>
 </html>

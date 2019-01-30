@@ -150,14 +150,14 @@ public class LezioneManager {
 		try{
 			
 			Path path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
-					+ "YouLearn\\Code\\Resources\\Lezioni\\"+lezione.getCorso().getIdCorso().toString());
+					+ "YouLearn\\Code\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni");
 			if(!Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS))
 					Files.createDirectories(path); 
 			String filename=UUID.randomUUID().toString();
 			String type=file.getSubmittedFileName().substring(file.getSubmittedFileName().indexOf('.'));
 			path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
-					+ "YouLearn\\Code\\Resources\\Lezioni\\"+lezione.getCorso().getIdCorso().toString()+File.separator+
-																				filename+File.separator+type);
+					+ "YouLearn\\Code\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni"+File.separator+
+																				filename+type);
 			statement=c.prepareStatement(sql);
 			statement.setString(1, lezione.getNome());
 			statement.setInt(2, lezione.getVisualizzazioni());

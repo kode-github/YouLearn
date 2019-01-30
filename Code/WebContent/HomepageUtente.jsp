@@ -388,7 +388,9 @@
                         <div class="float-lg-right ">
                        		<button type="submit" formaction="http://localhost:8080/YouLearn/ConfermaCorsoServlet?idCorso=<%=i.getIdCorso() %>" 
                        		class="btn btn-success btn-lg ">Conferma</button>
-                            <button type="submit" class="btn btn-outline-secondary btn-lg ">Modifica</button>
+                            <button type="submit"
+                             formaction="http://localhost:8080/YouLearn/SettingCorso.jsp?idCorso=<%=i.getIdCorso() %>"
+                              formtarget="_blank" class="btn btn-outline-secondary btn-lg ">Modifica</button>
                             <button type="submit" class="btn btn-outline-secondary btn-lg  ">Gestisci lezioni</button>
                             <button type="submit"
                        		 formaction="http://localhost:8080/YouLearn/CancCorsoServlet?idCorso=<%=i.getIdCorso() %>" 
