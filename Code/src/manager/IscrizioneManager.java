@@ -73,6 +73,7 @@ public class IscrizioneManager {
 	public Collection<IscrizioneBean> getIscrizioniUtente(AccountBean account) throws SQLException, NotFoundException, NoPermissionException, NotWellFormattedException {
 		accountManager= new AccountManager();
 		lezioneManager= new LezioneManager();
+		corsoManager=new CorsoManager();
 		if(!accountManager.checkAccount(account)) throw new NotFoundException("Questo account non esiste");
 		if(!account.getTipo().equals(Ruolo.Utente)) throw new NoPermissionException("Questo utente non può avere corsi creati");
 		
@@ -86,6 +87,7 @@ public class IscrizioneManager {
 			connection=dataSource.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1, account.getMail());
+			System.out.println("Iscrizioni account: "+preparedStatement.toString());
 			ResultSet rs= preparedStatement.executeQuery();
 			while(rs.next()) {
 				IscrizioneBean iscrizione= new IscrizioneBean();
@@ -93,7 +95,9 @@ public class IscrizioneManager {
 				iscrizione.setFattura(rs.getString("fattura"));
 				iscrizione.setImporto(rs.getInt("importo"));
 				iscrizione.setAccount(account); //aggiungo l'account
-				CorsoBean corso=corsoManager.doRetrieveByKey(rs.getInt("corsoIdCorso")); //recupero il corso
+				System.out.println(""+rs.getInt("corsoIdCorso"));
+				CorsoBean corso=new CorsoBean();
+				corso=corsoManager.doRetrieveByKey(rs.getInt("corsoIdCorso")); //recupero il corso
 				corso.addIscrizione(iscrizione); //aggiungo iscrizione a corso e viceversa
 				collection.add(iscrizione);
 			}
@@ -121,7 +125,8 @@ public class IscrizioneManager {
 	public Collection<IscrizioneBean> getIscrittiCorso(CorsoBean corso) throws SQLException, NotFoundException, NoPermissionException {
 		accountManager= new AccountManager();
 		lezioneManager= new LezioneManager();
-		if(corsoManager.checkCorso(corso)) throw new NotFoundException("Questo account non esiste");
+		corsoManager=new CorsoManager();
+		if(!corsoManager.checkCorso(corso)) throw new NotFoundException("Questo account non esiste");
 		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;

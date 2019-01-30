@@ -203,11 +203,11 @@
 										type="password" name="oldPass" id="oldPass"
 										class="form-control" placeholder="Conferma tua nuova password"></div>
 
-
+								<button type="submit" class="btn btn-info btn-lg btn-block"
+										formaction="http://localhost:8080/YouLearn/CambiaPassServlet">Conferma</button>
 								</form>
 							</div>
-							<button type="submit" class="btn btn-info btn-lg btn-block"
-										formaction="http://localhost:8080/YouLearn/CambiaPassServlet">Conferma</button>
+							
 						</div>
 
 
@@ -377,7 +377,7 @@
                     		%>
                     		<div class="card-body">
                     		<form method="post">
-                        <a href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><img class="img-corsi-attesa rounded float-left" src=<%=i.getCopertina() %> alt="FAIL" width="170" height="170" ></a>
+                        <a href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><img class="img-corsi-attesa rounded float-left"  src="Resources\<%=i.getIdCorso()%>\<%=i.getCopertina()%>" alt="FAIL" width="170" height="170" ></a>
                         <ul class="informazioni-corso rounded float-left">
                             <li>NOME CORSO: <a href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><%=i.getNome()%></a></li>
                             <li>NUMERO ISCRITTI: <%=i.getnIscritti() %></li>

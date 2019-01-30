@@ -76,10 +76,11 @@ public class CorsoManager {
 			corso.setCategoria(Categoria.valueOf(rs.getString("categoria")));
 			corso.setnLezioni(rs.getInt("nLezioni"));
 			corso.setnIscritti(rs.getInt("nIscritti"));
-			lezioneManager.retrieveLezioniByCorso(corso); //recuperlo le lezioni
-			iscrizioneManager.getIscrittiCorso(corso); //recupero il corso
 			corso.setDocente(accountManager.doRetrieveByKey(rs.getString("accountCreatore"))); //recupero il docente
 			corso.setSupervisore(accountManager.doRetrieveByKey(rs.getString("accountSupervisore"))); //recupero il supervisore
+			lezioneManager.retrieveLezioniByCorso(corso); //recuperlo le lezioni
+			iscrizioneManager.getIscrittiCorso(corso); //recupero il corso
+			
 		}finally {
 			try {
 				if(statement!=null)
@@ -147,25 +148,31 @@ public class CorsoManager {
 	/**
 	 * Registra un nuovo corso 
 	 * @param corso
+	 * @return 
 	 * @throws SQLException
 	 * @throws NotWellFormattedException
 	 * @throws NotFoundException
 	 * @throws NoPermissionException 
 	 */
-	public void creaCorso(CorsoBean corso) throws SQLException, NotWellFormattedException, NotFoundException, NoPermissionException {
+	public synchronized void creaCorso(CorsoBean corso,Part copertina) throws SQLException, NotWellFormattedException, NotFoundException, NoPermissionException {
 		accountManager= new AccountManager();
-		if(corso==null) throw new NotWellFormattedException("Il corso non può essere null");
-		corso.setStato(Stato.Completamento); //necessario per usare il WellFormatted
-		if(corso.getIdCorso()!=null || !isWellFormatted(corso)) 
+		if(corso==null || corso.getIdCorso()!=null || !isWellFormatted(corso) || copertina==null) 
 			throw new NotWellFormattedException("Il corso non è ben formattato");
 		if(!accountManager.checkMail(corso.getDocente().getMail())) throw new NotFoundException("Il creatore non esiste");
 		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		
-		String sql="INSERT INTO Corso VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+		String sql="INSERT INTO Corso VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		
 		try {
+			String filename=UUID.randomUUID().toString();
+			String type=copertina.getSubmittedFileName().substring(copertina.getSubmittedFileName().indexOf('.'));
+			
+			if(!type.equals(".jpg") && !type.equals(".png") && !type.equals(".jpeg")) 
+				throw new NotWellFormattedException("La copertina non ha un formato adeguato");
+			filename=filename+type;
+			
 			connection=dataSource.getConnection();
 			connection.setAutoCommit(false);
 			preparedStatement= connection.prepareStatement(sql);
@@ -176,15 +183,39 @@ public class CorsoManager {
 			preparedStatement.setString(5, corso.getDescrizione());
 			preparedStatement.setDate(6, corso.getDataCreazione());
 			preparedStatement.setDate(7, corso.getDataFine());
-			preparedStatement.setString(8, corso.getCopertina());
+			preparedStatement.setString(8, filename);
 			preparedStatement.setInt(9, corso.getPrezzo());
 			preparedStatement.setString(10, corso.getStato().toString());
-			preparedStatement.setString(11, corso.getDescrizione());
+			preparedStatement.setString(11, corso.getCategoria().toString());
+			preparedStatement.setInt(12, 0);
+			preparedStatement.setInt(13, 0);
 			System.out.println("Registrazione corso: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
+			preparedStatement.close();
+			
+			//Recupero il corso appena inserito con la sua nuova chiave primaria
+			preparedStatement=connection.prepareStatement("select idCorso\r\n" + 
+					"from corso\r\n" + 
+					"where idCorso=(select max(idCorso)\r\n" + 
+					"				from corso)");
+			ResultSet rs=preparedStatement.executeQuery();
+			rs.next();
+			corso.setIdCorso((rs.getInt("idCorso")));
+			
+			/* Salvo la copertina */
+			Path path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
+					+ "YouLearn\\Code\\WebContent\\Resources\\"+corso.getIdCorso());
+			if(!Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS))
+					Files.createDirectories(path); 
+			path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
+					+ "YouLearn\\Code\\WebContent\\Resources\\"+corso.getIdCorso()+File.separator+
+																				filename);
+			copertina.write(path.toString());
 			connection.commit();
-		}catch(SQLException e) {
+		}catch(SQLException |IOException e) {
+			e.printStackTrace();
 			connection.rollback();
+			throw new SQLException();
 		}finally {
 				try{
 					if (preparedStatement != null)
@@ -258,9 +289,10 @@ public class CorsoManager {
 		/* Salvo la copertina */
 		if(file!=null) {
 			Path path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
-					+ "YouLearn\\Code\\Resources\\"+corso.getIdCorso());
+					+ "YouLearn\\Code\\WebContent\\Resources\\"+corso.getIdCorso());
 			if(!Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS))
 					Files.createDirectories(path); 
+			
 //			String filename=UUID.randomUUID().toString();
 			//Riuso il vecchio nome
 			String filename=corso.getCopertina().substring(corso.getCopertina().indexOf(corso.getIdCorso()+"\\")+2, corso.getCopertina().indexOf('.'));
@@ -270,10 +302,11 @@ public class CorsoManager {
 				throw new NotWellFormattedException("La copertina non ha un formato adeguato");
 			
 			path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
-					+ "YouLearn\\Code\\Resources\\"+corso.getIdCorso()+File.separator+
+					+ "YouLearn\\Code\\WebContent\\Resources\\"+corso.getIdCorso()+File.separator+
 																				filename+type);
+			System.out.println(path.toString());
 			file.write(path.toString());
-			corso.setCopertina(path.toString()); //Assegno al corso la copertina appena salvata
+			corso.setCopertina(filename+type); //Assegno al corso la copertina appena salvata
 		}
 		/* Aggiorno il corso */
 		doUpdate(corso);
