@@ -22,6 +22,10 @@ public class AccountManager {
 		dataSource= new ConfiguredDataSource();
 	}
 	
+	public ConfiguredDataSource getDataSource() {
+		return this.dataSource;
+	}
+	
 	/**
 	 * Recupera un Account dal DB
 	 * @param code La mail dell'Account
@@ -58,6 +62,7 @@ public class AccountManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
+				if(connection != null)
 				connection.close();
 			}
 		}
@@ -218,7 +223,7 @@ public class AccountManager {
 	
 
 	/**
-	 * Verifica se un certo utente esiste già nel database
+	 * Verifica se un certo utente esiste giï¿½ nel database
 	 * @param email la mail da verificare
 	 * @return
 	 * @throws SQLException 
@@ -244,6 +249,7 @@ public class AccountManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
+				if(connection != null)
 				connection.close();
 			}
 		}

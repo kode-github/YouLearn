@@ -5,11 +5,14 @@ package manager;
 
 import static org.junit.Assert.*;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import javax.naming.NoPermissionException;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,8 +39,7 @@ public class AccountManagerTest {
 	 * @throws java.lang.Exception
 	 */
 	
-	private static int increment;
-	AccountManager managerAccount;
+	static AccountManager managerAccount;
 	CartaDiCreditoManager managerCarta;
 	
 	@Before
@@ -50,7 +52,6 @@ public class AccountManagerTest {
 		
 	}
 	
-
 	/**
 	 * Test methods for {@link manager.AccountManager#doRetrieveByKey(java.lang.String)}.
 	 * @throws SQLException
@@ -59,7 +60,7 @@ public class AccountManagerTest {
 
 	@Test (expected = NotFoundException.class)
 	public void testDoRetrieveByKeyNotFound() throws SQLException, NotFoundException {     
-		managerAccount.doRetrieveByKey("giacomo@mail.com");
+		managerAccount.doRetrieveByKey("peppino@mail.com");
 	}
 	
 	
@@ -101,27 +102,16 @@ public class AccountManagerTest {
 	@Test
 	public void testModificaMail() throws NoPermissionException, SQLException, AlreadyExistingException, NotFoundException {
 		
-		/* try { // Codice da rendere sequenziale per testing multipli
+		AccountBean _accountOne = managerAccount.doRetrieveByKey("mail_one@mail.com");
+		assertNotNull(managerAccount.checkAccount(_accountOne));
+		managerAccount.modificaMail("mail_" + "one"+ "@mail.com", "mail_" + "two" + "@mail.com");
+		AccountBean _accountTwo = managerAccount.doRetrieveByKey("mail_two@mail.com");
+		assertNotNull(managerAccount.checkAccount(_accountTwo));
 		
-			AccountBean _accountOne = managerAccount.doRetrieveByKey("mail_one@mail.com");
+		/* Reset */
+		managerAccount.modificaMail("mail_" + "two"+ "@mail.com", "mail_" + "one" + "@mail.com");
 		assertNotNull(managerAccount.checkAccount(_accountOne));
 		
-		managerAccount.modificaMail("mail_" + "one"+ "@mail.com", "mail_" + "two" + "@mail.com");
-		
-		AccountBean _accountTwo = managerAccount.doRetrieveByKey("mail_two@mail.com");
-		
-		assertNotNull(managerAccount.checkAccount(_accountTwo));
-		} catch(NotFoundException e) {
-			
-			AccountBean _accountOne = managerAccount.doRetrieveByKey("mail_one@mail.com");
-			assertNotNull(managerAccount.checkAccount(_accountOne));
-			
-			managerAccount.modificaMail("mail_" + "two"+ "@mail.com", "mail_" + "one" + "@mail.com");
-			
-			AccountBean _accountTwo = managerAccount.doRetrieveByKey("mail_two@mail.com");
-			assertNotNull(managerAccount.checkAccount(_accountTwo)); 
-			
-		} */
 		
 	}
 	
@@ -154,7 +144,7 @@ public class AccountManagerTest {
 	 * @throws NoPermissionException 
 	 */
 	
-	/*@Test
+	@Test
 	public void testSetRegistration() throws NoPermissionException, NotWellFormattedException, AlreadyExistingException, SQLException {
 		AccountBean account = new AccountBean();
 		CartaDiCreditoBean newCarta = new CartaDiCreditoBean();
@@ -162,7 +152,7 @@ public class AccountManagerTest {
 		
 		account.setNome("Test");
 		account.setCognome("Test");
-		account.setMail("mail"+increment++ +"@mail.com");
+		account.setMail("mailRegTest@mail.com");
 		account.setPassword("12345");
 		account.setTipo(Ruolo.Utente);
 		account.setVerificato(false);
@@ -170,12 +160,44 @@ public class AccountManagerTest {
 		newCarta.setAnnoScadenza("2022");
 		newCarta.setNomeIntestatario("TestName");
 		newCarta.setMeseScadenza("12");
-		newCarta.setNumeroCarta("000000000000000" + increment++);
+		newCarta.setNumeroCarta("0000000000000000");
 		newCarta.setTipo(CartaEnum.PAYPAL);
 		newCarta.setAccount(account);
-		account.setCarta(newCarta);*/
-		/* managerAccount.setRegistration(account); Test eseguito con successo, bisogna iterare i dati per test sequenziali */
-	//}
+		account.setCarta(newCarta);
+		managerAccount.setRegistration(account); 
+		this.resetRegistration(account);
+		
+	}
+	
+	/* Metodo da trasferire nel Manager, rimuove un account con la propria carta, eseguito SOLO DOPO un test di registrazione */
+	
+	private void resetRegistration(AccountBean account) throws SQLException {
+		
+		Connection connection=null;
+		PreparedStatement preparedStatement=null;
+		
+		String sql="DELETE FROM account WHERE email=?; "
+				+ "DELETE FROM cartadicredito WHERE numeroCarta=?";
+		try {
+			connection=managerAccount.getDataSource().getConnection();
+			connection.setAutoCommit(false);
+			preparedStatement= connection.prepareStatement(sql);
+			preparedStatement.setString(1, account.getMail());
+			preparedStatement.setString(2, account.getCarta().getNumeroCarta());
+			System.out.println("Reset registrazione: "+ preparedStatement.toString());
+			preparedStatement.executeUpdate();
+			connection.commit();
+		}catch(SQLException e) {
+			connection.rollback();
+		}finally {
+				try{
+					if (preparedStatement != null)
+						preparedStatement.close();
+				}finally {
+					connection.close();
+				}		
+		}
+	}
 
 	/**
 	 * Test method for {@link manager.AccountManager#checkMail(java.lang.String)}.

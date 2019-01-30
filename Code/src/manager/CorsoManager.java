@@ -157,7 +157,7 @@ public class CorsoManager {
 	public synchronized void creaCorso(CorsoBean corso,Part copertina) throws SQLException, NotWellFormattedException, NotFoundException, NoPermissionException {
 		accountManager= new AccountManager();
 		if(corso==null || corso.getIdCorso()!=null || !isWellFormatted(corso) || copertina==null) 
-			throw new NotWellFormattedException("Il corso non è ben formattato");
+			throw new NotWellFormattedException("Il corso non ï¿½ ben formattato");
 		if(!accountManager.checkMail(corso.getDocente().getMail())) throw new NotFoundException("Il creatore non esiste");
 		
 		Connection connection=null;
@@ -245,7 +245,7 @@ public class CorsoManager {
 			preparedStatement= connection.prepareStatement(insertSQL);
 			preparedStatement.setInt(1, corso.getIdCorso());
 			preparedStatement.setString(2, corso.getDocente().getMail());
-			//Controllo se c'è da aggiornare il supervisore
+			//Controllo se c'ï¿½ da aggiornare il supervisore
 			if(corso.getSupervisore()!=null)
 				preparedStatement.setString(3, corso.getSupervisore().getMail());
 			else
@@ -283,8 +283,8 @@ public class CorsoManager {
 	 */
 	public void modificaCorso(CorsoBean corso,Part file) throws NotFoundException, NotWellFormattedException, SQLException, NoPermissionException, IOException {
 		if(!checkCorso(corso.getIdCorso())) throw new NotFoundException("Il corso non esiste");
-		if(!isWellFormatted(corso) || corso.getIdCorso()==null) throw new NotWellFormattedException("Il corso non è ben formattato");
-		if(!corso.getStato().equals(Stato.Completamento)) throw new NoPermissionException("Non si può modificare un corso non in "
+		if(!isWellFormatted(corso) || corso.getIdCorso()==null) throw new NotWellFormattedException("Il corso non ï¿½ ben formattato");
+		if(!corso.getStato().equals(Stato.Completamento)) throw new NoPermissionException("Non si puï¿½ modificare un corso non in "
 																								+ "completamento");
 		/* Salvo la copertina */
 		if(file!=null) {
@@ -326,7 +326,7 @@ public class CorsoManager {
 			System.out.println("doDelete: "+ preparedStatement.toString());
 			int result=preparedStatement.executeUpdate();
 			
-			if(result==0) throw new NotFoundException("Il corso non esiste oppure non è in completamento");
+			if(result==0) throw new NotFoundException("Il corso non esiste oppure non ï¿½ in completamento");
 			
 			
 		} finally {
@@ -345,14 +345,14 @@ public class CorsoManager {
 	 * @param accetta se true allora accetta, altrimenti rifiuta
 	 * @param corso corso da convalidare
 	 * @throws NotFoundException IL CORSO non esiste
-	 * @throws NotWellFormattedException Il corso non è ben formattato
-	 * @throws NoPermissionException Il corso non è in stato di attesa
+	 * @throws NotWellFormattedException Il corso non ï¿½ ben formattato
+	 * @throws NoPermissionException Il corso non ï¿½ in stato di attesa
 	 * @throws SQLException
 	 */
 	public void convalidaCorso(boolean accetta,CorsoBean corso) throws NotFoundException, NotWellFormattedException, NoPermissionException, SQLException {
-		if(!isWellFormatted(corso) || corso.getIdCorso()==null) throw new NotWellFormattedException("Il corso non è ben formattato");
+		if(!isWellFormatted(corso) || corso.getIdCorso()==null) throw new NotWellFormattedException("Il corso non ï¿½ ben formattato");
 		if(!checkCorso(corso)) throw new NotFoundException("Il corso non esiste");
-		if(!corso.getStato().equals(Stato.Attesa)) throw new NoPermissionException("Non si può confermare un corso non in attesa");
+		if(!corso.getStato().equals(Stato.Attesa)) throw new NoPermissionException("Non si puï¿½ confermare un corso non in attesa");
 		
 		if(accetta)
 			corso.setStato(Stato.Attivo);
@@ -370,9 +370,9 @@ public class CorsoManager {
 	 * @throws SQLException
 	 */
 	public void confermaCorso(CorsoBean corso) throws NotWellFormattedException, NotFoundException, NoPermissionException, SQLException {
-		if(corso==null || !isWellFormatted(corso) || corso.getIdCorso()==null) throw new NotWellFormattedException("Il corso non è ben formattato");
+		if(corso==null || !isWellFormatted(corso) || corso.getIdCorso()==null) throw new NotWellFormattedException("Il corso non ï¿½ ben formattato");
 		if(!checkCorso(corso)) throw new NotFoundException("Il corso non esiste");
-		if(!corso.getStato().equals(Stato.Completamento)) throw new NoPermissionException("Non si può confermare un corso non in completamento");
+		if(!corso.getStato().equals(Stato.Completamento)) throw new NoPermissionException("Non si puï¿½ confermare un corso non in completamento");
 		
 		accountManager=new AccountManager();
 		corso.setStato(Stato.Attesa);
@@ -395,9 +395,9 @@ public class CorsoManager {
 	public Collection<CorsoBean> retrieveByCreatore(AccountBean account) throws NoPermissionException, SQLException, NotFoundException, NotWellFormattedException {
 		accountManager= new AccountManager();
 		lezioneManager= new LezioneManager();
-		if(!accountManager.isWellFormatted(account)) throw new NotWellFormattedException("L'account non è ben formattato");
+		if(!accountManager.isWellFormatted(account)) throw new NotWellFormattedException("L'account non ï¿½ ben formattato");
 		if(!accountManager.checkAccount(account)) throw new NotFoundException("Questo account non esiste");
-		if(!account.getTipo().equals(Ruolo.Utente)) throw new NoPermissionException("Questo utente non può avere corsi creati");
+		if(!account.getTipo().equals(Ruolo.Utente)) throw new NoPermissionException("Questo utente non puï¿½ avere corsi creati");
 		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
@@ -412,7 +412,7 @@ public class CorsoManager {
 			ResultSet rs= preparedStatement.executeQuery();
 			while(rs.next()) {
 			CorsoBean corso= new CorsoBean();
-				 corso.setIdCorso(rs.getInt("idcorso"));
+				 corso.setIdCorso(rs.getInt("idCorso"));
 				 corso.setNome(rs.getString("nome"));
 				 corso.setDescrizione(rs.getString("Descrizione"));
 				 corso.setCopertina(rs.getString("copertina"));
@@ -452,9 +452,9 @@ public class CorsoManager {
 	public Collection<CorsoBean> doRetrieveBySupervisore(AccountBean account) throws SQLException, NotFoundException, NoPermissionException, NotWellFormattedException {
 		accountManager= new AccountManager();
 		lezioneManager= new LezioneManager();
-		if(!accountManager.isWellFormatted(account)) throw new NotWellFormattedException("L'account non è ben formattato");
+		if(!accountManager.isWellFormatted(account)) throw new NotWellFormattedException("L'account non ï¿½ ben formattato");
 		if(!accountManager.checkAccount(account)) throw new NotFoundException("Questo account non esiste");
-		if(!account.getTipo().equals(Ruolo.Supervisore)) throw new NoPermissionException("Questo utente non può avere corsi da supervisionare");
+		if(!account.getTipo().equals(Ruolo.Supervisore)) throw new NoPermissionException("Questo utente non puï¿½ avere corsi da supervisionare");
 		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
@@ -469,7 +469,7 @@ public class CorsoManager {
 			ResultSet rs= preparedStatement.executeQuery();
 			while(rs.next()) {
 				CorsoBean corso= new CorsoBean();
-				 corso.setIdCorso(rs.getInt("idcorso"));
+				 corso.setIdCorso(rs.getInt("idCorso"));
 				 corso.setNome(rs.getString("nome"));
 				 corso.setDescrizione(rs.getString("Descrizione"));
 				 corso.setCopertina(rs.getString("copertina"));
@@ -499,7 +499,7 @@ public class CorsoManager {
 
 
 	/**
-	 * Controlla se un certo corso è corretto ed esiste
+	 * Controlla se un certo corso ï¿½ corretto ed esiste
 	 * @param corso
 	 * @return
 	 * @throws SQLException 
@@ -508,7 +508,7 @@ public class CorsoManager {
 		Connection connection=null;
 		PreparedStatement statement=null;
 		
-		String sql="Select idcorso from corso where idCorso=? AND nome=? AND descrizione=? AND dataCreazione=? AND dataFine=? AND"
+		String sql="Select idCorso from corso where idCorso=? AND nome=? AND descrizione=? AND dataCreazione=? AND dataFine=? AND"
 				+ " copertina=? AND prezzo=? AND stato=? AND categoria=? AND nLezioni=? AND nIscritti=? AND accountCreatore=?";
 		
 		try {
