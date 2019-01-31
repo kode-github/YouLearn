@@ -15,8 +15,12 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.UUID;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.naming.NoPermissionException;
 import javax.servlet.http.Part;
+import javax.sql.DataSource;
 
 import connection.ConfiguredDataSource;
 
@@ -33,10 +37,17 @@ public class CorsoManager {
 	AccountManager accountManager;
 	LezioneManager lezioneManager;
 	IscrizioneManager iscrizioneManager;
-	ConfiguredDataSource dataSource;
+	DataSource dataSource;
 	
 	public CorsoManager() {
-		dataSource=new ConfiguredDataSource();
+		Context ctx;
+		try {
+			ctx = new InitialContext();
+			dataSource= (DataSource) ctx.lookup("java:/comp/env/jdbc/MyLocalDB");
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -482,7 +493,7 @@ public class CorsoManager {
 				 corso.setStato(Stato.valueOf(rs.getString("stato")));
 				 corso.setSupervisore(account);
 				 lezioneManager.retrieveLezioniByCorso(corso);
-				 //non carichiamo il docente
+				 corso.setDocente(accountManager.doRetrieveByKey(rs.getString("accountCreatore")));
 				 collection.add(corso);
 			}
 		}finally {

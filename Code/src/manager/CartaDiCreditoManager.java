@@ -4,8 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.naming.NoPermissionException;
-import connection.ConfiguredDataSource;
+import javax.sql.DataSource;
+
 import bean.AccountBean;
 import bean.CartaDiCreditoBean;
 import bean.CartaDiCreditoBean.CartaEnum;
@@ -16,11 +21,18 @@ import exception.NotWellFormattedException;
 
 public class CartaDiCreditoManager {
 
-	ConfiguredDataSource dataSource;
+	DataSource dataSource;
 	AccountManager accountManager;
 	
 	public  CartaDiCreditoManager() {
-		dataSource= new ConfiguredDataSource();
+		Context ctx;
+		try {
+			ctx = new InitialContext();
+			dataSource= (DataSource) ctx.lookup("java:/comp/env/jdbc/MyLocalDB");
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**

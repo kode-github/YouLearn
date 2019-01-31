@@ -5,26 +5,34 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.naming.NoPermissionException;
 import bean.AccountBean;
 import bean.AccountBean.Ruolo;
-import connection.ConfiguredDataSource;
+import javax.sql.DataSource;
 import exception.*;
 
 public class AccountManager {
 	
-	private ConfiguredDataSource dataSource;
+	private DataSource dataSource;
 	private CartaDiCreditoManager managerCarta;
 	private CorsoManager managerCorso;
 	private IscrizioneManager managerIscrizione;
 	
 	public AccountManager() {
-		dataSource= new ConfiguredDataSource();
+		Context ctx;
+		try {
+			ctx = new InitialContext();
+			dataSource= (DataSource) ctx.lookup("java:/comp/env/jdbc/MyLocalDB");
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
-	public ConfiguredDataSource getDataSource() {
-		return this.dataSource;
-	}
 	
 	/**
 	 * Recupera un Account dal DB

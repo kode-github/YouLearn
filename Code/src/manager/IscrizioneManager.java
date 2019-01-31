@@ -6,7 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.naming.NoPermissionException;
+import javax.sql.DataSource;
+
 import connection.ConfiguredDataSource;
 import bean.AccountBean;
 import bean.CorsoBean;
@@ -18,14 +24,21 @@ import exception.NotWellFormattedException;
 
 public class IscrizioneManager {
 
-	ConfiguredDataSource dataSource;
+	DataSource dataSource;
 	AccountManager accountManager;
 	CorsoManager corsoManager;
 	LezioneManager lezioneManager;
 	
 	
 	public IscrizioneManager() {	
-		dataSource=new ConfiguredDataSource();
+		Context ctx;
+		try {
+			ctx = new InitialContext();
+			dataSource= (DataSource) ctx.lookup("java:/comp/env/jdbc/MyLocalDB");
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public IscrizioneBean doRetrieveByKey(int id,String mail) throws SQLException, NotFoundException, NoPermissionException, NotWellFormattedException{
