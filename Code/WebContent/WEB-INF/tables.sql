@@ -41,6 +41,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
+INSERT INTO `account` VALUES ('Mario','Sessa','PentiumD','china@gmail.com','Utente',0),('Luigi','Crisci','PentiumD','luigicrisci1997@gmail.com','Utente',0),('Pasquale','Ambrosio','PentiumD','pasqualeAmbrosio@gmail.com','Supervisore',0);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -70,6 +71,7 @@ CREATE TABLE `cartadicredito` (
 
 LOCK TABLES `cartadicredito` WRITE;
 /*!40000 ALTER TABLE `cartadicredito` DISABLE KEYS */;
+INSERT INTO `cartadicredito` VALUES ('4023600655123698','02','2020','PayPal','Luigi','luigicrisci1997@gmail.com'),('4023600666666666','02','2089','Visa','Mario','china@gmail.com');
 /*!40000 ALTER TABLE `cartadicredito` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -82,15 +84,12 @@ DROP TABLE IF EXISTS `commento`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `commento` (
   `idcommento` int(11) NOT NULL,
-  `NumeroLezione` int(11) DEFAULT NULL,
-  `IdCorso` int(11) DEFAULT NULL,
+  `idLezione` int(11) DEFAULT NULL,
   `testo` varchar(1024) NOT NULL,
   `AccountMail` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idcommento`),
-  KEY `b_idx` (`IdCorso`,`NumeroLezione`),
   KEY `creatore_idx` (`AccountMail`),
-  CONSTRAINT `creatore` FOREIGN KEY (`AccountMail`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `lezione` FOREIGN KEY (`IdCorso`, `NumeroLezione`) REFERENCES `lezione` (`corsoidcorso`, `numerolezione`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `creatore` FOREIGN KEY (`AccountMail`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -113,7 +112,7 @@ DROP TABLE IF EXISTS `corso`;
 CREATE TABLE `corso` (
   `idCorso` int(11) NOT NULL AUTO_INCREMENT,
   `accountCreatore` varchar(255) NOT NULL,
-  `accountSupervisore` varchar(255) NOT NULL,
+  `accountSupervisore` varchar(255) DEFAULT NULL,
   `nome` varchar(255) NOT NULL,
   `descrizione` varchar(1048) NOT NULL,
   `dataCreazione` date NOT NULL,
@@ -122,14 +121,14 @@ CREATE TABLE `corso` (
   `prezzo` varchar(10) NOT NULL,
   `stato` varchar(20) NOT NULL,
   `categoria` varchar(30) NOT NULL,
-  `nLezioni` int(10) NOT NULL,
-  `nIscritti` int(10) NOT NULL,
+  `nLezioni` int(10) NOT NULL DEFAULT '0',
+  `nIscritti` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`idCorso`),
   KEY `corso_ibfk_1` (`accountCreatore`),
   KEY `corso_ibfk_2` (`accountSupervisore`),
   CONSTRAINT `corso_ibfk_1` FOREIGN KEY (`accountCreatore`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `corso_ibfk_2` FOREIGN KEY (`accountSupervisore`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -138,6 +137,7 @@ CREATE TABLE `corso` (
 
 LOCK TABLES `corso` WRITE;
 /*!40000 ALTER TABLE `corso` DISABLE KEYS */;
+INSERT INTO `corso` VALUES (5,'luigicrisci1997@gmail.com',NULL,'NonBellissimo','         Stupendo                 ','2018-02-02','2030-02-02','141668b4-4eee-4ae4-972b-d6266166c9e2.jpg','90','Attesa','Musica',0,0),(12,'china@gmail.com','pasqualeAmbrosio@gmail.com','SuperComunista','PER IL PROLETARIATO','1917-02-02','2089-02-02','aaa','1','Completamento','Informatica',0,0);
 /*!40000 ALTER TABLE `corso` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -168,6 +168,7 @@ CREATE TABLE `iscrizione` (
 
 LOCK TABLES `iscrizione` WRITE;
 /*!40000 ALTER TABLE `iscrizione` DISABLE KEYS */;
+INSERT INTO `iscrizione` VALUES ('luigicrisci1997@gmail.com',12,'2019-01-10',89,555);
 /*!40000 ALTER TABLE `iscrizione` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -179,13 +180,16 @@ DROP TABLE IF EXISTS `lezione`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `lezione` (
-  `corsoIdCorso` int(11) NOT NULL,
   `nome` varchar(255) NOT NULL,
-  `visualizzazione` int(32) NOT NULL,
+  `visualizzazione` int(32) NOT NULL DEFAULT '0',
   `numeroLezione` int(10) NOT NULL,
-  PRIMARY KEY (`corsoIdCorso`,`numeroLezione`),
-  CONSTRAINT `lezione_ibfk_1` FOREIGN KEY (`corsoIdCorso`) REFERENCES `corso` (`idcorso`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `IdLezione` int(11) NOT NULL AUTO_INCREMENT,
+  `filePath` varchar(2048) NOT NULL,
+  `corsoIdCorso` int(11) NOT NULL,
+  PRIMARY KEY (`IdLezione`),
+  KEY `corso_idx` (`corsoIdCorso`),
+  CONSTRAINT `corso` FOREIGN KEY (`corsoIdCorso`) REFERENCES `corso` (`idcorso`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -252,4 +256,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-21 23:39:41
+-- Dump completed on 2019-01-31 10:24:59
