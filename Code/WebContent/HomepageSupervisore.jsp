@@ -160,23 +160,26 @@
 			<div class="card-body">
 
 				<a
-					href="http://localhost/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><img
+					href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><img
 					class="img-corsi-attesa rounded float-left"
 					src=<%=i.getCopertina()%> alt="FAIL" width="170" height="170"></a>
 				<ul class="informazioni-corso rounded float-left">
 					<li>NOME CORSO: <a
-						href="http://localhost/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><%=i.getNome()%></a></li>
+						href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><%=i.getNome()%></a></li>
 					<li>NUMERO ISCRITTI: <%=i.getnIscritti()%></li>
 					<li>SCADENZA ISCRIZIONI: <%=i.getDataFine()%></li>
 
 				</ul>
-
+			
 				<div class="float-right ">
-					<button type="button" class="btn btn-success btn-lg ">Conferma</button>
-					<button type="button" class="btn btn-outline-secondary btn-lg ">Vai
+				<form method="post"> 
+					<button type="submit" formaction="http://localhost:8080/YouLearn/VerificaCorsoServlet?verifica=true&idCorso=<%=i.getIdCorso() %>" 
+																		class="btn btn-success btn-lg ">Conferma</button>
+					<button type="submit" class="btn btn-outline-secondary btn-lg ">Vai
 						al corso</button>
-					<button type="button" class="btn btn-danger btn-lg">Rifiuta</button>
-
+					<button type="submit" formaction="http://localhost:8080/YouLearn/VerificaCorsoServlet?verifica=false&idCorso=<%=i.getIdCorso() %>"
+																		class="btn btn-danger btn-lg">Rifiuta</button>
+				</form>
 				</div>
 
 				<%

@@ -14,7 +14,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.UUID;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.http.Part;
+import javax.sql.DataSource;
+
 import connection.ConfiguredDataSource;
 import bean.CommentoBean;
 import bean.CorsoBean;
@@ -25,12 +31,19 @@ import exception.NotWellFormattedException;
 
 public class LezioneManager {
 	
-	ConfiguredDataSource dataSource;
+	DataSource dataSource;
 	AccountManager accountManager;
 	CorsoManager corsoManager;
 	
 	public LezioneManager() {
-		dataSource=new ConfiguredDataSource();
+		Context ctx;
+		try {
+			ctx = new InitialContext();
+			dataSource= (DataSource) ctx.lookup("java:/comp/env/jdbc/MyLocalDB");
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**

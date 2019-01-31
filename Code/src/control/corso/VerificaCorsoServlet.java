@@ -7,34 +7,41 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Servlet implementation class VerificaCorsoServlet
- */
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
+import bean.AccountBean;
+import bean.CorsoBean;
+import manager.CorsoManager;
+
+
 @WebServlet("/VerificaCorsoServlet")
 public class VerificaCorsoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+	CorsoManager manager;
+    
     public VerificaCorsoServlet() {
         super();
-        // TODO Auto-generated constructor stub
+        manager=new CorsoManager();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
+		try {
+			boolean verifica=Boolean.parseBoolean(request.getParameter("verifica"));
+			int idCorso=Integer.parseInt(request.getParameter("idCorso"));
+			AccountBean supervisore=(AccountBean)request.getSession().getAttribute("account");
+			CorsoBean corso=supervisore.getCorsoSupervisionato(idCorso);
+			manager.convalidaCorso(verifica, corso);
+		}catch(Exception e) {
+			e.printStackTrace();
+			
+		}
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

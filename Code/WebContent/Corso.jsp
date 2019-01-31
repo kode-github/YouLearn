@@ -55,7 +55,7 @@
 		if(listaCorsiTenuti.isEmpty() && listaCorsiSeguiti.isEmpty() && listaCorsiDaSupervisionare.isEmpty())
 			System.out.println("Devo acquistare il corso!");	
 		else{
-			
+			//Qua c'è da controllare quale lista ha l'elemento
 			CorsoBean corso = (CorsoBean) a1.getCorsoTenuto(Integer.parseInt(idCorso));
 			%>
 

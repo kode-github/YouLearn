@@ -396,6 +396,18 @@ public class AccountBean{
 	}
 
 
+	public CorsoBean getCorsoSupervisionato(int idCorso) {
+		if(corsiTenuti==null) return null;
+		Iterator<CorsoBean> i=corsiDaSupervisionare.iterator();
+		while(i.hasNext()) {
+			CorsoBean corso=i.next();
+			if(corso.getIdCorso()!=null && corso.getIdCorso()==idCorso)
+				return corso;
+		}
+		return null;
+	}
+
+
 	
 
 	
