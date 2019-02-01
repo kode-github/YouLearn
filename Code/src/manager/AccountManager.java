@@ -164,7 +164,6 @@ public class AccountManager {
 	 */
 	public AccountBean login(String email, String password) throws SQLException, NotFoundException, DatiErratiException, NoPermissionException, NotWellFormattedException {
 		AccountBean temp=doRetrieveByKey(email); //NotFoundException se non esiste
-		System.out.println("passsword: "+temp.getPassword()+"  "+password);
 		if(!temp.getPassword().equals(password)) throw new DatiErratiException("Le password non corrispondono"); 
 		
 		managerCarta= new CartaDiCreditoManager();
