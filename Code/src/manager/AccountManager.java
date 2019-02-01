@@ -46,7 +46,6 @@ public class AccountManager {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		AccountBean temp=new AccountBean();
-		managerCarta= new CartaDiCreditoManager();
 		
 		String sql="SELECT* FROM Account WHERE email=?";		
 		try {
@@ -88,7 +87,7 @@ public class AccountManager {
 	 */
 	public void modificaPassword(String email, String pass) throws SQLException, NotFoundException, NoPermissionException,NotWellFormattedException {
 		if(!checkMail(email)) throw new NotFoundException("L'account non esiste");
-		//Controllo sul formato della password
+		//TODO Controllo sul formato della password
 		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -174,12 +173,12 @@ public class AccountManager {
 		
 		if(temp.getTipo().equals(Ruolo.Utente)) {
 			managerCarta.retrieveByAccount(temp); //recupero la carta
-			managerCorso.retrieveByCreatore(temp); //recupero gli account da lui creati
-			managerIscrizione.getIscrizioniUtente(temp); //recupero gli account a cui � iscritto
+//			managerCorso.retrieveByCreatore(temp); //recupero gli account da lui creati
+//			managerIscrizione.getIscrizioniUtente(temp); //recupero gli account a cui � iscritto
 		}
-		else {
-			managerCorso.doRetrieveBySupervisore(temp); //recupero i corsi supervisionati
-		}
+//		else {
+//			managerCorso.doRetrieveBySupervisore(temp); //recupero i corsi supervisionati
+//		}
 		temp.setPassword(""); //elimino la password in quanto va inserito in sessione
 		return temp;
 	}

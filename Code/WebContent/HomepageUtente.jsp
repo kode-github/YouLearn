@@ -1,4 +1,4 @@
-<%@page import="bean.CorsoBean.Stato"%>
+<%@page import="bean.*,bean.CorsoBean.Stato"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@page import="bean.*,java.util.LinkedList"%>
@@ -28,17 +28,22 @@
 
 
 <!-- Script-->
-
-
-
-
-
 <title>YouLearn</title>
 </head>
 
 <body>
 
 	<%@ include file="Navbar.jsp"%>
+<%
+
+	String seguiti=request.getParameter("seguiti");
+	String tenuti=request.getParameter("tenuti");
+	
+	if(tenuti==null || seguiti==null)
+		response.sendRedirect(request.getContextPath()+"//VisualizzaProfiloServlet");
+	request.removeAttribute("seguiti");
+	request.removeAttribute("tenuti");
+%>
 
 
 	<!-- IL NOME DEL CAMPO PER LA NUOVA MAIL HA name="newMail" -->
@@ -337,20 +342,20 @@
 
 			<div class="card-b-corsi card-body">
 				<a
-						href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getCorso().getIdCorso()%>"><img
+						href="http://localhost:8080/YouLearn/Corso.jsp?from=iscrizioni&idCorso=<%=i.getCorso().getIdCorso()%>"><img
 						class="img-corsi-attesa rounded float-left"
-						src="Resources\<%=i.getCorso().getIdCorso()%><%=i.getCorso().getCopertina()%>"
+						src="Resources\<%=i.getCorso().getIdCorso()%>\<%=i.getCorso().getCopertina()%>"
 						alt="FAIL" width="170" height="170"></a>
 					<ul class="informazioni-corso rounded float-left">
 						<li>NOME CORSO: <a
-							href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getCorso().getIdCorso()%>"><%=i.getCorso().getNome()%></a></li>
+							href="http://localhost:8080/YouLearn/Corso.jsp?from=iscrizioni&idCorso=<%=i.getCorso().getIdCorso()%>"><%=i.getCorso().getNome()%></a></li>
 						<li>NUMERO ISCRITTI: <%=i.getCorso().getnIscritti() %></li>
 						<li>STATO: <%=i.getCorso().getStato() %></li>
 
 				</ul>
 				
 				
-						<a href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getCorso().getIdCorso()%>"><button
+						<a href="http://localhost:8080/YouLearn/Corso.jsp?from=iscrizioni&idCorso=<%=i.getCorso().getIdCorso()%>"><button
 							 class="position-btn btn btn-success btn-lg ">Vai al Corso</button></a>
 						
 				
@@ -383,13 +388,13 @@
 			<div class="card-b-corsi card-body">
 				<form method="post">
 					<a
-						href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><img
+						href="http://localhost:8080/YouLearn/Corso.jsp?from=tenuti&idCorso=<%=i.getIdCorso()%>"><img
 						class="img-corsi-attesa rounded float-left"
 						src="Resources\<%=i.getIdCorso()%>\<%=i.getCopertina()%>"
 						alt="FAIL" width="170" height="170"></a>
 					<ul class="informazioni-corso rounded float-left">
 						<li>NOME CORSO: <a
-							href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><%=i.getNome()%></a></li>
+							href="http://localhost:8080/YouLearn/Corso.jsp?from=tenuti&idCorso=<%=i.getIdCorso()%>"><%=i.getNome()%></a></li>
 						<li>NUMERO ISCRITTI: <%=i.getnIscritti() %></li>
 						<li>SCADENZA ISCRIZIONI: <%=i.getDataFine() %></li>
 						<li>STATO: <%=i.getStato() %></li>
