@@ -20,6 +20,8 @@ function validateCorso(formSettingCorso) {
     var name = formSettingCorso.nome.value;
     console.log(name + " "+ name.length);
     var desc = formSettingCorso.descrizione.value;
+	desc = desc.replace(/\s/g, '');
+
     console.log(desc);
     var date = formSettingCorso.dataScadenza.value;
     console.log(date);

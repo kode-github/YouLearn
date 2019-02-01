@@ -342,28 +342,32 @@
 
 			<div class="card-b-corsi card-body">
 				<a
-						href="http://localhost:8080/YouLearn/Corso.jsp?from=iscrizioni&idCorso=<%=i.getCorso().getIdCorso()%>"><img
-						class="img-corsi-attesa rounded float-left"
-						src="Resources\<%=i.getCorso().getIdCorso()%>\<%=i.getCorso().getCopertina()%>"
-						alt="FAIL" width="170" height="170"></a>
-					<ul class="informazioni-corso rounded float-left">
-						<li>NOME CORSO: <a
-							href="http://localhost:8080/YouLearn/Corso.jsp?from=iscrizioni&idCorso=<%=i.getCorso().getIdCorso()%>"><%=i.getCorso().getNome()%></a></li>
-						<li>NUMERO ISCRITTI: <%=i.getCorso().getnIscritti() %></li>
-						<li>STATO: <%=i.getCorso().getStato() %></li>
+					href="http://localhost:8080/YouLearn/Corso.jsp?from=iscrizioni&idCorso=<%=i.getCorso().getIdCorso()%>"><img
+					class="img-corsi-attesa rounded float-left"
+					src="Resources\<%=i.getCorso().getIdCorso()%>\<%=i.getCorso().getCopertina()%>"
+					alt="FAIL" width="170" height="170"></a>
+				<ul class="informazioni-corso rounded float-left">
+					<li>NOME CORSO: <a
+						href="http://localhost:8080/YouLearn/Corso.jsp?from=iscrizioni&idCorso=<%=i.getCorso().getIdCorso()%>"><%=i.getCorso().getNome()%></a></li>
+					<li>NUMERO ISCRITTI: <%=i.getCorso().getnIscritti()%></li>
+					<li>STATO: <%=i.getCorso().getStato()%></li>
 
 				</ul>
-				
-				
-						<a href="http://localhost:8080/YouLearn/Corso.jsp?from=iscrizioni&idCorso=<%=i.getCorso().getIdCorso()%>"><button
-							 class="position-btn btn btn-success btn-lg ">Vai al Corso</button></a>
-						
-				
-					<%} }%>
-</div></div>
+
+
+				<a
+					href="http://localhost:8080/YouLearn/Corso.jsp?from=iscrizioni&idCorso=<%=i.getCorso().getIdCorso()%>"><button
+						class="position-btn btn btn-success btn-lg ">Vai al Corso</button></a>
+
+				</div>
+				<%
+					}}
+				%>
+			
+		</div>
 		<!-- INIZIO CORSI TENUTI -->
 
-		<div style="margin-bottom:20px;" class="card w-75 mx-auto">
+		<div style="margin-bottom: 20px;" class="card w-75 mx-auto">
 			<div class="card-header">
 				<h5 class="card-h-corsi">CORSI TENUTI</h5>
 				<a class="float-right position-absolute"
@@ -407,23 +411,29 @@
 							formaction="http://localhost:8080/YouLearn/ConfermaCorsoServlet?idCorso=<%=i.getIdCorso() %>"
 							class="btn btn-success btn-lg ">Conferma</button>
 						<button type="submit"
-							formaction="http://localhost:8080/YouLearn/SettingCorso.jsp?idCorso=<%=i.getIdCorso() %>"
+							formaction="http://localhost:8080/YouLearn/SettingCorso.jsp?idCorso=<%=i.getIdCorso()%>"
 							class="btn btn-outline-secondary btn-lg ">Modifica</button>
 						<button type="submit" class="btn btn-outline-secondary btn-lg  ">Gestisci
 							lezioni</button>
 						<button type="submit"
-							formaction="http://localhost:8080/YouLearn/CancCorsoServlet?idCorso=<%=i.getIdCorso() %>"
+							formaction="http://localhost:8080/YouLearn/CancCorsoServlet?idCorso=<%=i.getIdCorso()%>"
 							class="btn btn-danger btn-lg  ">Elimina Corso</button>
 					</div>
 
-					<%}
-                            }}%>
+					<%
+						}
+					%>
 				</form>
 			</div>
+			<%
+				}
+				}
+			%>
 
-		
+
+
 		</div>
-		
+
 	</div>
 	<!-- FINE -->
 	

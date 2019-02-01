@@ -66,10 +66,10 @@
 						value=<%=corso.getNome() %> <%} %>>
 				</div>
 				<div class="form-group">
-					<label for="InputCognome">DESCRIZIONE DEL CORSO</label>
-					<textarea required="required" name="descrizione" id="" class="form-control" id="InputDescrizione">
-						<%if(corso!=null){ %> <%=corso.getDescrizione() %> <%} %>
-					</textarea>
+					<label for="Input">DESCRIZIONE DEL CORSO</label>
+					
+					<textarea id="txtarea" name="descrizione"
+				placeholder="Inserisci qui la descrizione!" class="form-control" class=" w-100"><%if(corso!=null){ %> <%=corso.getDescrizione() %> <%} %></textarea>
 				</div>
 				<div class="form-group">
 					<label for="InputCategoria">CATEGORIA</label>
