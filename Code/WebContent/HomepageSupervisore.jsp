@@ -45,6 +45,15 @@
 
 	<%@ include file="Navbar.jsp"%>
 
+<%
+	String sup=request.getParameter("sup");	
+
+	if(sup==null)
+		response.sendRedirect(request.getContextPath()+"//VisualizzaProfiloServlet");
+	request.removeAttribute("sup");
+
+%>
+
 
 	<div class="container-fluid">
 		<div class="row ">

@@ -438,6 +438,7 @@ public class CorsoManager {
 				 corso.setDocente(account);
 				 lezioneManager.retrieveLezioniByCorso(corso);
 				 //non carichiamo il supervisore
+				 //Non recupera le iscrizioni
 				 collection.add(corso);
 			}
 		}finally {

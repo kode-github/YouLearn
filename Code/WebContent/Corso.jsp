@@ -1,5 +1,5 @@
 <%@page import="bean.IscrizioneBean"%>
-<%@page import="bean.CorsoBean"%>
+<%@page import="bean.CorsoBean,bean.CorsoBean.*"%>
 <%@page import="java.util.LinkedList"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -43,20 +43,47 @@
 	
 	<%@ include file="Navbar.jsp" %>
 
-<% 	
-		String idCorso = request.getParameter("idCorso");
-		if(idCorso==null){}
-		//Manda su Homepage
-		AccountBean a1 = (AccountBean) request.getSession().getAttribute("account");
-		LinkedList<CorsoBean> listaCorsiTenuti = (LinkedList<CorsoBean>) a1.getCorsiTenuti();
-		LinkedList<IscrizioneBean> listaCorsiSeguiti = (LinkedList<IscrizioneBean>) a1.getIscrizioni();
-		LinkedList<CorsoBean> listaCorsiDaSupervisionare = (LinkedList<CorsoBean>) a1.getCorsiDaSupervisionare();
+<% 
+	//Con questa struttura non è possibile condividere link
 
-		if(listaCorsiTenuti.isEmpty() && listaCorsiSeguiti.isEmpty() && listaCorsiDaSupervisionare.isEmpty())
+		String idCorso = request.getParameter("idCorso");
+		if(idCorso==null){
+			response.sendRedirect(request.getContextPath()+"\\Welcome.jsp");
+		}
+		
+		CorsoBean corso=(CorsoBean)request.getSession().getAttribute("corso");
+		String ruolo=(String)  request.getSession().getAttribute("ruolo");
+		if(corso==null || ruolo==null){
+			response.sendRedirect(request.getContextPath()+"\\VisualCorsoServlet?idCorso="+idCorso);
+		}
+		else{
+			request.getSession().removeAttribute("collection");
+			request.getSession().removeAttribute("ruolo");
+		}
+		
+		//Ora abbiamo le iscrizioni del corso e from che ci dice da dove proveniamo
+		
+		
+		
+		
+		//Manda su Homepage
+		/* AccountBean a1 = (AccountBean) request.getSession().getAttribute("account");
+		if(account.getTipo().equals(Ruolo.Utente)){
+			LinkedList<CorsoBean> listaCorsiTenuti = (LinkedList<CorsoBean>) a1.getCorsiTenuti();
+			LinkedList<IscrizioneBean> listaCorsiSeguiti = (LinkedList<IscrizioneBean>) a1.getIscrizioni();
+		}
+		else
+			LinkedList<CorsoBean> listaCorsiDaSupervisionare = (LinkedList<CorsoBean>) a1.getCorsiDaSupervisionare();
+ */
+ 
+ 
+/* 		if(listaCorsiTenuti.isEmpty() && listaCorsiSeguiti.isEmpty() && listaCorsiDaSupervisionare.isEmpty())
 			System.out.println("Devo acquistare il corso!");	
 		else{
 			//Qua c'è da controllare quale lista ha l'elemento
-			CorsoBean corso = (CorsoBean) a1.getCorsoTenuto(Integer.parseInt(idCorso));
+			CorsoBean corso = (CorsoBean) a1.getCorsoTenuto(Integer.parseInt(idCorso)); */
+			
+			
 			%>
 
 	<h1 id="titolo-pagina" class="display-3"><%=corso.getNome() %></h1>

@@ -18,6 +18,8 @@ import bean.AccountBean;
 import bean.CorsoBean;
 import bean.IscrizioneBean;
 import bean.AccountBean.Ruolo;
+import bean.CorsoBean.Categoria;
+import bean.CorsoBean.Stato;
 import exception.AlreadyExistingException;
 import exception.NotFoundException;
 import exception.NotWellFormattedException;
@@ -41,6 +43,17 @@ public class IscrizioneManager {
 		}
 	}
 	
+	/**
+	 * Questo metodo non viene mai usato ma si dovrà controllare
+	 * Utile nell'eventualità si debba analizzare un'iscrizione da parte di un supervisore
+	 * @param id
+	 * @param mail
+	 * @return
+	 * @throws SQLException
+	 * @throws NotFoundException
+	 * @throws NoPermissionException
+	 * @throws NotWellFormattedException
+	 */
 	public IscrizioneBean doRetrieveByKey(int id,String mail) throws SQLException, NotFoundException, NoPermissionException, NotWellFormattedException{
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
@@ -75,7 +88,7 @@ public class IscrizioneManager {
 	}
 	
 	/**
-	 * Recupera tutti i corsi a cui ï¿½ iscritto un Utente
+	 * Recupera tutti i corsi a cui e' iscritto un Utente
 	 * @param account
 	 * @return
 	 * @throws SQLException
@@ -94,7 +107,7 @@ public class IscrizioneManager {
 		PreparedStatement preparedStatement=null;
 		Collection<IscrizioneBean> collection= new LinkedList<IscrizioneBean>();
 		
-		String sql="SELECT* FROM iscrizione WHERE accountMail=?";
+		String sql="SELECT* FROM iscrizione join corso on corsoIdCorso=idCorso WHERE accountMail=?";
 		
 		try {
 			connection=dataSource.getConnection();
@@ -110,8 +123,19 @@ public class IscrizioneManager {
 				iscrizione.setAccount(account); //aggiungo l'account
 				System.out.println(""+rs.getInt("corsoIdCorso"));
 				CorsoBean corso=new CorsoBean();
-				corso=corsoManager.doRetrieveByKey(rs.getInt("corsoIdCorso")); //recupero il corso
-				corso.addIscrizione(iscrizione); //aggiungo iscrizione a corso e viceversa
+				corso.setIdCorso(rs.getInt("corsoIdCorso"));
+				corso.setNome(rs.getString("nome"));
+				corso.setDescrizione(rs.getString("Descrizione"));
+				corso.setDataCreazione(rs.getDate("DataCreazione"));
+				corso.setDataFine(rs.getDate("dataFine"));
+				corso.setCopertina(rs.getString("Copertina"));
+				corso.setPrezzo(rs.getInt("Prezzo"));
+				corso.setStato(Stato.valueOf(rs.getString("stato")));
+				corso.setCategoria(Categoria.valueOf(rs.getString("categoria")));
+				corso.setnLezioni(rs.getInt("nLezioni"));
+				corso.setnIscritti(rs.getInt("nIscritti"));
+				iscrizione.setAccount(account);
+				iscrizione.setCorso(corso);
 				collection.add(iscrizione);
 			}
 		}finally {
@@ -127,6 +151,59 @@ public class IscrizioneManager {
 		return collection;
 	}
 
+//	
+//	/**
+//	 * Recupera tutti gli utenti iscritti ad un corso
+//	 * @param corso
+//	 * @return
+//	 * @throws SQLException
+//	 * @throws NotFoundException
+//	 * @throws NoPermissionException
+//	 */
+//	public Collection<IscrizioneBean> getIscrittiCorso(int corso) throws SQLException, NotFoundException, NoPermissionException {
+//		accountManager= new AccountManager();
+//		lezioneManager= new LezioneManager();
+//		corsoManager=new CorsoManager();
+//		if(!corsoManager.checkCorso(corso)) throw new NotFoundException("Questo corso non esiste");
+//		CorsoBean tmp=new CorsoBean();
+//		tmp.setIdCorso(corso);
+//		Connection connection=null;
+//		PreparedStatement preparedStatement=null;
+//		Collection<IscrizioneBean> collection= new LinkedList<IscrizioneBean>();
+//		
+//		String sql="SELECT* FROM iscrizione WHERE corsoIdCorso=?";
+//		
+//		try {
+//			connection=dataSource.getConnection();
+//			connection.setAutoCommit(false);
+//			preparedStatement= connection.prepareStatement(sql);
+//			preparedStatement.setInt(1, corso);
+//			ResultSet rs= preparedStatement.executeQuery();
+//			while(rs.next()) {
+//				IscrizioneBean iscrizione= new IscrizioneBean();
+//				iscrizione.setDataPagamento(rs.getDate("DataPagamento"));
+//				iscrizione.setFattura(rs.getString("fattura"));
+//				iscrizione.setImporto(rs.getInt("importo"));
+//				iscrizione.setCorso(tmp); //aggiungo il corso
+//				AccountBean account=accountManager.doRetrieveByKey(rs.getString("accountMail")); //recupero l'account
+//				iscrizione.setAccount(account); //aggiungo iscrizione all'account e viceversa
+//				collection.add(iscrizione);
+//			}
+//			connection.commit();
+//		}finally {
+//			try {
+//			if(preparedStatement!=null)
+//				preparedStatement.close();
+//			}finally {
+//				connection.close();
+//			}
+//		}
+//		return collection;
+//	}
+//	
+	
+	
+	
 	/**
 	 * Recupera tutti gli utenti iscritti ad un corso
 	 * @param corso
@@ -188,6 +265,7 @@ public class IscrizioneManager {
 	public void iscriviStudente(IscrizioneBean iscrizione) throws SQLException, NotFoundException, AlreadyExistingException, NoPermissionException, NotWellFormattedException {
 		accountManager=new AccountManager();
 		corsoManager= new CorsoManager();
+		//TODO Verificare perchè si usano solo le key per i check
 		if(checkIscrizione(iscrizione.getCorso().getIdCorso(),iscrizione.getAccount().getMail())) 
 												throw new AlreadyExistingException("L'iscrizione esiste giï¿½");
 		if(!corsoManager.checkCorso(iscrizione.getCorso())) throw new NotFoundException("Il corso non esiste");
@@ -226,11 +304,24 @@ public class IscrizioneManager {
 	 * @throws NotWellFormattedException 
 	 */
 	private boolean checkIscrizione(int id ,String mail) throws NoPermissionException, SQLException, NotWellFormattedException {
+		Connection connection=null;
+		PreparedStatement preparedStatement=null;
+		ResultSet rs;
+		String sql="SELECT accountMail FROM iscrizione WHERE accountmail=? AND corsoIdCorso=?";		
 		try {
-			doRetrieveByKey(id, mail);
-			return true;
-		}catch(NotFoundException e) {
-			return false;
+			connection=dataSource.getConnection();
+			preparedStatement= connection.prepareStatement(sql);
+			preparedStatement.setString(1, mail);
+			preparedStatement.setInt(2, id);
+			rs= preparedStatement.executeQuery();
+		}finally {
+			try {
+			if(preparedStatement!=null)
+				preparedStatement.close();
+			}finally {
+				connection.close();
+			}
 		}
+		return rs.next();
 	}
 }
