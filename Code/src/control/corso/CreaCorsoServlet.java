@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.LinkedList;
 
@@ -59,14 +60,14 @@ public class CreaCorsoServlet extends HttpServlet {
 			
 			//Crea un oggetto temporaneo in cui inserire i dati
 			@SuppressWarnings("deprecation")
-			Date date=new Date(Calendar.YEAR-1900,Calendar.MONTH, Calendar.DAY_OF_MONTH);
+			Date date=new Date(LocalDateTime.now().getYear()-1900, LocalDateTime.now().getMonthValue()-1, LocalDateTime.now().getDayOfMonth());
 			CorsoBean temp=new CorsoBean(null,nome,descrizione,date,
 					dataScadenza,prezzo,categoria,"temp",Stato.Completamento,0,
 					0,new LinkedList<IscrizioneBean>(),account,null, new LinkedList<LezioneBean>());
 			
 			manager.creaCorso(temp,copertina);
-			account.AddCorsoTenuto(temp);
-			response.sendRedirect(request.getContextPath()+"/HomepageUtente.jsp?corsoCreato=true");
+			request.getSession().setAttribute("creato", "true");
+			response.sendRedirect(request.getContextPath()+"/HomepageUtente.jsp");
 			
 		}catch (NullPointerException | IllegalArgumentException | NotWellFormattedException e) {
 			//TODO dati non ben formattati

@@ -121,7 +121,6 @@ public class IscrizioneManager {
 				iscrizione.setFattura(rs.getString("fattura"));
 				iscrizione.setImporto(rs.getInt("importo"));
 				iscrizione.setAccount(account); //aggiungo l'account
-				System.out.println(""+rs.getInt("corsoIdCorso"));
 				CorsoBean corso=new CorsoBean();
 				corso.setIdCorso(rs.getInt("corsoIdCorso"));
 				corso.setNome(rs.getString("nome"));
@@ -134,6 +133,7 @@ public class IscrizioneManager {
 				corso.setCategoria(Categoria.valueOf(rs.getString("categoria")));
 				corso.setnLezioni(rs.getInt("nLezioni"));
 				corso.setnIscritti(rs.getInt("nIscritti"));
+				corso.setDocente(accountManager.doRetrieveByKey(rs.getString("accountCreatore")));
 				iscrizione.setAccount(account);
 				iscrizione.setCorso(corso);
 				collection.add(iscrizione);

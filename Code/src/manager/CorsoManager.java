@@ -92,7 +92,11 @@ public class CorsoManager {
 			lezioneManager.retrieveLezioniByCorso(corso); //recuperlo le lezioni
 			iscrizioneManager.getIscrittiCorso(corso); //recupero il corso
 			
-		}finally {
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		finally {
 			try {
 				if(statement!=null)
 					statement.close();
@@ -204,14 +208,14 @@ public class CorsoManager {
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
 			
-			//Recupero il corso appena inserito con la sua nuova chiave primaria
-			preparedStatement=connection.prepareStatement("select idCorso\r\n" + 
-					"from corso\r\n" + 
-					"where idCorso=(select max(idCorso)\r\n" + 
-					"				from corso)");
-			ResultSet rs=preparedStatement.executeQuery();
-			rs.next();
-			corso.setIdCorso((rs.getInt("idCorso")));
+//			//Recupero il corso appena inserito con la sua nuova chiave primaria
+//			preparedStatement=connection.prepareStatement("select idCorso\r\n" + 
+//					"from corso\r\n" + 
+//					"where idCorso=(select max(idCorso)\r\n" + 
+//					"				from corso)");
+//			ResultSet rs=preparedStatement.executeQuery();
+//			rs.next();
+//			corso.setIdCorso((rs.getInt("idCorso")));
 			
 			/* Salvo la copertina */
 			Path path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"

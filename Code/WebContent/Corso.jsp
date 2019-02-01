@@ -43,48 +43,27 @@
 	
 	<%@ include file="Navbar.jsp" %>
 
-<% 
-	//Con questa struttura non è possibile condividere link
 
+<% 
 		String idCorso = request.getParameter("idCorso");
 		if(idCorso==null){
 			response.sendRedirect(request.getContextPath()+"\\Welcome.jsp");
+			return;
 		}
 		
 		CorsoBean corso=(CorsoBean)request.getSession().getAttribute("corso");
 		String ruolo=(String)  request.getSession().getAttribute("ruolo");
 		if(corso==null || ruolo==null){
 			response.sendRedirect(request.getContextPath()+"\\VisualCorsoServlet?idCorso="+idCorso);
+			return;
 		}
 		else{
-			request.getSession().removeAttribute("collection");
+			request.getSession().removeAttribute("corso");
 			request.getSession().removeAttribute("ruolo");
+			System.out.println("id: "+corso.getIdCorso()+" descrizione: "+corso.getDescrizione());
 		}
-		
-		//Ora abbiamo le iscrizioni del corso e from che ci dice da dove proveniamo
-		
-		
-		
-		
-		//Manda su Homepage
-		/* AccountBean a1 = (AccountBean) request.getSession().getAttribute("account");
-		if(account.getTipo().equals(Ruolo.Utente)){
-			LinkedList<CorsoBean> listaCorsiTenuti = (LinkedList<CorsoBean>) a1.getCorsiTenuti();
-			LinkedList<IscrizioneBean> listaCorsiSeguiti = (LinkedList<IscrizioneBean>) a1.getIscrizioni();
-		}
-		else
-			LinkedList<CorsoBean> listaCorsiDaSupervisionare = (LinkedList<CorsoBean>) a1.getCorsiDaSupervisionare();
- */
- 
- 
-/* 		if(listaCorsiTenuti.isEmpty() && listaCorsiSeguiti.isEmpty() && listaCorsiDaSupervisionare.isEmpty())
-			System.out.println("Devo acquistare il corso!");	
-		else{
-			//Qua c'è da controllare quale lista ha l'elemento
-			CorsoBean corso = (CorsoBean) a1.getCorsoTenuto(Integer.parseInt(idCorso)); */
-			
-			
-			%>
+		//Ora abbiamo le iscrizioni del corso e ruolo che ci dice da dove proveniamo
+%>
 
 	<h1 id="titolo-pagina" class="display-3"><%=corso.getNome() %></h1>
 	<div class="container-fluid">
@@ -153,18 +132,6 @@
 		</div>
 	</div>
 
-
-
-
-	<%
-		}
-
-		//recupera il corso da Account, prima su CorsiTenuti e poi su Iscrizioni
-		//Se il corso è in CorsiTenuti, account è un docente e quindi visualizza interamente
-		//Se il corso è in Iscrizioni, account è uno studente del corso
-		//Altrimenti, non mostrare le lezioni e mostra pulsante di Acquisto
-	%>
-	 
 	
 	<!-- <h1 id="titolo-pagina" class="display-3">NOME CORSO</h1>
 	<div class="container-fluid">

@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sun.org.apache.regexp.internal.REUtil;
+
 import bean.AccountBean;
 import bean.AccountBean.Ruolo;
 import bean.CorsoBean;
@@ -41,7 +43,7 @@ public class VisualCorsoServlet extends HttpServlet {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 			try {
 				String ruolo=null;
-				Integer idCorso=Integer.parseInt(request.getParameter("corso"));
+				Integer idCorso=Integer.parseInt(request.getParameter("idCorso"));
 				CorsoBean corso=null;
 				
 				AccountBean account=(AccountBean) request.getSession().getAttribute("account");
@@ -78,14 +80,22 @@ public class VisualCorsoServlet extends HttpServlet {
 						manager.getIscrittiCorso(corso);
 					}
 				}
-				else {
-					//recupero per il supervisore
-					
+				else { //Sono un supervisore
+					Iterator<CorsoBean> corsiSup=account.getCorsiDaSupervisionare().iterator();
+					CorsoBean tmp=new CorsoBean();
+					while(corsiSup.hasNext()) {
+						tmp=corsiSup.next();
+						if(tmp.getIdCorso()==idCorso) {
+							corso=tmp;
+							break;
+						}
+					}
+					if(corso==null) throw new NotFoundException("Non è un corso da lui supervisionato");
 				}
-				//recupero le iscrizioni
-				//Setto il ruolo in sessione
-				//redirect alla pagina
-				
+				manager.getIscrittiCorso(corso); //recupero le iscrizioni
+				request.getSession().setAttribute("ruolo", ruolo); //Setto il ruolo in sessione
+				request.getSession().setAttribute("corso", corso);
+				response.sendRedirect(request.getContextPath()+"\\Corso.jsp?idCorso="+idCorso);
 			} catch (NoPermissionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -99,19 +109,7 @@ public class VisualCorsoServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-		
-		
-					
-
-				
-			}
-
-
-
-
-
-
+}
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
