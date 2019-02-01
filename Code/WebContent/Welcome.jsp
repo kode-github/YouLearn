@@ -89,7 +89,7 @@
 					<div class="card card-5">
 						<div class="card-header text-center" style="font-size: 30px;">LOGIN</div>
 						<div class="card-body">
-							<form class="login" method="post" onSubmit="return validateLogin();">
+							<form name="formLogin" class="login" method="post">
 								<div class="form-group">
 									<label for="exampleInputEmail">E-mail</label> <input
 										name="email" type="email" class="form-control"

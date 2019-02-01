@@ -1,3 +1,4 @@
+
 function allLetter(name) {
 		var letters = /^[A-Za-z]+$/;
 		if (name.value.match(letters)) {
@@ -13,6 +14,7 @@ function validateCorso(formSettingCorso) {
     
 
     //Save all matches in a variable
+	alert("Ciao");
 
     //var usrIsOK = formRegistration.username.value.match(usrValidator);
     var name = formSettingCorso.nome.value;
@@ -22,7 +24,6 @@ function validateCorso(formSettingCorso) {
     var date = formSettingCorso.dataScadenza.value;
     console.log(date);
     var todayDate = new Date();
-    console.log(todayDate);
     var prezzo = formSettingCorso.prezzo.value;
     console.log(prezzo);
     
@@ -36,8 +37,8 @@ function validateCorso(formSettingCorso) {
     	return false;
     } else
     
-    if(desc.length==0 || desc.length<10 || desc.length>40){
-	alertify.error("Descrizione non valida, la lunghezza del descrizione deve essere compresa tra 10 e 40 caratteri.");
+    if(desc.length==0 || desc.length<10 || desc.length>400){
+	alertify.error("Descrizione non valida, la lunghezza del descrizione deve essere compresa tra 10 e 400 caratteri.");
     	return false;
     } else 
     	if(isValidDate(date) == false){

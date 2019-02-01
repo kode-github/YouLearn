@@ -12,7 +12,7 @@ import java.sql.Date;
 
 public class CartaDiCreditoBean {
 	
-	public enum CartaEnum{PAYPAL, POSTEPAY, AMERICANEXPRESS};
+	public enum CartaEnum{PAYPAL, POSTEPAY, AMERICANEXPRESS, VISA};
 	private String nomeIntestatario;
 	private String numeroCarta;
 	private String meseScadenza;

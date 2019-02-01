@@ -1,5 +1,4 @@
 <%@page import="bean.CorsoBean.Stato"%>
-<%@page import="org.apache.jasper.tagplugins.jstl.core.ForEach"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@page import="bean.*,java.util.LinkedList"%>
@@ -336,39 +335,30 @@
                     			for(IscrizioneBean i: corsi){
                     		%>
 
-			<div class="card-body">
-				<img class="img-corsi-attesa rounded float-left"
-					src="Images/Image.jpg" alt="FAIL" srcset="">
-				<ul class="informazioni-corso rounded float-left">
-					<li>NOME CORSO:</li>
-					<li>NUMERO ISCRITTI:</li>
-					<li>SCADENZA ISCRIZIONI:</li>
-
-				</ul>
-				<div class="float-lg-right ">
-					<button type="button"
-						class="btn btn-primary btn-lg d-lg-block w-100">Vai al
-						corso</button>
-					<button type="button"
-						class="btn btn-success btn-lg d-lg-block w-100">Conferma</button>
-					<button type="button"
-						class="btn btn-danger btn-lg d-lg-block w-100">Rifiuta</button>
-				</div>
-
-
-			</div>
 			<div class="card-b-corsi card-body">
 				<a
-					href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getCorso().getIdCorso()%>">
-					<%=i.getCorso().getNome()%></a>
-			</div>
-			<%}
-                            }%>
-		</div>
+						href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getCorso().getIdCorso()%>"><img
+						class="img-corsi-attesa rounded float-left"
+						src="Resources\<%=i.getCorso().getIdCorso()%><%=i.getCorso().getCopertina()%>"
+						alt="FAIL" width="170" height="170"></a>
+					<ul class="informazioni-corso rounded float-left">
+						<li>NOME CORSO: <a
+							href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getCorso().getIdCorso()%>"><%=i.getCorso().getNome()%></a></li>
+						<li>NUMERO ISCRITTI: <%=i.getCorso().getnIscritti() %></li>
+						<li>STATO: <%=i.getCorso().getStato() %></li>
 
+				</ul>
+				
+				
+						<a href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getCorso().getIdCorso()%>"><button
+							 class="position-btn btn btn-success btn-lg ">Vai al Corso</button></a>
+						
+				
+					<%} }%>
+</div></div>
 		<!-- INIZIO CORSI TENUTI -->
 
-		<div class="card w-75 mx-auto">
+		<div style="margin-bottom:20px;" class="card w-75 mx-auto">
 			<div class="card-header">
 				<h5 class="card-h-corsi">CORSI TENUTI</h5>
 				<a class="float-right position-absolute"
@@ -390,7 +380,7 @@
                     		else{
                     			for(CorsoBean i: corsiTenuti){
                     		%>
-			<div class="card-body">
+			<div class="card-b-corsi card-body">
 				<form method="post">
 					<a
 						href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><img
@@ -431,6 +421,9 @@
 		
 	</div>
 	<!-- FINE -->
+	
+	 <%@ include file="Footer.jsp" %>
+	 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"

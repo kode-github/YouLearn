@@ -67,8 +67,7 @@
 				</div>
 				<div class="form-group">
 					<label for="InputCognome">DESCRIZIONE DEL CORSO</label>
-					<textarea required="required" name="descrizione" id="" cols="30"
-						rows="10" class="form-control" id="InputDescrizione">
+					<textarea required="required" name="descrizione" id="" class="form-control" id="InputDescrizione">
 						<%if(corso!=null){ %> <%=corso.getDescrizione() %> <%} %>
 					</textarea>
 				</div>

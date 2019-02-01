@@ -91,6 +91,14 @@ p>span {
 
 }
 
+.position-btn{
+	
+	position: absolute;
+	right:25px;
+	bottom: 15px;
+	
+}
+
 #carouselSlider {
 
     margin: 10px;
