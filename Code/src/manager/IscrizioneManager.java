@@ -138,6 +138,7 @@ public class IscrizioneManager {
 				iscrizione.setCorso(corso);
 				collection.add(iscrizione);
 			}
+			account.setIscrizioni(collection);
 		}finally {
 			try {
 			if(preparedStatement!=null)

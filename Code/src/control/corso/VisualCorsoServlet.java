@@ -87,6 +87,7 @@ public class VisualCorsoServlet extends HttpServlet {
 						tmp=corsiSup.next();
 						if(tmp.getIdCorso()==idCorso) {
 							corso=tmp;
+							ruolo="supervisore";
 							break;
 						}
 					}
