@@ -8,41 +8,46 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import bean.AccountBean;
-import bean.AccountBean.Ruolo;
 
 
-@WebFilter("/AdminFilter")
-public class AdminFilter implements Filter {
+@WebFilter("/LoginFilter")
+public class LoginFilter implements Filter {
 
 
-    public AdminFilter() {
+    public LoginFilter() {
     }
 
 
 	public void destroy() {
-
-}
+	}
 
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest httpRequest=(HttpServletRequest) request;
 		HttpServletResponse httpResponse=(HttpServletResponse) response;
 		AccountBean account=(AccountBean) httpRequest.getSession().getAttribute("account");
-		if(!account.getTipo().equals(Ruolo.Supervisore)) {
-			//Oppure una error page (Forbidden Access)
-				httpResponse.sendRedirect(httpRequest.getContextPath()+"/HomepageUtente.jsp");
+		String uri=httpRequest.getRequestURI();
+		System.out.println("uri: "+uri);
+		if(uri.contains("Welcome.jsp") || uri.contains("/CSS/") || uri.contains("/JS/") || uri.contains("/Images") 
+				|| uri.contains("LoginServlet") || uri.contains("/Resources"))
+			chain.doFilter(request, response);
+		else {
+			if(account==null) {
+				httpRequest.getSession().setAttribute("logged", "false"); //Avviso che si è provato ad accedere senza essser loggati
+				httpResponse.sendRedirect(httpRequest.getContextPath()+"/Welcome.jsp");
 				return;
-		}else
+			}else
 				chain.doFilter(request, response);
-
+		}
 	}
 
 
-	public void init(FilterConfig fConfig) throws ServletException {		// TODO Auto-generated method stub
+	public void init(FilterConfig fConfig) throws ServletException {
 	}
 
 }
