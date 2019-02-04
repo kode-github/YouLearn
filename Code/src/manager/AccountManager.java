@@ -1,14 +1,12 @@
 package manager;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+
 import javax.naming.NoPermissionException;
 import bean.AccountBean;
 import bean.AccountBean.Ruolo;
@@ -41,7 +39,7 @@ public class AccountManager {
 		PreparedStatement preparedStatement=null;
 		AccountBean temp=new AccountBean();
 		
-		String sql="SELECT* FROM Account WHERE email=?";		
+		String sql="SELECT* FROM account WHERE email=?";		
 		try {
 			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
@@ -86,7 +84,7 @@ public class AccountManager {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
-		String insertSQL = "UPDATE Account SET Password= ? "
+		String insertSQL = "UPDATE account SET password= ? "
 				+ " WHERE Email = ?";
 
 		try {
@@ -124,7 +122,7 @@ public class AccountManager {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
-		String insertSQL = "UPDATE Account SET Email= ? "
+		String insertSQL = "UPDATE account SET email= ? "
 				+ " WHERE Email = ?";
 
 		try {
@@ -194,7 +192,7 @@ public class AccountManager {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		
-		String sql="INSERT INTO Account VALUES(?,?,?,?,?,?)";
+		String sql="INSERT INTO account VALUES(?,?,?,?,?,?)";
 		try {
 			connection=DriverManagerConnectionPool.getConnection();
 			connection.setAutoCommit(false);
@@ -235,7 +233,7 @@ public class AccountManager {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		
-		String sql="SELECT email FROM Account WHERE email=?";		
+		String sql="SELECT email FROM account WHERE email=?";		
 		try {
 			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
@@ -269,7 +267,7 @@ public class AccountManager {
 		PreparedStatement preparedStatement=null;
 		ResultSet rs;
 		
-		String sql="SELECT email FROM Account WHERE email=? AND nome=? AND cognome=? AND tipo=? AND verificato=? ";		
+		String sql="SELECT email FROM account WHERE email=? AND nome=? AND cognome=? AND tipo=? AND verificato=? ";		
 		try {
 			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
