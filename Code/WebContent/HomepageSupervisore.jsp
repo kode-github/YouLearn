@@ -45,10 +45,8 @@
 
 	<%@ include file="Navbar.jsp"%>
 
-	<%
-	String sup=request.getParameter("sup");	
-// MESSAGGIO DI CORSO CONFERMATO SU ATTRIBUTO IN SESSIONE "VERIFICATO" CON VALORE TRUE O FALSE (CONFERMATO O RIFIUTATO)
-%>
+
+<!-- MESSAGGIO DI CORSO CONFERMATO SU ATTRIBUTO IN SESSIONE "VERIFICATO" CON VALORE TRUE O FALSE (CONFERMATO O RIFIUTATO) -->
 
 <%
 	String sup=(String)request.getSession().getAttribute("sup");
