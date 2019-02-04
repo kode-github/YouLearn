@@ -45,6 +45,7 @@
 
 	<%@ include file="Navbar.jsp"%>
 
+
 <!-- MESSAGGIO DI CORSO CONFERMATO SU ATTRIBUTO IN SESSIONE "VERIFICATO" CON VALORE TRUE O FALSE (CONFERMATO O RIFIUTATO) -->
 
 <%
@@ -181,29 +182,29 @@
 					<li>SCADENZA ISCRIZIONI: <%=i.getDataFine()%></li>
 
 				</ul>
-			
-				<div class="float-right ">
-				<form method="post"> 
-					<button type="submit" formaction="http://localhost:8080/YouLearn/VerificaCorsoServlet?verifica=true&idCorso=<%=i.getIdCorso() %>" 
-																		class="btn btn-success btn-lg ">Conferma</button>
-					<button type="submit" class="btn btn-outline-secondary btn-lg ">Vai
-						al corso</button>
-					<button type="submit" formaction="http://localhost:8080/YouLearn/VerificaCorsoServlet?verifica=false&idCorso=<%=i.getIdCorso() %>"
-																		class="btn btn-danger btn-lg">Rifiuta</button>
-				</form>
-				</div>
 
-				<%
+				<div class="float-right ">
+					<form method="post">
+						<button type="submit"
+							formaction="http://localhost:8080/YouLearn/VerificaCorsoServlet?verifica=true&idCorso=<%=i.getIdCorso() %>"
+							class="btn btn-success btn-lg ">Conferma</button>
+						<button type="submit" class="btn btn-outline-secondary btn-lg ">Vai
+							al corso</button>
+						<button type="submit"
+							formaction="http://localhost:8080/YouLearn/VerificaCorsoServlet?verifica=false&idCorso=<%=i.getIdCorso() %>"
+							class="btn btn-danger btn-lg">Rifiuta</button>
+					</form>
+				</div>
+			</div>
+
+			<%
 					}
 					}
 				%>
 
-			</div>
-
-			<!-- FINE -->
 		</div>
 
-
+	<!-- FINE -->
 	</div>
 
 
