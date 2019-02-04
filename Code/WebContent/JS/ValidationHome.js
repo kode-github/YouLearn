@@ -111,9 +111,9 @@ function cardnumberTest()
 
 	var name = document.modCarta.nomeIntestatario;
 	var x = document.modCarta.cardname;
-	console.log(x.value + " dovrebbe esserci la nome");
+	console.log(x.value + "dovrebbe esserci la carta");
 	var inputtxt = document.modCarta.cardnumber;
-	console.log(inputtxt.value + "dovrebbe esserci il numero di carta");
+	console.log(inputtxt.value + "dovrebbe esserci la carta");
 
 
 
