@@ -1,6 +1,7 @@
 package manager;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,27 +12,20 @@ import javax.naming.NamingException;
 import javax.naming.NoPermissionException;
 import bean.AccountBean;
 import bean.AccountBean.Ruolo;
-import javax.sql.DataSource;
+import connection.DriverManagerConnectionPool;
+
 import exception.*;
 
 public class AccountManager {
 	
-	private DataSource dataSource;
 	private CartaDiCreditoManager managerCarta;
 	private CorsoManager managerCorso;
 	private IscrizioneManager managerIscrizione;
 	
 	public AccountManager() {
-		Context ctx;
-		try {
-			ctx = new InitialContext();
-			dataSource= (DataSource) ctx.lookup("java:/comp/env/jdbc/MyLocalDB");
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 	}
+	
+	
 	
 	
 	/**
@@ -49,7 +43,7 @@ public class AccountManager {
 		
 		String sql="SELECT* FROM Account WHERE email=?";		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1, code);
 			System.out.println("Query: " + preparedStatement.toString());
@@ -96,7 +90,7 @@ public class AccountManager {
 				+ " WHERE Email = ?";
 
 		try {
-			connection =dataSource.getConnection();
+			connection =DriverManagerConnectionPool.getConnection();
 			preparedStatement = connection.prepareStatement(insertSQL);
 			preparedStatement.setString(1, pass);
 			preparedStatement.setString(2, email);
@@ -134,7 +128,7 @@ public class AccountManager {
 				+ " WHERE Email = ?";
 
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			preparedStatement = connection.prepareStatement(insertSQL);
 			preparedStatement.setString(1, newMail);
 			preparedStatement.setString(2, email);
@@ -202,7 +196,7 @@ public class AccountManager {
 		
 		String sql="INSERT INTO Account VALUES(?,?,?,?,?,?)";
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			connection.setAutoCommit(false);
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1, user.getNome());
@@ -243,7 +237,7 @@ public class AccountManager {
 		
 		String sql="SELECT email FROM Account WHERE email=?";		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1, email);
 			System.out.println("CheckMail: " + preparedStatement.toString());
@@ -277,7 +271,7 @@ public class AccountManager {
 		
 		String sql="SELECT email FROM Account WHERE email=? AND nome=? AND cognome=? AND tipo=? AND verificato=? ";		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1, account.getMail());
 			preparedStatement.setString(2, account.getNome());
@@ -346,7 +340,7 @@ public class AccountManager {
 				"					where tipo='Supervisore' \r\n" + 
 				"                    group by email) as v) ";
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			statement=connection.prepareStatement(sql);
 			System.out.println("retrieveLessUsedSupervisor: "+statement.toString());
 			ResultSet rs=statement.executeQuery();

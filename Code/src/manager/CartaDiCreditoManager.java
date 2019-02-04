@@ -9,11 +9,10 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.naming.NoPermissionException;
-import javax.sql.DataSource;
-
 import bean.AccountBean;
 import bean.CartaDiCreditoBean;
 import bean.CartaDiCreditoBean.CartaEnum;
+import connection.DriverManagerConnectionPool;
 import bean.AccountBean.Ruolo;
 import exception.AlreadyExistingException;
 import exception.NotFoundException;
@@ -21,19 +20,12 @@ import exception.NotWellFormattedException;
 
 public class CartaDiCreditoManager {
 
-	DataSource dataSource;
 	AccountManager accountManager;
 	
 	public  CartaDiCreditoManager() {
-		Context ctx;
-		try {
-			ctx = new InitialContext();
-			dataSource= (DataSource) ctx.lookup("java:/comp/env/jdbc/MyLocalDB");
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
+	
 	
 	/**
 	 * Ottiene una carta dal db con l'account associato
@@ -51,7 +43,7 @@ public class CartaDiCreditoManager {
 		
 		String sql="SELECT* FROM CartaDiCredito WHERE numeroCarta=?";		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1, code);
 			System.out.println("Query: " + preparedStatement.toString());
@@ -97,7 +89,7 @@ public class CartaDiCreditoManager {
 		
 		String sql="INSERT INTO Carta VALUES(?,?,?,?,?)";
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			connection.setAutoCommit(false);
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1, carta.getNomeIntestatario());
@@ -144,7 +136,7 @@ public class CartaDiCreditoManager {
 				+ "AND  accountMail=?"
 				+ " where numeroCarta=?";		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			System.out.println("Update: " + preparedStatement.toString());
 			preparedStatement.setString(1, newCarta.getNumeroCarta());
@@ -180,7 +172,7 @@ public class CartaDiCreditoManager {
 		
 		String sql="SELECT numeroCarta FROM CartaDiCredito WHERE numeroCarta=?";		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1, numeroCarta);
 			System.out.println("Query: " + preparedStatement.toString());
@@ -218,7 +210,7 @@ public class CartaDiCreditoManager {
 		
 		String sql="SELECT* FROM CartaDiCredito WHERE accountMail=?";		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1, account.getMail());
 			System.out.println("Query: " + preparedStatement.toString());

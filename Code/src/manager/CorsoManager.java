@@ -15,20 +15,16 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.UUID;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.naming.NoPermissionException;
 import javax.servlet.http.Part;
-import javax.sql.DataSource;
 
-import connection.ConfiguredDataSource;
 
 import bean.AccountBean;
 import bean.AccountBean.Ruolo;
 import bean.CorsoBean;
 import bean.CorsoBean.Categoria;
 import bean.CorsoBean.Stato;
+import connection.DriverManagerConnectionPool;
 import exception.NotFoundException;
 import exception.NotWellFormattedException;
 
@@ -37,17 +33,10 @@ public class CorsoManager {
 	AccountManager accountManager;
 	LezioneManager lezioneManager;
 	IscrizioneManager iscrizioneManager;
-	DataSource dataSource;
+
 	
 	public CorsoManager() {
-		Context ctx;
-		try {
-			ctx = new InitialContext();
-			dataSource= (DataSource) ctx.lookup("java:/comp/env/jdbc/MyLocalDB");
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 	
 	/**
@@ -70,7 +59,7 @@ public class CorsoManager {
 		String sql="Select * from corso where idCorso=?";
 		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			statement=connection.prepareStatement(sql);
 			statement.setInt(1,id);
 			ResultSet rs=statement.executeQuery();
@@ -126,7 +115,7 @@ public class CorsoManager {
 		String sql="Select * from corso where nome like %?%";
 		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			statement=connection.prepareStatement(sql);
 			statement.setString(1,search);
 			ResultSet rs=statement.executeQuery();
@@ -188,7 +177,7 @@ public class CorsoManager {
 				throw new NotWellFormattedException("La copertina non ha un formato adeguato");
 			filename=filename+type;
 			
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			connection.setAutoCommit(false);
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1, null);
@@ -255,7 +244,7 @@ public class CorsoManager {
 				+ " WHERE idCorso = ?";
 
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			connection.setAutoCommit(false);
 			preparedStatement= connection.prepareStatement(insertSQL);
 			preparedStatement.setInt(1, corso.getIdCorso());
@@ -341,7 +330,7 @@ public class CorsoManager {
 		String deleteSQL = "DELETE FROM Corso WHERE idCorso=? AND stato=?";
 
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			preparedStatement = connection.prepareStatement(deleteSQL);
 			preparedStatement.setInt(1, idCorso);
 			preparedStatement.setString(2, Stato.Completamento.toString());
@@ -428,7 +417,7 @@ public class CorsoManager {
 		String sql="SELECT* FROM Corso WHERE accountCreatore=?";
 		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1, account.getMail());
 			ResultSet rs= preparedStatement.executeQuery();
@@ -487,7 +476,7 @@ public class CorsoManager {
 		String sql="SELECT* FROM Corso WHERE accountSupervisore=? AND stato='Attesa'";
 		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1, account.getMail());
 			ResultSet rs= preparedStatement.executeQuery();
@@ -538,7 +527,7 @@ public class CorsoManager {
 				+ " copertina=? AND prezzo=? AND stato=? AND categoria=? AND nLezioni=? AND nIscritti=? AND accountCreatore=?";
 		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			statement=connection.prepareStatement(sql);
 			statement.setInt(1,corso.getIdCorso());
 			statement.setString(2, corso.getNome());
@@ -578,7 +567,7 @@ public class CorsoManager {
 		String sql="Select idCorso from corso where idCorso=?";
 		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			statement=connection.prepareStatement(sql);
 			statement.setInt(1,idCorso);
 			return (statement.executeQuery()).next();
