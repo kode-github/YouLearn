@@ -36,16 +36,6 @@ CREATE TABLE `account` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `account`
---
-
-LOCK TABLES `account` WRITE;
-/*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES ('Mario','Sessa','PentiumD','china@gmail.com','Utente',0),('Luigi','Crisci','PentiumD','luigicrisci1997@gmail.com','Utente',0),('Pasquale','Ambrosio','PentiumD','pasqualeAmbrosio@gmail.com','Supervisore',0);
-/*!40000 ALTER TABLE `account` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `cartadicredito`
 --
 
@@ -66,16 +56,6 @@ CREATE TABLE `cartadicredito` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `cartadicredito`
---
-
-LOCK TABLES `cartadicredito` WRITE;
-/*!40000 ALTER TABLE `cartadicredito` DISABLE KEYS */;
-INSERT INTO `cartadicredito` VALUES ('4023600655123698','02','2020','PayPal','Luigi','luigicrisci1997@gmail.com'),('4023600666666666','02','2089','Visa','Mario','china@gmail.com');
-/*!40000 ALTER TABLE `cartadicredito` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `commento`
 --
 
@@ -92,15 +72,6 @@ CREATE TABLE `commento` (
   CONSTRAINT `creatore` FOREIGN KEY (`AccountMail`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `commento`
---
-
-LOCK TABLES `commento` WRITE;
-/*!40000 ALTER TABLE `commento` DISABLE KEYS */;
-/*!40000 ALTER TABLE `commento` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `corso`
@@ -128,18 +99,8 @@ CREATE TABLE `corso` (
   KEY `corso_ibfk_2` (`accountSupervisore`),
   CONSTRAINT `corso_ibfk_1` FOREIGN KEY (`accountCreatore`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `corso_ibfk_2` FOREIGN KEY (`accountSupervisore`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `corso`
---
-
-LOCK TABLES `corso` WRITE;
-/*!40000 ALTER TABLE `corso` DISABLE KEYS */;
-INSERT INTO `corso` VALUES (5,'luigicrisci1997@gmail.com',NULL,'NonBellissimo','         Stupendo                 ','2018-02-02','2030-02-02','141668b4-4eee-4ae4-972b-d6266166c9e2.jpg','90','Attesa','Musica',0,0),(12,'china@gmail.com','pasqualeAmbrosio@gmail.com','SuperComunista','PER IL PROLETARIATO','1917-02-02','2089-02-02','aaa','1','Completamento','Informatica',0,0);
-/*!40000 ALTER TABLE `corso` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `iscrizione`
@@ -163,16 +124,6 @@ CREATE TABLE `iscrizione` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `iscrizione`
---
-
-LOCK TABLES `iscrizione` WRITE;
-/*!40000 ALTER TABLE `iscrizione` DISABLE KEYS */;
-INSERT INTO `iscrizione` VALUES ('luigicrisci1997@gmail.com',12,'2019-01-10',89,555);
-/*!40000 ALTER TABLE `iscrizione` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `lezione`
 --
 
@@ -182,37 +133,32 @@ DROP TABLE IF EXISTS `lezione`;
 CREATE TABLE `lezione` (
   `nome` varchar(255) NOT NULL,
   `visualizzazione` int(32) NOT NULL DEFAULT '0',
-  `numeroLezione` int(10) NOT NULL,
+  `numeroLezione` int(10) DEFAULT '0',
   `IdLezione` int(11) NOT NULL AUTO_INCREMENT,
   `filePath` varchar(2048) NOT NULL,
   `corsoIdCorso` int(11) NOT NULL,
   PRIMARY KEY (`IdLezione`),
   KEY `corso_idx` (`corsoIdCorso`),
   CONSTRAINT `corso` FOREIGN KEY (`corsoIdCorso`) REFERENCES `corso` (`idcorso`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `lezione`
---
-
-LOCK TABLES `lezione` WRITE;
-/*!40000 ALTER TABLE `lezione` DISABLE KEYS */;
-/*!40000 ALTER TABLE `lezione` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `lezione_AFTER_INSERT` AFTER INSERT ON `lezione` FOR EACH ROW BEGIN
-update corso 
-    set nlezioni=nlezioni+1
-    where corso.idCorso=NEW.corsoIdCorso;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `lezione_BEFORE_INSERT` BEFORE INSERT ON `lezione` FOR EACH ROW BEGIN
+	
+    IF((Select MAX(numeroLezione) 
+							from lezione where corsoIdCorso=new.corsoIdCorso) IS NULL)
+	then set new.numeroLezione=1;
+    else set new.numeroLezione=(Select MAX(numeroLezione) 
+							from lezione where corsoIdCorso=new.corsoIdCorso)+1;
+	end if;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -222,9 +168,29 @@ DELIMITER ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `lezione_AFTER_INSERT` AFTER INSERT ON `lezione` FOR EACH ROW begin 
+update corso 
+    set nlezioni=nlezioni+1
+    where corso.idCorso=NEW.corsoIdCorso;
+
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -232,6 +198,8 @@ DELIMITER ;;
 update corso 
     set nlezioni=nlezioni-1
     where corso.idCorso=OLD.corsoIdCorso;
+    
+    
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -256,4 +224,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-31 10:24:59
+-- Dump completed on 2019-02-04 16:22:35
