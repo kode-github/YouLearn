@@ -37,13 +37,16 @@
 	<%@ include file="Navbar.jsp"%>
 <%
 
-	String seguiti=request.getParameter("seguiti");
-	String tenuti=request.getParameter("tenuti");
+	String seguiti=(String)request.getSession().getAttribute("seguiti");
+	String tenuti=(String)request.getSession().getAttribute("tenuti");
 	
-	if(tenuti==null || seguiti==null)
+	
+	if(tenuti==null || seguiti==null){
 		response.sendRedirect(request.getContextPath()+"//VisualizzaProfiloServlet");
-	request.removeAttribute("seguiti");
-	request.removeAttribute("tenuti");
+		return;
+	}
+	request.getSession().removeAttribute("seguiti");
+	request.getSession().removeAttribute("tenuti");
 %>
 
 

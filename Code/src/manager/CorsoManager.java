@@ -92,7 +92,11 @@ public class CorsoManager {
 			lezioneManager.retrieveLezioniByCorso(corso); //recuperlo le lezioni
 			iscrizioneManager.getIscrittiCorso(corso); //recupero il corso
 			
-		}finally {
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		finally {
 			try {
 				if(statement!=null)
 					statement.close();
@@ -323,6 +327,13 @@ public class CorsoManager {
 		doUpdate(corso);
 	}
 	
+	/**
+	 * Elimina un corso
+	 * TODO Eliminare l'immagine di copertina
+	 * @param idCorso
+	 * @throws SQLException
+	 * @throws NotFoundException
+	 */
 	public void removeCorso(int idCorso) throws SQLException, NotFoundException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -441,6 +452,7 @@ public class CorsoManager {
 				 //Non recupera le iscrizioni
 				 collection.add(corso);
 			}
+			account.setCorsiTenuti(collection);
 		}finally {
 			try {
 			if(preparedStatement!=null)
@@ -472,7 +484,7 @@ public class CorsoManager {
 		PreparedStatement preparedStatement=null;
 		Collection<CorsoBean> collection= new LinkedList<CorsoBean>();
 		
-		String sql="SELECT* FROM Corso WHERE accountSupervisore=?";
+		String sql="SELECT* FROM Corso WHERE accountSupervisore=? AND stato='Attesa'";
 		
 		try {
 			connection=dataSource.getConnection();
@@ -485,6 +497,7 @@ public class CorsoManager {
 				 corso.setNome(rs.getString("nome"));
 				 corso.setDescrizione(rs.getString("Descrizione"));
 				 corso.setCopertina(rs.getString("copertina"));
+				 corso.setPrezzo(rs.getInt("prezzo"));
 				 corso.setStato(Stato.valueOf(rs.getString("stato")));
 				 corso.setDataCreazione(rs.getDate("dataCreazione"));
 				 corso.setDataFine(rs.getDate("DataFine"));
@@ -497,6 +510,7 @@ public class CorsoManager {
 				 corso.setDocente(accountManager.doRetrieveByKey(rs.getString("accountCreatore")));
 				 collection.add(corso);
 			}
+			account.setCorsiSupervisionati(collection);
 		}finally {
 			try {
 			if(preparedStatement!=null)

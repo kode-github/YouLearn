@@ -34,6 +34,8 @@ public class VerificaCorsoServlet extends HttpServlet {
 			AccountBean supervisore=(AccountBean)request.getSession().getAttribute("account");
 			CorsoBean corso=supervisore.getCorsoSupervisionato(idCorso);
 			manager.convalidaCorso(verifica, corso);
+			request.getSession().setAttribute("verificato", verifica);
+			response.sendRedirect(request.getContextPath()+"\\HomepageSupervisore.jsp");
 		}catch(Exception e) {
 			e.printStackTrace();
 			

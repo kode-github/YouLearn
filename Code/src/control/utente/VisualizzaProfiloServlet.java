@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import bean.AccountBean;
 import bean.AccountBean.Ruolo;
@@ -33,17 +34,20 @@ public class VisualizzaProfiloServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
-		
+		HttpSession session=request.getSession();
 		AccountBean account=(AccountBean) request.getSession().getAttribute("account");
 				try {
 					if(account.getTipo().equals(Ruolo.Utente)) {
 						manager.retrieveByCreatore(account);
 						iscrizione.getIscrizioniUtente(account);
-						response.sendRedirect(request.getContextPath()+"\\HomepageUtente.jsp?seguiti=true&tenuti=true");
+						session.setAttribute("tenuti", "true");
+						session.setAttribute("seguiti", "true");
+						response.sendRedirect(request.getContextPath()+"\\HomepageUtente.jsp");
 					}
 					else {
 						manager.doRetrieveBySupervisore(account);
-						response.sendRedirect(request.getContextPath()+"\\HomepageSupervisore.jsp?sup=true");
+						session.setAttribute("sup", "true");
+						response.sendRedirect(request.getContextPath()+"\\HomepageSupervisore.jsp");
 					}
 					
 				} catch (NoPermissionException | SQLException | NotFoundException | NotWellFormattedException e) {

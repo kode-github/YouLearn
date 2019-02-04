@@ -47,10 +47,18 @@
 
 	<%
 	String sup=request.getParameter("sup");	
+// MESSAGGIO DI CORSO CONFERMATO SU ATTRIBUTO IN SESSIONE "VERIFICATO" CON VALORE TRUE O FALSE (CONFERMATO O RIFIUTATO)
+%>
 
-	if(sup==null)
+<%
+	String sup=(String)request.getSession().getAttribute("sup");
+
+	if(sup==null){
 		response.sendRedirect(request.getContextPath()+"//VisualizzaProfiloServlet");
-	request.removeAttribute("sup");
+		return;
+	}
+	else
+		request.getSession().removeAttribute("sup");
 
 %>
 
@@ -61,15 +69,12 @@
 				class="profile-img " src="Images/Image.jpg" alt="FAIL" width="220"
 				height="220">
 			<div class="utente-tab  mx-auto w-75">
-				<%
-					AccountBean account1 = (AccountBean) request.getSession().getAttribute("account");
-				%>
 				<div class="row">
 					<div class="col-4">
 						<div class="card mb-3 mx-auto">
 							<div class="card-utente card-header">Nome:</div>
 							<div class="card-b-utente card-body ">
-								<h5 class="card-title"><%=account1.getNome()%></h5>
+								<h5 class="card-title"><%=account.getNome()%></h5>
 							</div>
 						</div>
 					</div>
@@ -77,7 +82,7 @@
 						<div class="card mb-3 mx-auto">
 							<div class="card-utente card-header">Cognome:</div>
 							<div class="card-b-utente card-body ">
-								<h5 class="card-title"><%=account1.getCognome()%></h5>
+								<h5 class="card-title"><%=account.getCognome()%></h5>
 							</div>
 						</div>
 					</div>
@@ -85,7 +90,7 @@
 						<div class="card mb-3 mx-auto">
 							<div class="card-utente card-header">E-mail:</div>
 							<div class="card-b-utente card-body ">
-								<h5 class="card-title"><%=account1.getMail()%></h5>
+								<h5 class="card-title"><%=account.getMail()%></h5>
 							</div>
 						</div>
 					</div>
@@ -157,7 +162,7 @@
 		<div class="card w-75 mx-auto">
 			<h5 class="card-h-corsi card-header">CORSI DA SUPERVISIONARE</h5>
 			<%
-				LinkedList<CorsoBean> corsiDaSupervsionare = (LinkedList<CorsoBean>) account1.getCorsiDaSupervisionare();
+				LinkedList<CorsoBean> corsiDaSupervsionare = (LinkedList<CorsoBean>) account.getCorsiDaSupervisionare();
 				if (corsiDaSupervsionare.isEmpty()) {
 			%>
 			<div class="card-b-corsi card-body">Non ci sono corsi da
@@ -171,7 +176,7 @@
 				<a
 					href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><img
 					class="img-corsi-attesa rounded float-left"
-					src=<%=i.getCopertina()%> alt="FAIL" width="170" height="170"></a>
+					src="Resources\<%=i.getIdCorso()%>\<%=i.getCopertina()%>" alt="FAIL" width="170" height="170"></a>
 				<ul class="informazioni-corso rounded float-left">
 					<li>NOME CORSO: <a
 						href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><%=i.getNome()%></a></li>

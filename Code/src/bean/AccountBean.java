@@ -39,6 +39,17 @@ public class AccountBean{
 		
 	}
 	
+	public void setCorsiTenuti(Collection<CorsoBean> collection) {
+		corsiTenuti=collection;
+	}
+	
+	public void setIscrizioni(Collection<IscrizioneBean> iscrizioni) {
+		this.iscrizioni=iscrizioni;
+	}
+	
+	public void setCorsiSupervisionati(Collection<CorsoBean> collection) {
+		corsiDaSupervisionare=collection;
+	}
 	
 	/**
 	 * Costruttore della classe generico, gli usi di tale costruttore sono molteplici. In genere viene utilizzato per prelevare informazioni dal database.
