@@ -96,6 +96,7 @@ public class VisualCorsoServlet extends HttpServlet {
 				manager.getIscrittiCorso(corso); //recupero le iscrizioni
 				request.getSession().setAttribute("ruolo", ruolo); //Setto il ruolo in sessione
 				request.getSession().setAttribute("corso", corso);
+				request.getSession().setAttribute("updated", "true");
 				response.sendRedirect(request.getContextPath()+"\\Corso.jsp?idCorso="+idCorso);
 			} catch (NoPermissionException e) {
 				// TODO Auto-generated catch block

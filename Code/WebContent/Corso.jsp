@@ -46,20 +46,22 @@
 
 <% 
 		String idCorso = request.getParameter("idCorso");
-		if(idCorso==null){
+		if(idCorso==null || !idCorso.matches("^[0-9]+")){
 			response.sendRedirect(request.getContextPath()+"\\Welcome.jsp");
 			return;
 		}
 		
 		CorsoBean corso=(CorsoBean)request.getSession().getAttribute("corso");
 		String ruolo=(String)  request.getSession().getAttribute("ruolo");
-		if(corso==null || ruolo==null){
+		String updated=(String) request.getSession().getAttribute("updated");
+		if(updated==null || corso==null || ruolo==null || corso.getIdCorso()!=Integer.parseInt(idCorso)){
 			response.sendRedirect(request.getContextPath()+"\\VisualCorsoServlet?idCorso="+idCorso);
 			return;
 		}
 		else{
-			request.getSession().removeAttribute("corso");
-			request.getSession().removeAttribute("ruolo");
+			request.getSession().removeAttribute("updated");
+			//request.getSession().removeAttribute("corso");
+			//request.getSession().removeAttribute("ruolo");
 			System.out.println("id: "+corso.getIdCorso()+" descrizione: "+corso.getDescrizione());
 		}
 		//Ora abbiamo le iscrizioni del corso e ruolo che ci dice da dove proveniamo

@@ -17,6 +17,8 @@ import java.util.UUID;
 
 import javax.servlet.http.Part;
 
+import com.mysql.jdbc.CallableStatement;
+
 import bean.CommentoBean;
 import bean.CorsoBean;
 import bean.LezioneBean;
@@ -150,13 +152,13 @@ public class LezioneManager {
 		try{
 			
 			Path path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
-					+ "YouLearn\\Code\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni");
+					+ "YouLearn\\Code\\WebContent\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni");
 			if(!Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS))
 					Files.createDirectories(path); 
 			String filename=UUID.randomUUID().toString();
 			String type=file.getSubmittedFileName().substring(file.getSubmittedFileName().indexOf('.'));
 			path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
-					+ "YouLearn\\Code\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni"+File.separator+
+					+ "YouLearn\\Code\\WebContent\\\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni"+File.separator+
 																				filename+type);
 			statement=c.prepareStatement(sql);
 			statement.setString(1, lezione.getNome());
@@ -187,20 +189,34 @@ public class LezioneManager {
 	 * @throws DatiErratiException 
 	 * @throws NotFoundException 
 	 */
-	public void delLezione(int idLezione) throws SQLException, DatiErratiException, NotFoundException {
-		
+	public void delLezione(LezioneBean lezione) throws SQLException, DatiErratiException, NotFoundException {
+		if(!checkLezione(lezione.getIdLezione())) throw new NotFoundException("La lezione non esiste");
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
+		java.sql.CallableStatement callableStatement;
 
 		String deleteSQL = "DELETE FROM lezione WHERE idLezione=?";
 
 		try {
 			connection = DriverManagerConnectionPool.getConnection();
+			connection.setAutoCommit(false);
 			preparedStatement = connection.prepareStatement(deleteSQL);
-			preparedStatement.setInt(1, idLezione);
+			preparedStatement.setInt(1, lezione.getIdLezione());
 			System.out.println("doDelete: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
+			//Sistemo le lezioni
+			callableStatement=connection.prepareCall("{ call adjustLezioni }");
+			callableStatement.execute();
+			//Elimino il file dal disco
+			Path path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
+					+ "YouLearn\\Code\\WebContent\\Resources\\"+lezione.getCorso().getIdCorso()
+					+"\\Lezioni\\"+lezione.getFilePath());
+			Files.delete(path);
 			
+			connection.commit();
+		} catch (IOException | SQLException e) {
+			e.printStackTrace();
+			connection.rollback();
 		} finally {
 			try {
 				if (preparedStatement != null)
