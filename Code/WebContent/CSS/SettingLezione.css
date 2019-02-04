@@ -1,0 +1,87 @@
+
+
+.item div.Commands {
+    width: 60px;
+}
+
+.card-body{
+	
+	height: 7rem!important;
+	
+	
+}
+#b-UD {
+    width: 60px;
+}
+
+.num{
+	
+    font-size: 2rem;
+    margin-top: 17px;
+	
+}
+
+#list-lezione{
+	
+	margin: 5px 20px 0px;
+	font-size:1.5rem;
+	
+}
+
+.li-lezione{
+	margin-top:5px;
+}
+
+
+
+/*.LeftFloat {
+    float: left
+}
+.RightFloat {
+    float: right
+}
+.collection {
+    border: 1px solid black;
+    width: 400px;
+    height: 300px;
+    overflow-y: auto;
+    font-family:tahoma;
+}
+.item {
+    margin: 3px;
+    border: 1px dashed #0da3fd;
+    background-color: #e8efff;
+    height: 50px;
+}
+.item div.Commands {
+    width: 60px;
+}
+button {
+    width: 60px;
+}*/
+
+/*.LeftFloat {
+    float: left
+}
+.RightFloat {
+    float: right
+}
+.collection {
+    border: 1px solid black;
+    width: 400px;
+    height: 300px;
+    overflow-y: auto;
+    font-family:tahoma;
+}
+.item {
+    margin: 3px;
+    border: 1px dashed #0da3fd;
+    background-color: #e8efff;
+    height: 50px;
+}
+.item div.Commands {
+    width: 60px;
+}
+button {
+    width: 60px;
+}*/
