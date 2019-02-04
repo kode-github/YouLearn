@@ -7,16 +7,12 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.naming.NoPermissionException;
-import javax.sql.DataSource;
 
-import connection.ConfiguredDataSource;
 import bean.AccountBean;
 import bean.CorsoBean;
 import bean.IscrizioneBean;
+import connection.DriverManagerConnectionPool;
 import bean.AccountBean.Ruolo;
 import bean.CorsoBean.Categoria;
 import bean.CorsoBean.Stato;
@@ -26,26 +22,17 @@ import exception.NotWellFormattedException;
 
 public class IscrizioneManager {
 
-	DataSource dataSource;
 	AccountManager accountManager;
 	CorsoManager corsoManager;
 	LezioneManager lezioneManager;
 	
 	
 	public IscrizioneManager() {	
-		Context ctx;
-		try {
-			ctx = new InitialContext();
-			dataSource= (DataSource) ctx.lookup("java:/comp/env/jdbc/MyLocalDB");
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	/**
-	 * Questo metodo non viene mai usato ma si dovrà controllare
-	 * Utile nell'eventualità si debba analizzare un'iscrizione da parte di un supervisore
+	 * Questo metodo non viene mai usato ma si dovrï¿½ controllare
+	 * Utile nell'eventualitï¿½ si debba analizzare un'iscrizione da parte di un supervisore
 	 * @param id
 	 * @param mail
 	 * @return
@@ -63,7 +50,7 @@ public class IscrizioneManager {
 		
 		String sql="SELECT* FROM iscrizione WHERE accountmail=? AND corsoIdCorso=?";		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1, mail);
 			preparedStatement.setInt(2, id);
@@ -110,7 +97,7 @@ public class IscrizioneManager {
 		String sql="SELECT* FROM iscrizione join corso on corsoIdCorso=idCorso WHERE accountMail=?";
 		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1, account.getMail());
 			System.out.println("Iscrizioni account: "+preparedStatement.toString());
@@ -175,7 +162,7 @@ public class IscrizioneManager {
 //		String sql="SELECT* FROM iscrizione WHERE corsoIdCorso=?";
 //		
 //		try {
-//			connection=dataSource.getConnection();
+//			connection=DriverManagerConnectionPool.getConnection();
 //			connection.setAutoCommit(false);
 //			preparedStatement= connection.prepareStatement(sql);
 //			preparedStatement.setInt(1, corso);
@@ -226,7 +213,7 @@ public class IscrizioneManager {
 		String sql="SELECT* FROM iscrizione WHERE corsoIdCorso=?";
 		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			connection.setAutoCommit(false);
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setInt(1, corso.getIdCorso());
@@ -266,7 +253,7 @@ public class IscrizioneManager {
 	public void iscriviStudente(IscrizioneBean iscrizione) throws SQLException, NotFoundException, AlreadyExistingException, NoPermissionException, NotWellFormattedException {
 		accountManager=new AccountManager();
 		corsoManager= new CorsoManager();
-		//TODO Verificare perchè si usano solo le key per i check
+		//TODO Verificare perchï¿½ si usano solo le key per i check
 		if(checkIscrizione(iscrizione.getCorso().getIdCorso(),iscrizione.getAccount().getMail())) 
 												throw new AlreadyExistingException("L'iscrizione esiste giï¿½");
 		if(!corsoManager.checkCorso(iscrizione.getCorso())) throw new NotFoundException("Il corso non esiste");
@@ -278,7 +265,7 @@ public class IscrizioneManager {
 		String sql="Insert into Iscrizione values(?,?,?,?,?)";
 		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1,iscrizione.getAccount().getMail());
 			preparedStatement.setInt(2,iscrizione.getCorso().getIdCorso());
@@ -310,7 +297,7 @@ public class IscrizioneManager {
 		ResultSet rs;
 		String sql="SELECT accountMail FROM iscrizione WHERE accountmail=? AND corsoIdCorso=?";		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1, mail);
 			preparedStatement.setInt(2, id);

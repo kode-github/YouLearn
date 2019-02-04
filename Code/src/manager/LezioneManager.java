@@ -15,35 +15,22 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.UUID;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.http.Part;
-import javax.sql.DataSource;
 
-import connection.ConfiguredDataSource;
 import bean.CommentoBean;
 import bean.CorsoBean;
 import bean.LezioneBean;
+import connection.DriverManagerConnectionPool;
 import exception.DatiErratiException;
 import exception.NotFoundException;
 import exception.NotWellFormattedException;
 
 public class LezioneManager {
 	
-	DataSource dataSource;
 	AccountManager accountManager;
 	CorsoManager corsoManager;
 	
 	public LezioneManager() {
-		Context ctx;
-		try {
-			ctx = new InitialContext();
-			dataSource= (DataSource) ctx.lookup("java:/comp/env/jdbc/MyLocalDB");
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -59,7 +46,7 @@ public class LezioneManager {
 		
 		Connection c=null;
 		try {
-			c=dataSource.getConnection();
+			c=DriverManagerConnectionPool.getConnection();
 			c.setAutoCommit(false);
 			for(LezioneBean l: lezioni) 
 				changeNumeroLezione(l.getIdLezione(), l.getNumeroLezione(),corso.getIdCorso(), c);
@@ -74,7 +61,7 @@ public class LezioneManager {
 	}
 	
 	/**
-	 * Sta roba è brutta ma pacienz
+	 * Sta roba ï¿½ brutta ma pacienz
 	 * Controlla se, in un certo corso, esistono lezioni con lo stesso 
 	 * @param idCorso
 	 * @return
@@ -103,7 +90,7 @@ public class LezioneManager {
 		PreparedStatement statement=null;
 		String sql="Update Lezione set numeroLezione=? where idLezione=? AND corsoIdCorso=?";
 		try {
-			c=dataSource.getConnection();
+			c=DriverManagerConnectionPool.getConnection();
 			statement=c.prepareStatement(sql);
 			statement.setInt(1, numeroLezione);
 			statement.setInt(2, idLezione);
@@ -130,11 +117,11 @@ public class LezioneManager {
 	 */
 	public void insLezioniMultiple(ArrayList<LezioneBean> lezioni,ArrayList<Part> files) throws DatiErratiException, NotWellFormattedException, SQLException, IOException {
 		if(lezioni==null || files==null || lezioni.size()!=files.size())
-									throw new DatiErratiException("Non c'è un file per ogni lezione");
+									throw new DatiErratiException("Non c'ï¿½ un file per ogni lezione");
 		/**Inizio le modifiche */
 		corsoManager= new CorsoManager();
 		int i=0;
-		Connection c=dataSource.getConnection();
+		Connection c=DriverManagerConnectionPool.getConnection();
 		c.setAutoCommit(false);
 		for(Part file: files) {
 			insLezione(lezioni.get(i++),file,c);
@@ -147,17 +134,17 @@ public class LezioneManager {
 	 * @param lezione la lezione da inserire
 	 * @param file il file della lezione
 	 * @param c la connessione al db: necessaria per evitare che ne venga creata una per ogni inserimento
-	 * @throws NotWellFormattedException la lezione non è ben formattata 
+	 * @throws NotWellFormattedException la lezione non ï¿½ ben formattata 
 	 * @throws SQLException Errore nella connessione al db o nell'inserimento
-	 * @throws DatiErratiException la lezione esiste già o non è collegata al corso giusto
+	 * @throws DatiErratiException la lezione esiste giï¿½ o non ï¿½ collegata al corso giusto
 	 * @throws IOException Errore nella scrittura del file su disco
 	 */
 	private void insLezione(LezioneBean lezione,Part file,Connection c) throws NotWellFormattedException, SQLException, DatiErratiException, IOException {
 		//Va controllato che non esista un'altra lezione con lo stesso numero per quell'idCorso
 		if(!lezioneIsWellFormatted(lezione) || lezione.getCorso().getIdCorso()==null)  
-										throw new NotWellFormattedException("la lezione non è ben formattata");
+										throw new NotWellFormattedException("la lezione non ï¿½ ben formattata");
 		if(checkLezione(lezione) || !corsoManager.checkCorso(lezione.getCorso().getIdCorso())) 
-										throw new DatiErratiException("la lezione esiste già o il corso non esiste");
+										throw new DatiErratiException("la lezione esiste giï¿½ o il corso non esiste");
 		PreparedStatement statement=null;
 		String sql="Insert into Lezione values (?,?,?,?,?,?)";
 		try{
@@ -184,7 +171,7 @@ public class LezioneManager {
 			
 			c.commit(); //conferma l'inserimento nel db
 		}catch(SQLException | IOException e) {
-			//C'è stato un errore nel salvataggio del file o nell'inserimento
+			//C'ï¿½ stato un errore nel salvataggio del file o nell'inserimento
 			//In ogni caso la scrittura nel db viene eliminata
 			c.rollback();
 		}finally {
@@ -208,7 +195,7 @@ public class LezioneManager {
 		String deleteSQL = "DELETE FROM lezione WHERE idLezione=?";
 
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			preparedStatement = connection.prepareStatement(deleteSQL);
 			preparedStatement.setInt(1, idLezione);
 			System.out.println("doDelete: "+ preparedStatement.toString());
@@ -229,7 +216,7 @@ public class LezioneManager {
 		PreparedStatement statement=null;
 		String sql="Select * from lezione where idLezione=?";
 		try {
-			c=dataSource.getConnection();
+			c=DriverManagerConnectionPool.getConnection();
 			statement=c.prepareStatement(sql);
 			statement.setInt(1, idLezione);
 			
@@ -246,14 +233,14 @@ public class LezioneManager {
 
 	public boolean checkLezione(LezioneBean lezione) throws SQLException, DatiErratiException {
 		if(lezione==null || lezione.getIdLezione()==null || !lezioneIsWellFormatted(lezione) ) 
-											throw new DatiErratiException("La lezione non è corretta");
+											throw new DatiErratiException("La lezione non ï¿½ corretta");
 		
 		Connection c=null;
 		PreparedStatement statement=null;
 		String sql="Select * from lezione where idLezione=? AND numeroLezione=? AND nome=? AND visualizzazione=? AND filepath=? "
 																					+ "AND corsoIdCorso=?";
 		try {
-			c=dataSource.getConnection();
+			c=DriverManagerConnectionPool.getConnection();
 			statement=c.prepareStatement(sql);
 			statement.setInt(1, lezione.getIdLezione());
 			statement.setInt(2, lezione.getNumeroLezione());
@@ -283,14 +270,14 @@ public class LezioneManager {
 	public Collection<LezioneBean> retrieveLezioniByCorso(CorsoBean corso) throws NotWellFormattedException, SQLException{
 		corsoManager=new CorsoManager();
 		if(corso.getIdCorso()==null || !corsoManager.isWellFormatted(corso)) 
-								throw new NotWellFormattedException("Il corso non è ben formattato");
+								throw new NotWellFormattedException("Il corso non ï¿½ ben formattato");
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		Collection<LezioneBean> collection=new LinkedList<LezioneBean>();
 		String sql="Select * from lezione where corsoIdCorso=?";
 		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement=connection.prepareStatement(sql);
 			preparedStatement.setInt(1, corso.getIdCorso());
 			ResultSet rs=preparedStatement.executeQuery();
@@ -330,7 +317,7 @@ public class LezioneManager {
 		
 		String sql="SELECT* FROM commento WHERE id=?";		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setInt(1, id);
 			System.out.println("retrieveCommento: " + preparedStatement.toString());
@@ -378,7 +365,7 @@ public class LezioneManager {
 		String deleteSQL = "DELETE FROM commento WHERE id = ?";
 
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			preparedStatement = connection.prepareStatement(deleteSQL);
 			preparedStatement.setInt(1, code);
 
@@ -408,7 +395,7 @@ public class LezioneManager {
 		
 		String sql="SELECT* FROM commento WHERE id=?";		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setInt(1, code);
 			System.out.println("Query: " + preparedStatement.toString());
@@ -432,14 +419,14 @@ public class LezioneManager {
 	 */
 	public void insCommento(CommentoBean product) throws NotWellFormattedException, SQLException {
 		if(product.getIdCommento()!=null || !commentoIsWellFormatted(product)) throw new NotWellFormattedException("Il commento non"
-																					+ "è ben formattato");
+																					+ "ï¿½ ben formattato");
 		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		
 		String sql="INSERT INTO commento VALUES(?,?,?,?)";
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			
 			preparedStatement.setInt(1, product.getIdCommento());
@@ -470,7 +457,7 @@ public class LezioneManager {
 	 * @throws NotWellFormattedException 
 	 */
 	public Collection<CommentoBean> retrieveCommentiByLezione(LezioneBean lezione) throws SQLException,NotFoundException, NotWellFormattedException {
-		if(!lezioneIsWellFormatted(lezione) ) throw new NotWellFormattedException("La lezione non è ben formattata");
+		if(!lezioneIsWellFormatted(lezione) ) throw new NotWellFormattedException("La lezione non ï¿½ ben formattata");
 		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
@@ -478,7 +465,7 @@ public class LezioneManager {
 		
 		String sql="SELECT* FROM commento WHERE idLezione=?";		
 		try {
-			connection=dataSource.getConnection();
+			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setInt(1, lezione.getIdLezione());
 			System.out.println("retrieveCommentiByLezione: " + preparedStatement.toString());
@@ -505,8 +492,8 @@ public class LezioneManager {
 	}
 
 	/**
-	 * Controlla se un commento è ben formattato
-	 * Da notare che un commento è considerato valido anche se l'id è null (in caso di inserimento in quanto AutoIncrement)
+	 * Controlla se un commento ï¿½ ben formattato
+	 * Da notare che un commento ï¿½ considerato valido anche se l'id ï¿½ null (in caso di inserimento in quanto AutoIncrement)
 	 * @param commento
 	 * @return
 	 */
@@ -520,8 +507,8 @@ public class LezioneManager {
 	}
 	
 	/**
-	 * Controlla se una lezione è ben formattata
-	 * Da notare che una lezione è considerata valida anche se l'id è null (in caso di inserimento in quanto AutoIncrement)
+	 * Controlla se una lezione ï¿½ ben formattata
+	 * Da notare che una lezione ï¿½ considerata valida anche se l'id ï¿½ null (in caso di inserimento in quanto AutoIncrement)
 	 * @param lezione
 	 * @return
 	 */

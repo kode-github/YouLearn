@@ -5,12 +5,15 @@ package manager;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import javax.naming.InitialContext;
 import javax.naming.NoPermissionException;
 
+import org.apache.tomcat.jdbc.pool.DataSource;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -24,6 +27,7 @@ import exception.AlreadyExistingException;
 import exception.DatiErratiException;
 import exception.NotFoundException;
 import exception.NotWellFormattedException;
+import hthurow.tomcatjndi.TomcatJNDI;
 import connection.ConfiguredDataSource;
 import connection.DriverManagerConnecitonPoolTest;
 import junit.framework.TestSuite;
@@ -42,13 +46,23 @@ public class AccountManagerTest {
 	static AccountManager managerAccount;
 	CartaDiCreditoManager managerCarta;
 	
+	
+	
 	@Before
 	public void setUp() throws Exception {
 		
+	
 		managerAccount = new AccountManager();
 		managerCarta = new CartaDiCreditoManager();
 		assertNotNull(managerAccount);
 		assertNotNull(managerCarta);
+		
+		
+		
+		
+		
+		
+		
 		
 	}
 	
