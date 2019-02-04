@@ -1,15 +1,47 @@
+$(document).ready(function(){
+
+    $(".emailToogle").hide();
+    $(".pswToogle").hide();
+    $(".cartaToogle").hide();
+
+    $(".email").click(function(){
+        $(".emailToogle").slideToggle();
+    });
+    $(".password").click(function(){
+        $(".pswToogle").slideToggle();
+    });
+    $(".carta").click(function(){
+        $(".cartaToogle").slideToggle();
+    });
+
+    
+
+})
+
 if($("#alert").css('display') == 'none'){
+    	
+    	$("#alert").removeClass("d-none").hide();
+    	   setTimeout(function(){
+    	       
+    	          $("#alert").fadeOut(2000);
+    	        
+    	       
+    	       
+    	   }, 3000);
+    };
+
+
+
+
+
+function toogleEmail(){
 	
-	$("#alert").removeClass("d-none").hide();
 	
-	   $("#alert").fadeIn();
-	   setTimeout(function(){
-	       
-	          $("#alert").fadeOut(2000);
-	        
-	       
-	       
-	   }, 3000);
+	
+		$(".emailToogle").slideToogle("slow");
+	
+		
+	
 }
 
 function showAlert(string){
