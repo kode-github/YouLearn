@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+<%@page import="bean.*" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,6 +29,27 @@
 </head>
 <body>
 
+	<%
+		String idLezione=request.getParameter("idLezione");
+		if(idLezione==null || !idLezione.matches("^[0-9]+")){
+			//O una pagina di errore
+			response.sendRedirect(request.getContextPath()+"/Welcome.jsp");
+			return;
+		}
+		CorsoBean corso=(CorsoBean) request.getSession().getAttribute("corso");
+		if(corso==null){
+			//O pagina di errore?
+			response.sendRedirect(request.getContextPath()+"//Welcome.jsp");
+			return;
+		}
+		LezioneBean lezione=(LezioneBean) request.getSession().getAttribute("lezione");
+		if(lezione==null){
+			response.sendRedirect(request.getContextPath()+"//VisualLezioneServlet?idLezione="+idLezione);
+			return;
+		}
+		//Ora abbiamo il corso da cui proviene la lezione e la lezione
+	
+	%>
 	<div class="videocontent">
 		<video id="my_video_1" style="width: 100%; height: 100%;"
 			controls="controls" width="100%" height="100%" preload="auto"
