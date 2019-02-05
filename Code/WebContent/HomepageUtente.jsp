@@ -28,6 +28,7 @@
 
 
 <!-- Script-->
+
 <title>YouLearn</title>
 </head>
 
@@ -66,8 +67,9 @@
 		Boolean emailGiaEsistente=(Boolean)request.getSession().getAttribute("emailGiaEsistente");
 		if(emailGiaEsistente!=null){
 			request.getSession().removeAttribute("emailGiaEsistente");
+			System.out.println("KTM");
 	%>
-	<div id="alert" class="alert alert-warning d-none" style="text-align: center;"
+	<div id="alert" class="alert alert-warning " style="text-align: center;"
 		role="alert">Ci dispiace! L'e-mail è già in uso. Prova con
 		un'altra!</div>
 	<% } %>
@@ -121,8 +123,7 @@
 		OGNI LABEL AVRA' NOME UGUALE AL CAMPO NEL DATABASE, cioe name="nomeTabella"
 	 -->
 
-	<div id="alert" class="d-none" style="text-align: center;"
-		role="alert"></div>
+	
 	<div class="container-fluid">
 
 		<div class="row ">
@@ -164,20 +165,16 @@
 
 				<div class="row">
 					<div class="col-4">
-						
-										<a id="btn-utente" class="btn btn-primary btn-lg btn-block" data-toggle="collapse"
-										href="#collapseModEmail" role="button" aria-expanded="false"
-										aria-controls="collapseModEmail"> Modifica E-mail </a>
+
+						<a id="btn-utente" class="email btn btn-primary btn-lg btn-block"> Modifica E-mail </a>
 							
-
-
-						<div class="collapse" id="collapseModEmail">
+						<div class="emailToogle">
 							<form name="changeMailForm" id="changeMailForm"
 								onsubmit="return validateMail(changeMailForm)">
 								<div class="card card-body" style="margin-bottom: 10px; text-align: center;">
 								<div class="form-group">
 									<input type="email" name="newMail" class="form-control"
-										id="inputEmailDimenticata" aria-describedby="emailHelp"
+										
 										placeholder="Inserisci la tua nuova e-mail"></div>
 										<button type="submit" class="btn btn-info btn-lg btn-block"
 									formaction="http://localhost:8080/YouLearn/CambiaMailServlet">Conferma</button>
@@ -188,13 +185,13 @@
 					</div>
 					<div class="col-4">
 
-						<a id="btn-utente" class="btn btn-primary btn-lg btn-block"
+						<a id="btn-utente" class="password btn btn-primary btn-lg btn-block"
 							data-toggle="collapse" href="#collapseModPass" role="button"
 							aria-expanded="false" aria-controls="collapseModPass">
 							Modifica Password</a>
 
 
-						<div class="collapse" id="collapseModPass">
+						<div class="pswToogle" id="collapseModPass">
 							<div class="card card-body"
 								style="margin-bottom: 10px; text-align: center;">
 								<form method="post" name="changePswForm" id="changePswForm"
@@ -221,13 +218,13 @@
 					</div>
 					<div class="col-4">
 
-						<a id="btn-utente" class="btn btn-primary btn-lg btn-block"
+						<a id="btn-utente" class="carta btn btn-primary btn-lg btn-block"
 							data-toggle="collapse" href="#collapseModCarta" role="button"
 							aria-expanded="false" aria-controls="collapseModCarta">
 							Modifica Carta</a>
 
 
-						<div class="collapse" id="collapseModCarta">
+						<div class="cartaToogle" id="collapseModCarta">
 							<form method="post" name="modCarta"
 								onsubmit="return cardnumberTest()">
 								<div class="card card-body"
@@ -360,7 +357,7 @@
 
 				<a
 					href="http://localhost:8080/YouLearn/Corso.jsp?from=iscrizioni&idCorso=<%=i.getCorso().getIdCorso()%>"><button
-						class="position-btn btn btn-success btn-lg ">Vai al Corso</button></a>
+						style="margin-top:48px;" class="float-right btn btn-success btn-lg ">Vai al Corso</button></a>
 
 				</div>
 				<%
@@ -441,18 +438,11 @@
 	<!-- FINE -->
 	
 	 <%@ include file="Footer.jsp" %>
+	 <script src="JS/ValidationHome.js"></script>
 	 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-	integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-	crossorigin="anonymous"></script>
-<script
-	src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-	integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-	crossorigin="anonymous"></script>
-<script src="JS/ValidationHome.js"></script>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 </body>
 
 </html>

@@ -37,7 +37,8 @@ public class UserFilter implements Filter {
 				|| uri.contains("LoginServlet") || uri.contains("/Resources") || uri.contains("/HomepageSupervisore.jsp") 
 				|| uri.contains("/VerificaCorsoServlet") || uri.contains("/VisualizzaProfiloServlet") 
 				|| uri.contains("/VisualCorsoServlet") || uri.contains("Logout") || uri.contains("SearchCorso")
-				|| uri.contains("/RegistrazioneServlet") || uri.contains("/CambiaMail") || uri.contains("/CambiaPass"))
+				|| uri.contains("/RegistrazioneServlet") || uri.contains("/CambiaMail") || uri.contains("/CambiaPass") 
+				|| uri.contains("/Lezione.jsp"))
 			chain.doFilter(request, response);
 		else {
 			if(!account.getTipo().equals(Ruolo.Utente)) {

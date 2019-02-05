@@ -397,6 +397,16 @@ public class CorsoBean {
 		this.prezzo = prezzo;
 	}
 
+	public LezioneBean getLezione(int idLezione) {
+		Iterator<LezioneBean> iterator=lezioni.iterator();
+		LezioneBean lezione;
+		while(iterator.hasNext()) {
+			if((lezione=iterator.next()).getIdLezione()==idLezione)
+				return lezione;
+		}
+		return null;
+	}
+
 
 	
 	
