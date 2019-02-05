@@ -1,3 +1,17 @@
+if($("#alert1").css('display') == 'none'){
+    	alert("NIENTE");
+    	$("#alert1").removeClass("d-none");
+    	   setTimeout(function(){
+    	       
+    	          $("#alert1").fadeOut(2000);
+    	        
+    	       
+    	       
+    	   }, 3000);
+    };
+
+
+
 $(document).ready(function(){
 
     $(".emailToogle").hide();
@@ -18,17 +32,6 @@ $(document).ready(function(){
 
 })
 
-if($("#alert").css('display') == 'none'){
-    	
-    	$("#alert").removeClass("d-none").hide();
-    	   setTimeout(function(){
-    	       
-    	          $("#alert").fadeOut(2000);
-    	        
-    	       
-    	       
-    	   }, 3000);
-    };
 
 
 
@@ -81,13 +84,16 @@ function validatePsw(changePswForm){
 
 	if(!newPsw.match(oldPsw)){
 		showAlert('Le password non corrispondono');
-		
+		console.log("Password no")
+
 	      return false;
 		}
 
 
     if(!newPsw.match(pswValidator)){
 		showAlert('La password deve contenere almeno 8 caratteri tra lettere, numeri e simboli');
+		console.log("Password no")
+
       return false;
     }
      else return true;
@@ -134,7 +140,6 @@ function cardnumberTest()
 			var cardno = /^(?:5[1-5][0-9]{14})$/;
 			if (inputtxt.value.match(cardno)) {
 				if(allLetter(name) == false) return false;
-				alert('Abbiamo vinto')
 				return true;
 			} else {
 				showAlert('Numero di carta di credito MasterCard, non valido!');

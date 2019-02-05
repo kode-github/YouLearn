@@ -8,6 +8,8 @@
 
 <script type="text/javascript" src="JS/jquery-3.3.1.js"></script>
 <script type="text/javascript" src="JS/jquery-ui.js"></script>
+   <link href="https://transloadit.edgly.net/releases/uppy/v0.29.1/dist/uppy.min.css" rel="stylesheet">
+
 
 
 
@@ -21,17 +23,29 @@
 	<%@ include file="Navbar.jsp"%>
 
 	<div class="card w-50 mx-auto">
-		<div class="card-header text-center" style="font-size: 30px;">
-			<h3>GESTIONE LEZIONI</h3>
+		<div class="card-header text-left" style="font-size: 30px;">
+			<h3>
+				GESTIONE LEZIONI
+				<button onclick="" id="insert"
+					class="btn btn-outline-success float-right">Inserisci
+					lezioni</button>
+				<button style="margin: 0px 10px;" onclick="modify()" id="b"
+					class="btn btn-outline-primary float-right">Modifica...</button>
+			</h3>
 		</div>
+		
+		
 		<div class="collection">
-
-			<%for(int i = 0; i<10; i++){ %>
-			<div class="card-body item" id=<%=i+10 %>>
-				<div class="float-left num"><%=i%></div>
+		
+			
+			<%
+						for (int i = 0; i < 10; i++) {
+					%>
+			<div class="card-body item" id=<%=i + 10%>>
+				<div class="float-left num"><%=i + 1%></div>
 				<div class="float-left">
 					<ul id="list-lezione">
-						<li id="nome-lezione" class="li-lezione">Nome Lezione</li>
+						<li id="nome" class="nome-lezione li-lezione">Nome Lezione</li>
 						<li id="file-lezione" class="li-lezione">Nome file</li>
 					</ul>
 				</div>
@@ -45,30 +59,38 @@
 						<i class="fas fa-arrow-down"></i>
 					</button>
 				</div>
-				<button id="b" class="btn btn-outline-primary">Modifica...</button>
 
 
 
 			</div>
-<%} %>
-	
+			<%
+						}
+					%>
+
 
 
 		</div>
-		<button id="conferma" class="btn btn-success btn-block">CONFERMA MODIFICHE</button>
-
+		<button onclick="UploadResult()" id="conferma"
+			class="btn btn-success btn-block d-none">CONFERMA MODIFICHE</button>
 	</div>
-
 	
 
 
-	Output
-	<br />
-	<div id="items"></div>
-	-->
-
 
 	<script src="JS/SettingLezione.js"></script>
+	<script src="https://transloadit.edgly.net/releases/uppy/v0.29.1/dist/uppy.min.js"></script>
+    <!-- <script>
+      var uppy = Uppy.Core()
+        .use(Uppy.Dashboard, {
+          inline: true,
+          target: '#drag-drop-area'
+        })
+        .use(Uppy.Tus, {endpoint: 'https://master.tus.io/files/'})
+
+      uppy.on('complete', function result() {
+        console.log('Upload complete! We’ve uploaded these files:', result.successful)
+      })
+    </script> -->
 
 
 </body>

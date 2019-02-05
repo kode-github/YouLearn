@@ -14,8 +14,7 @@ function validateCorso(formSettingCorso) {
     
 
     //Save all matches in a variable
-	alert("Ciao");
-
+	
     //var usrIsOK = formRegistration.username.value.match(usrValidator);
     var name = formSettingCorso.nome.value;
     console.log(name + " "+ name.length);
@@ -28,13 +27,13 @@ function validateCorso(formSettingCorso) {
     var todayDate = new Date();
     var prezzo = formSettingCorso.prezzo.value;
     console.log(prezzo);
-    
-   
 
+   
 
     if(name.length == 0 || name.length<5 || name.length >20){
     	
-    	alertify.error("("+name + ") non e' valido, prova con un nome che contenga almeno 4 caratteri e che non sia piu' lungo di 20 caratteri.");
+    	
+    	alertify.error("("+name + ") non e' valido, prova con un nome che contenga almeno 5 caratteri e che non sia piu' lungo di 20 caratteri.");
     	
     	return false;
     } else

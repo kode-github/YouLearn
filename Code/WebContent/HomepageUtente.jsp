@@ -57,7 +57,7 @@
 		if(emailModificata!=null){
 			request.getSession().removeAttribute("emailModificata");
 	%>
-	<div id="alert" class="alert alert-success d-none" style="text-align: center;"
+	<div id="alert1" class="alert alert-success d-none" style="text-align: center;"
 		role="alert">E-mail modificata con successo!</div>
 
 
@@ -69,7 +69,7 @@
 			request.getSession().removeAttribute("emailGiaEsistente");
 			System.out.println("KTM");
 	%>
-	<div id="alert" class="alert alert-warning " style="text-align: center;"
+	<div id="alert1" class="alert alert-warning " style="text-align: center;"
 		role="alert">Ci dispiace! L'e-mail è già in uso. Prova con
 		un'altra!</div>
 	<% } %>
@@ -80,7 +80,7 @@
 		if(passwordModificata!=null){
 			request.getSession().removeAttribute("passwordModificata");
 	%>
-	<div id="alert" class="alert alert-success d-none"  style="text-align: center;"
+	<div id="alert1" class="alert alert-success d-none"  style="text-align: center;"
 		role="alert">Password modificata con successo!</div>
 	<% } %>
 
@@ -90,7 +90,7 @@
 			request.getSession().removeAttribute("passwordNonModificata");
 	%>
 
-	<div id="alert" class="alert alert-warning d-none" style="text-align: center;"
+	<div id="alert1" class="alert alert-warning d-none" style="text-align: center;"
 		role="alert">C'è stato un problema! Le password non
 		coincidono, riprova.</div>
 	<% } %>
@@ -106,7 +106,7 @@
 		if(cartaModificata!=null){
 			request.getSession().removeAttribute("cartaModificata");
 	%>
-		<div id="alert" class="alert alert-success d-none" style="text-align: center;"
+		<div id="alert1" class="alert alert-success d-none" style="text-align: center;"
 		role="alert">Complimenti! La tua carta è stata modificata con successo!</div>
 	<% } %>
 
@@ -115,7 +115,7 @@
 		if(cartaNonModificata!=null){
 			request.getSession().removeAttribute("cartaNonModificata");
 	%>
-		<div id="alert" class="alert alert-warning d-none" style="text-align: center;"
+		<div id="alert1" class="alert alert-warning d-none" style="text-align: center;"
 		role="alert">C'è stato un problema! La carta inserita è già in uso, riprova.</div>
 	<% } %>
 
@@ -123,6 +123,8 @@
 		OGNI LABEL AVRA' NOME UGUALE AL CAMPO NEL DATABASE, cioe name="nomeTabella"
 	 -->
 
+<div id="alert" class="" style="text-align: center;"
+		role="alert"></div>
 	
 	<div class="container-fluid">
 

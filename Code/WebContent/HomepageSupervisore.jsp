@@ -26,9 +26,7 @@
 	rel="stylesheet">
 
 <!-- Script-->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-	integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-	crossorigin="anonymous"></script>
+
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
 	integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
@@ -59,7 +57,8 @@
 		request.getSession().removeAttribute("sup");
 
 %>
-
+<div id="alert" class="" style="text-align: center;"
+		role="alert"></div>
 
 	<div class="container-fluid">
 		<div class="row ">
@@ -99,35 +98,32 @@
 
 				<div class="row">
 					<div class="col-6">
-						<a id="btn-utente" class="btn btn-primary btn btn-lg btn-block"
-							data-toggle="collapse" href="#collapseModEmail" role="button"
-							aria-expanded="false" aria-controls="collapseModEmail">
-							Modifica E-mail</a>
-
-
-						<div class="collapse" id="collapseModEmail">
+						<a id="btn-utente" class="email btn btn-primary btn-lg btn-block"> Modifica E-mail </a>
+							
+						<div class="emailToogle">
 							<form name="changeMailForm" id="changeMailForm"
 								onsubmit="return validateMail(changeMailForm)">
-								<div class="card card-body"
-									style="margin-bottom: 10px; text-align: center;">
+								<div class="card card-body" style="margin-bottom: 10px; text-align: center;">
+								<div class="form-group">
 									<input type="email" name="newMail" class="form-control"
-										id="inputEmailDimenticata" aria-describedby="emailHelp"
-										placeholder="Inserisci la tua nuova e-mail">
-								</div>
-								<button type="submit" class="btn btn-info btn-lg btn-block"
+										
+										placeholder="Inserisci la tua nuova e-mail"></div>
+										<button type="submit" class="btn btn-info btn-lg btn-block"
 									formaction="http://localhost:8080/YouLearn/CambiaMailServlet">Conferma</button>
+								</div>
+								
 							</form>
 						</div>
 					</div>
 					<div class="col-6">
 
-						<a id="btn-utente" class="btn btn-primary btn-lg btn-block"
+						<a id="btn-utente" class="password btn btn-primary btn-lg btn-block"
 							data-toggle="collapse" href="#collapseModPass" role="button"
-							aria-expanded="false" aria-controls="collapseExample">
+							aria-expanded="false" aria-controls="collapseModPass">
 							Modifica Password</a>
 
 
-						<div class="collapse" id="collapseModPass">
+						<div class="pswToogle" id="collapseModPass">
 							<div class="card card-body"
 								style="margin-bottom: 10px; text-align: center;">
 								<form method="post" name="changePswForm" id="changePswForm"
@@ -143,11 +139,11 @@
 											placeholder="Conferma tua nuova password">
 									</div>
 
-
+									<button type="submit" class="btn btn-info btn-lg btn-block"
+										formaction="http://localhost:8080/YouLearn/CambiaPassServlet">Conferma</button>
 								</form>
 							</div>
-							<button type="submit" class="btn btn-info btn-lg btn-block"
-								formaction="http://localhost:8080/YouLearn/CambiaPassServlet">Conferma</button>
+
 						</div>
 
 
@@ -207,6 +203,7 @@
 	<!-- FINE -->
 	</div>
 
+	 <script src="JS/ValidationHome.js"></script>
 
 </body>
 

@@ -66,9 +66,9 @@
 						value=<%=corso.getNome() %> <%} %>>
 				</div>
 				<div class="form-group">
-					<label for="Input">DESCRIZIONE DEL CORSO</label>
+					<label for="Input" >DESCRIZIONE DEL CORSO</label>
 					
-					<textarea id="txtarea" name="descrizione"
+					<textarea id="txtarea" name="descrizione" required="required"
 				placeholder="Inserisci qui la descrizione!" class="form-control" class=" w-100"><%if(corso!=null){ %> <%=corso.getDescrizione() %> <%} %></textarea>
 				</div>
 				<div class="form-group">
@@ -136,10 +136,9 @@
 
 		  <%@ include file="Footer.jsp" %>
 
+	<script src="JS/ValidationSettingCorso.js"></script>
 
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-		crossorigin="anonymous"></script>
+	
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
 		integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
@@ -148,7 +147,6 @@
 		src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
 		integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
 		crossorigin="anonymous"></script>
-	<script src="JS/ValidationSettingCorso.js"></script>
 		<script src="JS/alertify.js-0.3.11/lib/alertify.min.js"></script>
 	
 </body>

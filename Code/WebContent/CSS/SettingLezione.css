@@ -1,4 +1,7 @@
-
+.card{
+	
+	margin:20px;
+}
 
 .item div.Commands {
     width: 60px;
@@ -6,7 +9,7 @@
 
 .card-body{
 	
-	height: 7rem!important;
+	height: 8rem!important;
 	
 	
 }
