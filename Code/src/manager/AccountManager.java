@@ -22,9 +22,7 @@ public class AccountManager {
 	
 	public AccountManager() {
 	}
-	
-	
-	
+
 	
 	/**
 	 * Recupera un Account dal DB
@@ -85,7 +83,7 @@ public class AccountManager {
 		PreparedStatement preparedStatement = null;
 
 		String insertSQL = "UPDATE account SET password= ? "
-				+ " WHERE Email = ?";
+				+ " WHERE email = ?";
 
 		try {
 			connection =DriverManagerConnectionPool.getConnection();
@@ -309,7 +307,8 @@ public class AccountManager {
 			String cognome=account.getCognome();
 			String password=account.getPassword();
 			return nome!=null && nome.matches("^[a-zA-Z]{2,20}") && cognome!=null &&
-				   cognome.matches("^[a-zA-Z]{2,20}") && /**password!=null && password.matches("^[a-zA-Z0-9]{5,30}") &&*/ account.getTipo()!=null;
+			cognome.matches("^[a-zA-Z]{2,20}") && /**password!=null && password.matches("^[a-zA-Z0-9]{5,30}") &&*/ account.getTipo()!=null;
+	
 //			}
 //		else 
 //			return false;

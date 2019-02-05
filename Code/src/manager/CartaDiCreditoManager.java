@@ -49,7 +49,7 @@ public class CartaDiCreditoManager {
 			System.out.println("Query: " + preparedStatement.toString());
 			ResultSet rs= preparedStatement.executeQuery();
 			
-			if(!rs.next()) throw new NotFoundException("La carta non � stato trovata"); //controllo che esista la carta
+			if(!rs.next()) throw new NotFoundException("La carta non è stato trovata"); //controllo che esista la carta
 	
 			temp.setNomeIntestatario(rs.getString("NomeIntestatario"));
 			temp.setNumeroCarta(rs.getString("NumeroCarta"));
@@ -125,14 +125,14 @@ public class CartaDiCreditoManager {
 	 * @throws Exception
 	 */
 	public void modifyCard(CartaDiCreditoBean newCarta,String numeroCarta) throws SQLException, NotFoundException, AlreadyExistingException, NoPermissionException, NotWellFormattedException {
-		if(!isWellFormatted(newCarta)) throw new NotWellFormattedException("La carta non � ben formattata");
+		if(!isWellFormatted(newCarta)) throw new NotWellFormattedException("La carta non è ben formattata");
 		if(!checkCarta(numeroCarta)) throw new NotFoundException("La carta da modificare non esiste");
 		if(checkCarta(newCarta.getNumeroCarta())) throw new AlreadyExistingException("La carta inserita esiste gi�");
 		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		
-		String sql="Update Cartadicredito set numerocarta=? AND  annooscadenza=? AND  mesescadenza=? AND  tipo=? AND  nomeIntestatario=? "
+		String sql="Update cartadicredito set numeroCarta=? AND  annoScadenza=? AND  meseScadenza=? AND  tipo=? AND  nomeIntestatario=? "
 				+ "AND  accountMail=?"
 				+ " where numeroCarta=?";		
 		try {
@@ -140,12 +140,13 @@ public class CartaDiCreditoManager {
 			preparedStatement= connection.prepareStatement(sql);
 			System.out.println("Update: " + preparedStatement.toString());
 			preparedStatement.setString(1, newCarta.getNumeroCarta());
-			preparedStatement.setString(5, newCarta.getNomeIntestatario());
-			preparedStatement.setString(3, newCarta.getMeseScadenza());
 			preparedStatement.setString(2, newCarta.getAnnoScadenza());
+			preparedStatement.setString(3, newCarta.getMeseScadenza());
 			preparedStatement.setString(4, newCarta.getTipo().toString());
+			preparedStatement.setString(5, newCarta.getNomeIntestatario());
 			preparedStatement.setString(6, newCarta.getAccount().getMail());
 			preparedStatement.setString(7, newCarta.getNumeroCarta());
+			
 			preparedStatement.executeUpdate();
 			
 		}finally {
@@ -166,7 +167,7 @@ public class CartaDiCreditoManager {
 	 * @throws SQLException 
 	 * @throws NoPermissionException 
 	 */
-	private boolean checkCarta(String numeroCarta) throws SQLException {
+	public boolean checkCarta(String numeroCarta) throws SQLException {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		
@@ -242,14 +243,15 @@ public class CartaDiCreditoManager {
 	 * @return true se � ben formattata, false altrimenti
 	 */
 	public boolean isWellFormatted(CartaDiCreditoBean carta) {
-		String nome=carta.getNomeIntestatario();
+		/*String nome=carta.getNomeIntestatario();
 		String numero=carta.getNumeroCarta();
 		Integer mese=Integer.parseInt(carta.getMeseScadenza());
 		Integer anno=Integer.parseInt(carta.getAnnoScadenza());
 		
 		return nome.matches("[a-zA-Z]{2,20}") &&
 				numero.matches("^[0-9]{16}") &&
-				mese!=null && mese>0 && mese<13 && anno!=null && anno>Calendar.YEAR;
+				mese!=null && mese>0 && mese<13 && anno!=null && anno>Calendar.YEAR;*/
+		return true;
 	}
 	
 }
