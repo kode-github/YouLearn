@@ -3,9 +3,12 @@ package control.lezione;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.function.Consumer;
 
+import javax.naming.NoPermissionException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import bean.AccountBean;
+import bean.CorsoBean;
 import bean.LezioneBean;
 import exception.DatiErratiException;
 import exception.NotFoundException;
@@ -39,12 +43,11 @@ public class ModificaOrdineServlet extends HttpServlet {
     		AccountBean account=(AccountBean) request.getSession().getAttribute("account");
     		int idCorso=Integer.parseInt(request.getParameter("idCorso"));
         	int idLezione=Integer.parseInt(request.getParameter("idLezione"));
-        	
         	String coppie=request.getParameter("coppie");
         	
         	
-        	
-        	LinkedList<LezioneBean> lezione=(LinkedList<LezioneBean>)account.getCorsoTenuto(idCorso).getLezioni();
+        	manager.modificaOrdine(idCorso, coppie);        	
+        	//Setto un attributo per dire che è andato a buon fine
         	//Setto il nuovo nome della lezione
         	response.sendRedirect(request.getContextPath()+"/SettingLezione.jsp?idCorso="+idCorso);
 		} catch (SQLException e) {
@@ -58,8 +61,15 @@ public class ModificaOrdineServlet extends HttpServlet {
 			e.printStackTrace();
 		} catch(IOException e) {
 			
+		} catch (DatiErratiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoPermissionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
+	
 
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

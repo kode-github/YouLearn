@@ -12,10 +12,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.UUID;
 
+import javax.naming.NoPermissionException;
 import javax.servlet.http.Part;
 
 import com.mysql.jdbc.CallableStatement;
@@ -43,70 +45,81 @@ public class LezioneManager {
 	 * @param corso a cui appartengono le lezioni
 	 * @throws SQLException 
 	 * @throws DatiErratiException 
+	 * @throws NotWellFormattedException 
+	 * @throws NotFoundException 
+	 * @throws NoPermissionException 
 	 */
-	public void modificaOrdine(LinkedList<LezioneBean> lezioni,String coppie) throws SQLException, DatiErratiException {
-		//Controllo che le lezioni siano relative allo stesso corso
+	public void modificaOrdine(int corso,String coppie) throws SQLException, DatiErratiException, NoPermissionException, NotFoundException, NotWellFormattedException {
+		//Recupera le lezioni di un corso
+		LinkedList<LezioneBean> lezione=(LinkedList<LezioneBean>)corsoManager.doRetrieveByKey(corso).getLezioni();
+		
 		//Controllo la coerenza della lista
-		if(coppie==null || !coppie.matches("^([0-9]+[-][0-9]+[,])*([0-9]+[-][0-9]+)")) throw new DatiErratiException("dati errati");
+		if(coppie==null || !coppie.matches("^([0-9]+[-][0-9]+[,])*([0-9]+[-][0-9]+)$")) throw new DatiErratiException("dati errati");
     	String[] couple=coppie.split(",");
+    	ArrayList<Integer> numeriLezione=new ArrayList<>();
+    	
+    	//creo un mapping tra le lezioni e i loro nuovi numeri lezione
     	HashMap<Integer, Integer> map=new HashMap<Integer, Integer>();
     	for(String s: couple) {
+    		//Controllo di non avere lezioni e numeriLezione duplicati
     		if(map.put(Integer.parseInt(s.substring(0, s.indexOf('-'))), Integer.parseInt(s.substring(s.indexOf('-')+1, s.length())))!=null)
     			throw new DatiErratiException("valori duplicati");
+    		if(numeriLezione.contains(Integer.parseInt(s.substring(s.indexOf('-')+1, s.length())))) throw new DatiErratiException("Numeri lezione duplicati");
+    		numeriLezione.add(Integer.parseInt(s.substring(s.indexOf('-')+1, s.length())));
     	}
-
+    	//Controllo che i numeri lezione siano consecutivi e partano da 1
+    	numeriLezione.sort(new Comparator<Integer>() {
+    		@Override
+    		public int compare(Integer o1, Integer o2) {
+    			if(o1>o2)
+    				return 1;
+    			if(o1<o2) 
+    				return -1;
+    			return 0;
+    		}
+		});
+    	for(int i=0;i<numeriLezione.size();i++) {
+    		if(numeriLezione.get(i)!=i+1) throw new DatiErratiException("I numeri lezione non sono consecutivi");
+    	}
+    	//controllo che ci siano numeri per ogni lezione effettiva e lo associo
+    	int i;
+    	for(i=0;i<lezione.size();i++) {
+    		if(map.containsKey(lezione.get(i).getIdLezione()))
+    			lezione.get(i).setNumeroLezione(map.get(lezione.get(i).getIdLezione()));
+    		else throw new DatiErratiException("Esiste una lezione non coperta");
+    	}
+		
+    	//Adesso ho un insieme di lezioni relative allo stesso corso con numeri incrementali
 		Connection c=null;
 		try {
 			c=DriverManagerConnectionPool.getConnection();
 			c.setAutoCommit(false);
-			for(LezioneBean l: lezioni) 
-				changeNumeroLezione(l.getIdLezione(), map.get(l.getIdLezione()),l.getCorso().getIdCorso(), c);
-			checkCoerenza(lezioni.iterator().next().getCorso());
+			for(LezioneBean l: lezione) 
+				changeNumeroLezione(l, c);
 			c.commit();
-		}catch(SQLException | DatiErratiException |NotWellFormattedException  e) {
+		}catch(SQLException | DatiErratiException  e) {
 			c.rollback();
 		}finally {
 			c.close();
 		}
 		
 	}
-	
-	/**
-	 * Sta roba � brutta ma pacienz
-	 * Controlla se, in un certo corso, esistono lezioni con lo stesso 
-	 * @param idCorso
-	 * @return
-	 * @throws SQLException 
-	 * @throws NotWellFormattedException 
-	 */
-	private void checkCoerenza(CorsoBean corso) throws NotWellFormattedException, SQLException {
-		LinkedList<LezioneBean> l=(LinkedList<LezioneBean>) retrieveLezioniByCorso(corso);
-		for(LezioneBean lezione: l) 
-			for(LezioneBean lezione2: l)
-				if(lezione.getIdLezione()!=lezione2.getIdLezione() && lezione.getNumeroLezione()==lezione2.getNumeroLezione()) 
-									throw new NotWellFormattedException("");
-
-	}
 
 	
 	
 	/**
 	 * Cambia il numero di lezione
-	 * @param from numero di partenza
-	 * @param to nuovo numero
 	 * @throws SQLException
 	 * @throws DatiErratiException 
 	 */
-	private void changeNumeroLezione(Integer idLezione,Integer numeroLezione,Integer idCorso,Connection c) throws SQLException, DatiErratiException {
-		if(numeroLezione==null || idLezione==null || idCorso==null) throw new DatiErratiException("i dati non sono corretti");
+	private void changeNumeroLezione(LezioneBean lezione,Connection c) throws SQLException, DatiErratiException {
 		PreparedStatement statement=null;
-		String sql="Update Lezione set numeroLezione=? where idLezione=? AND corsoIdCorso=?";
+		String sql="Update Lezione set numeroLezione=? where idLezione=?";
 		try {
 			c=DriverManagerConnectionPool.getConnection();
 			statement=c.prepareStatement(sql);
-			statement.setInt(1, numeroLezione);
-			statement.setInt(2, idLezione);
-			statement.setInt(3, idCorso);
+			statement.setInt(1, lezione.getNumeroLezione());
+			statement.setInt(2, lezione.getIdLezione());
 			
 			int res=statement.executeUpdate();
 			if(res==0) throw new DatiErratiException("non esiste una lezione con questo codice oppure non appartiene a questo corso");

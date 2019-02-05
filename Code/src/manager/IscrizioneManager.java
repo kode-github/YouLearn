@@ -253,7 +253,7 @@ public class IscrizioneManager {
 	public void iscriviStudente(IscrizioneBean iscrizione) throws SQLException, NotFoundException, AlreadyExistingException, NoPermissionException, NotWellFormattedException {
 		accountManager=new AccountManager();
 		corsoManager= new CorsoManager();
-		//TODO Verificare perch� si usano solo le key per i check
+		//TODO Verificare perchè si usano solo le key per i check
 		if(checkIscrizione(iscrizione.getCorso().getIdCorso(),iscrizione.getAccount().getMail())) 
 												throw new AlreadyExistingException("L'iscrizione esiste gi�");
 		if(!corsoManager.checkCorso(iscrizione.getCorso())) throw new NotFoundException("Il corso non esiste");
@@ -262,7 +262,7 @@ public class IscrizioneManager {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		
-		String sql="Insert into Iscrizione values(?,?,?,?,?)";
+		String sql="insert into iscrizione values(?,?,?,?,?)";
 		
 		try {
 			connection=DriverManagerConnectionPool.getConnection();
@@ -271,7 +271,7 @@ public class IscrizioneManager {
 			preparedStatement.setInt(2,iscrizione.getCorso().getIdCorso());
 			preparedStatement.setDate(3,iscrizione.getDataPagamento());
 			preparedStatement.setDouble(4,iscrizione.getImporto());
-			preparedStatement.setString(5, iscrizione.getFattura());
+			preparedStatement.setInt(5, Integer.parseInt(iscrizione.getFattura()));
 			preparedStatement.executeUpdate();
 		}finally {
 			try {
@@ -295,13 +295,16 @@ public class IscrizioneManager {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		ResultSet rs;
-		String sql="SELECT accountMail FROM iscrizione WHERE accountmail=? AND corsoIdCorso=?";		
+		String sql="SELECT accountMail FROM iscrizione WHERE accountMail=? AND corsoIdCorso=?";		
 		try {
+			System.out.println(mail);
+			System.out.println(id);
 			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1, mail);
 			preparedStatement.setInt(2, id);
 			rs= preparedStatement.executeQuery();
+			
 		}finally {
 			try {
 			if(preparedStatement!=null)

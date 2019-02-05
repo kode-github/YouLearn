@@ -112,12 +112,12 @@ public class CorsoManager {
 		Collection<CorsoBean> collection=new LinkedList<>();
 		accountManager=new AccountManager();
 		
-		String sql="Select * from corso where nome like %?%";
+		String sql="Select * from corso where nome like ?";
 		
 		try {
 			connection=DriverManagerConnectionPool.getConnection();
 			statement=connection.prepareStatement(sql);
-			statement.setString(1,search);
+			statement.setString(1,"%" + search + "%");
 			ResultSet rs=statement.executeQuery();
 			while(rs.next()) {
 				CorsoBean corso=new CorsoBean();
@@ -249,7 +249,7 @@ public class CorsoManager {
 			preparedStatement= connection.prepareStatement(insertSQL);
 			preparedStatement.setInt(1, corso.getIdCorso());
 			preparedStatement.setString(2, corso.getDocente().getMail());
-			//Controllo se c'� da aggiornare il supervisore
+			//Controllo se c'è da aggiornare il supervisore
 			if(corso.getSupervisore()!=null)
 				preparedStatement.setString(3, corso.getSupervisore().getMail());
 			else
@@ -327,7 +327,7 @@ public class CorsoManager {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
-		String deleteSQL = "DELETE FROM Corso WHERE idCorso=? AND stato=?";
+		String deleteSQL = "delete from corso where idCorso = ? and stato=?";
 
 		try {
 			connection = DriverManagerConnectionPool.getConnection();
@@ -337,7 +337,7 @@ public class CorsoManager {
 			System.out.println("doDelete: "+ preparedStatement.toString());
 			int result=preparedStatement.executeUpdate();
 			
-			if(result==0) throw new NotFoundException("Il corso non esiste oppure non � in completamento");
+			if(result==0) throw new NotFoundException("Il corso non esiste oppure non è in completamento");
 			
 			
 		} finally {

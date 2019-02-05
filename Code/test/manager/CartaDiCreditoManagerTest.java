@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.sql.SQLException;
 
 import javax.naming.NoPermissionException;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
 
 import org.junit.After;
 import org.junit.Before;
@@ -23,6 +24,7 @@ public class CartaDiCreditoManagerTest {
 	
 	private CartaDiCreditoManager managerCarta;
 	private AccountManager managerAccount;
+
 	@Before
 	public void setUp() throws Exception {
 		managerCarta = new CartaDiCreditoManager();
@@ -31,58 +33,80 @@ public class CartaDiCreditoManagerTest {
 		assertNotNull(managerAccount);
 	}
 
+	@After
+	public void TierDown() throws Exception{
+		managerCarta = null;
+		managerAccount = null;
+		assertNull(managerAccount);
+		assertNull(managerCarta);
+	}
 
+	/**
+	 * Tests methods for {@link manager.CartaDiCreditoManager#doRetrieveByKey(java.lang.String)}.
+	 * @throws SQLException
+	 * @throws NotFoundException
+	 * @throws NoPermissionException 
+	 */
 	@Test
 	public void testDoRetrieveByKey() throws NoPermissionException, SQLException, NotFoundException {
-		managerCarta.doRetrieveByKey("0000000000000000");
+		assertTrue(managerCarta.checkCarta("1111222233334444"));
+		managerCarta.doRetrieveByKey("1111222233334444");
 	}
 
 	@Test(expected=NotFoundException.class)
 	public void TestDoRetrieveByKeyNotFound() throws NoPermissionException, SQLException, NotFoundException {
-		managerCarta.doRetrieveByKey("00000001010");
-		
+		assertFalse(managerCarta.checkCarta("1234567890123456"));
+		managerCarta.doRetrieveByKey("1234567890123456"); 
 	}
 	
 	
-	@Test
-	public void testRegisterCard() throws NoPermissionException, SQLException, NotWellFormattedException, AlreadyExistingException {
-		
-		AccountBean account = new AccountBean();
-		CartaDiCreditoBean newCarta = new CartaDiCreditoBean();
-		
-		account.setNome("Test");
-		account.setCognome("Test");
-		account.setMail("mail" +"@mail.com");
-		account.setPassword("12345");
-		account.setTipo(Ruolo.Utente);
-		account.setVerificato(false);
-		
-		newCarta.setAnnoScadenza("2022");
-		newCarta.setNomeIntestatario("TestName");
-		newCarta.setMeseScadenza("12");
-		newCarta.setNumeroCarta("0000000000000001");
-		newCarta.setTipo(CartaEnum.PAYPAL);
-		newCarta.setAccount(account);
-		
-		managerCarta.registerCard(newCarta);
-	}
-
+	/**
+	 * Tests methods for {@link manager.CartaDiCreditoManager#modifyCard(bean.CartaDiCreditoBean, java.lang.String)}.
+	 * @throws SQLException
+	 * @throws NotFoundException
+	 * @throws NoPermissionException 
+	 */
+	
 	@Test
 	public void testModifyCard() throws NoPermissionException, SQLException, NotFoundException, AlreadyExistingException, NotWellFormattedException {
 		
-		CartaDiCreditoBean newCarta = managerCarta.doRetrieveByKey("0000000000000000");
-		// managerCarta.modifyCard(newCarta, "0000000000000005"); Cambiamenti da effettuare
+		CartaDiCreditoBean oldCarta = managerCarta.doRetrieveByKey("1111222233334444");
+		CartaDiCreditoBean newCarta = managerCarta.doRetrieveByKey("5555666677778888");
+		
+		newCarta.setNumeroCarta("999999999991");
+		System.out.println(oldCarta.getNumeroCarta());
+		assertNotNull(newCarta);
+		assertEquals(newCarta.getNumeroCarta(),"999999999991");
+		managerCarta.modifyCard(newCarta, oldCarta.getNumeroCarta());
+		managerCarta.modifyCard(oldCarta, newCarta.getNumeroCarta());
+		System.out.println(managerCarta.checkCarta(newCarta.getNumeroCarta()));
+		
+		
 	}
 
+	/**
+	 * Tests methods for {@link manager.CartaDiCreditoManager#retrieveByAccount(bean.AccountBean)}.
+	 * @throws SQLException
+	 * @throws NotFoundException
+	 * @throws NoPermissionException 
+	 */
+	
 	@Test
 	public void testRetrieveByAccount() throws NoPermissionException, SQLException, NotFoundException {
-		AccountBean account = managerAccount.doRetrieveByKey("pasquale@mail.com");
+		AccountBean account = managerAccount.doRetrieveByKey("mario@gmail.com");
 		managerCarta.retrieveByAccount(account);
 	}
 
+	/**
+	 * Test methods for {@link manager.CartaDiCreditoBean#isWellFormatted()}.
+	 * @throws SQLException
+	 * @throws NotFoundException
+	 * @throws NoPermissionException 
+	 */
+	
 	@Test
-	public void testIsWellFormatted() {
-		// Da modificare
+	public void testIsWellFormatted() throws NoPermissionException, SQLException, NotFoundException {
+		assertEquals(managerCarta.isWellFormatted(managerCarta.doRetrieveByKey("1111222233334444")),true);
 	}
 
 }
