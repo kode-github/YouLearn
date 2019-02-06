@@ -38,10 +38,10 @@ public class GetLezioniServlet extends HttpServlet {
 			AccountBean account= (AccountBean)session.getAttribute("account");
 			int idCorso=Integer.parseInt(request.getParameter("idCorso"));
 			CorsoBean corso=account.getCorsoTenuto(idCorso);
-			corso.addLezioni(new LinkedList<LezioneBean>()); //Annullo le lezioni che contiene
-			Collection<LezioneBean> lezione=manager.retrieveLezioniByCorso(corso);
-			corso.addLezioni(lezione);
 			account.removeCorsoTenuto(corso);
+			corso.setLezioni(new LinkedList<LezioneBean>()); //Annullo le lezioni che contiene
+			Collection<LezioneBean> lezione=manager.retrieveLezioniByCorso(corso);
+			corso.setLezioni(lezione);
 			account.AddCorsoTenuto(corso);
 			request.getSession().removeAttribute("updated");
 			response.sendRedirect(request.getContextPath()+"//SettingLezione.jsp?idCorso="+corso.getIdCorso());

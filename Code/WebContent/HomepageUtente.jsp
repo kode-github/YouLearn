@@ -26,7 +26,7 @@
 <!-- include the style -->
 <link rel="stylesheet" href="JS/alertifyjs/css/alertify.min.css" />
 <!-- include a theme -->
-<link rel="stylesheet" href="JS/alertifyjs/css/themes/default.min.css"/>
+<link rel="stylesheet" href="JS/alertifyjs/css/themes/default.min.css" />
 <link
 	href="https://fonts.googleapis.com/css?family=Permanent+Marker|Ubuntu"
 	rel="stylesheet">
@@ -199,7 +199,9 @@
 										<input type="email" name="newMail" class="form-control"
 											placeholder="Inserisci la tua nuova e-mail">
 									</div>
-									<button type="submit"  onclick="return confirm('Sei sicuro di voler continuare?\nLa tua email verrà moodificata!')" class="btn btn-info btn-lg btn-block"
+									<button type="submit"
+										onclick="return confirm('Sei sicuro di voler continuare?\nLa tua email verrà moodificata!')"
+										class="btn btn-info btn-lg btn-block"
 										formaction="http://localhost:8080/YouLearn/CambiaMailServlet">Conferma</button>
 								</div>
 
@@ -231,7 +233,9 @@
 											placeholder="Conferma tua nuova password">
 									</div>
 
-									<button type="submit" onclick="return confirm('Sei sicuro di voler continuare?\nLa tua password verrà moodificata!')" class="btn btn-info btn-lg btn-block"
+									<button type="submit"
+										onclick="return confirm('Sei sicuro di voler continuare?\nLa tua password verrà moodificata!')"
+										class="btn btn-info btn-lg btn-block"
 										formaction="http://localhost:8080/YouLearn/CambiaPassServlet">Conferma</button>
 								</form>
 							</div>
@@ -307,8 +311,9 @@
 									</div>
 
 								</div>
-								<button type="submit" onclick="return confirm('Sei sicuro di voler continuare?\nLa tua carta verrà moodificata!')"class="btn btn-info btn-lg btn-block"
-									formaction="#">Conferma</button>
+								<button type="submit"
+									onclick="return confirm('Sei sicuro di voler continuare?\nLa tua carta verrà moodificata!')"
+									class="btn btn-info btn-lg btn-block" formaction="#">Conferma</button>
 							</form>
 						</div>
 
@@ -434,20 +439,23 @@
 						<li>STATO: <%=i.getStato()%></li>
 
 					</ul>
-<!--  -->
+
 					<%
 						if (i.getStato().equals(Stato.Completamento)) {
 					%>
 					<div class="float-lg-right ">
-						<button type="submit" onclick="return confirm('Sei sicuro di voler continuare?\nIl corso verrà assegnato ad un Supervisore!')"
+						<button type="submit"
+							onclick="return confirm('Sei sicuro di voler continuare?\nIl corso verrà assegnato ad un Supervisore!')"
 							formaction="http://localhost:8080/YouLearn/ConfermaCorsoServlet?idCorso=<%=i.getIdCorso()%>"
 							class="btn btn-success btn-lg conferma">Conferma</button>
 						<button type="submit"
 							formaction="http://localhost:8080/YouLearn/SettingCorso.jsp?idCorso=<%=i.getIdCorso()%>"
 							class="btn btn-outline-secondary btn-lg ">Modifica</button>
-						<button type="submit" class="btn btn-outline-secondary btn-lg  ">Gestisci
+						<button type="submit" class="btn btn-outline-secondary btn-lg "
+							formaction="http://localhost:8080/YouLearn/SettingLezione.jsp?idCorso=<%=i.getIdCorso()%>">Gestisci
 							lezioni</button>
-						<button type="submit" onclick="return confirm('Sei sicuro di voler continuare?\nIl corso verrà cancellato e perderai tutti i dati!')"
+						<button type="submit"
+							onclick="return confirm('Sei sicuro di voler continuare?\nIl corso verrà cancellato e perderai tutti i dati!')"
 							formaction="http://localhost:8080/YouLearn/CancCorsoServlet?idCorso=<%=i.getIdCorso()%>"
 							class="btn btn-danger btn-lg elimina">Elimina Corso</button>
 					</div>
@@ -472,7 +480,7 @@
 	<%@ include file="Footer.jsp"%>
 	<script src="JS/ValidationHome.js"></script>
 	<script src="JS/alertifyjs/alertify.min.js"></script>
-	
+
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script

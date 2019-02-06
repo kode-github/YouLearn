@@ -41,15 +41,18 @@ public class InsLezioneServlet extends HttpServlet {
 	    		AccountBean account=(AccountBean) request.getSession().getAttribute("account");
 	        	Part file = request.getPart("file");
 	        	int idCorso=Integer.parseInt(request.getParameter("idCorso"));
+	        	String nome = request.getParameter("name");
 		    	CorsoBean corso=account.getCorsoTenuto(idCorso);
+		    	System.out.println(corso.getIdCorso()+"\n");
 		    	String filename=getFilename(file);		      
 		    	
 		        LezioneBean lezione = new LezioneBean();
-		        lezione.setNome(filename);
+		        lezione.setNome(nome);
 		        lezione.setIdLezione(null);
 		        lezione.setCorso(corso);
 		        
 				manager.insLezione(lezione, file);
+				System.out.println("LUIGI è bravo");
 				
 				request.getSession().setAttribute("updated", "true");
 				response.setContentType("application/json");

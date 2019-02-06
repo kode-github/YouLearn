@@ -406,6 +406,13 @@ public class CorsoBean {
 		}
 		return null;
 	}
+	
+	public void setLezioni(Collection<LezioneBean> l) {
+		
+		lezioni=l;
+		
+		
+	}
 
 
 	
