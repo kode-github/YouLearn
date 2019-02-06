@@ -40,6 +40,10 @@
 		idCorso=Integer.parseInt(request.getParameter("idCorso"));
 		corso=account.getCorsoTenuto(idCorso);
 	}
+	else{
+		response.sendRedirect(request.getContextPath()+"\\Welcome.jsp");
+		return;
+	}
 		
 %>
 
