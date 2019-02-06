@@ -77,7 +77,8 @@ public class CorsoManager {
 			corso.setnLezioni(rs.getInt("nLezioni"));
 			corso.setnIscritti(rs.getInt("nIscritti"));
 			corso.setDocente(accountManager.doRetrieveByKey(rs.getString("accountCreatore"))); //recupero il docente
-			corso.setSupervisore(accountManager.doRetrieveByKey(rs.getString("accountSupervisore"))); //recupero il supervisore
+			if(corso.getStato()!=Stato.Completamento)
+				corso.setSupervisore(accountManager.doRetrieveByKey(rs.getString("accountSupervisore"))); //recupero il supervisore
 			lezioneManager.retrieveLezioniByCorso(corso); //recuperlo le lezioni
 			iscrizioneManager.getIscrittiCorso(corso); //recupero il corso
 			
@@ -591,15 +592,15 @@ public class CorsoManager {
 	 */
 	public boolean isWellFormatted(CorsoBean corso) {
 		Date dataOdierna = new Date();
-//		
-//		return  corso.getNome()!=null && corso.getNome().matches("^[a-zA-Z]{2,20}") && 
-//				corso.getDescrizione()!=null && corso.getDescrizione().matches("^[a-zA-Z0-9]{0,2048}") &&
-//				corso.getDataCreazione()!=null && corso.getDataFine()!=null && corso.getDataCreazione().before(corso.getDataFine())
-//				&& !corso.getDataCreazione().after(dataOdierna) && ( corso.getLezioni()==null || corso.getnLezioni()==corso.getLezioni().size())
-//				&& (corso.getIscrizioni()==null || corso.getnIscritti()==corso.getIscrizioni().size()) && corso.getCopertina()!=null && 
-//				corso.getCopertina().matches("^[a-zA-Z\\.]{1,255}") && corso.getDocente()!=null && corso.getCategoria()!=null
-//				&& corso.getStato()!=null;
-		return true;
+		
+		return  corso.getNome()!=null && corso.getNome().matches("^[a-zA-Z\\s]{5,20}")  &&
+				corso.getDataCreazione()!=null && corso.getDataFine()!=null && corso.getDataCreazione().before(corso.getDataFine())
+				&& !corso.getDataCreazione().after(dataOdierna) && 
+				corso.getDescrizione()!=null && corso.getDescrizione().length()<400  && corso.getCopertina()!=null && 
+				corso.getCopertina().matches("^[a-zA-Z0-9\\.-]{1,255}") && corso.getDocente()!=null && corso.getCategoria()!=null
+				&& corso.getStato()!=null;
+		
+
 	}
 
 }
