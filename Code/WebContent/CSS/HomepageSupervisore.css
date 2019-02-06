@@ -1,132 +1,101 @@
 body {
-
-    font-family: 'Ubuntu', sans-serif;
-    background-color: #eeeeee;
-
+	font-family: 'Ubuntu', sans-serif;
+	background-color: #eeeeee;
 }
 
+#alert{
+	
+position: absolute;
+margin-left: auto;
+margin-right: auto;
+left: 0;
+right: 0;
+z-index:-1;
+	
+}
 
 .top {
-    margin-top: 15px;
-
+	margin-top: 15px;
 }
 
-.container-fluid{
-	
-	padding: 0px 35px!important;
-	
+.container-fluid {
+	padding: 0px 35px !important;
 }
 
 .utente-tab {
-
-    /*padding: 40px 0px;*/
-    text-align: center;
-   padding:50px 40px;
-
+	/*padding: 40px 0px;*/
+	text-align: center;
+	padding: 50px 40px;
 }
 
 .utente-tab>.btn {
-
-    display: block;
-    margin-top: 10px;
-
+	display: block;
+	margin-top: 10px;
 }
 
 .profile-img {
-
-    margin-bottom: 10px;
-    border-radius: 50%;
+	margin-top: 10px;
+	border-radius: 50%;
 }
 
-
-
-.card-utente{
-
-    padding:2px!important;
-    background-color: #00adb5!important;
-    color: #222831;
-    font-weight: bolder;
+.card-utente {
+	padding: 2px !important;
+	background-color: #00adb5 !important;
+	color: #222831;
+	font-weight: bolder;
 }
 
-.card-b-utente{
-   padding:2px!important;
-    background-color: #393e46!important;
-    color: #eeeeee!important;
-
-}
-.card{
-
-    margin-top: 20px;
-
+.card-b-utente {
+	padding: 2px !important;
+	background-color: #393e46 !important;
+	color: #eeeeee !important;
 }
 
-.card-h-corsi{
-
-    text-align: center;
-    font-size: 30px;
-    font-weight: bolder;
-
+.card {
+	margin-top: 20px;
 }
 
-.card-title{
-	
-	margin-bottom:0.2rem!important;
-	
+.card-h-corsi {
+	text-align: center;
+	font-size: 30px;
+	font-weight: bolder;
+}
+
+.card-title {
+	margin-bottom: 0.2rem !important;
 }
 
 #btn-utente {
-
-    background-color: #00adb5;
-    font-weight: bolder;
-    color: black;
-
+	background-color: #00adb5;
+	font-weight: bolder;
+	color: black;
 }
 
 .informazioni-corso {
+	margin-top: 17px;
+	margin-left: 10px;
+	text-align: left;
+	font-size: 25px;
+}
 
-  	margin-top: 17px;
-    margin-left: 10px;
-    text-align: left;
-    font-size: 25px;
-
+.card-body {
+	border-bottom: 1px solid black;
 }
 
 
-.card-body{
-
-    border-bottom: 1px solid black;
-
+ul {
+	padding: 30px;
+	font-size: 30px;
+	margin-left: 30px;
+	margin-top: 24px;
 }
 
-.card-lista-attesa{
-
-    text-align: center;
-    font-size: 30px;
-    font-weight: bolder;
-
+.img-corsi-attesa {
+	width: 250px;
+	height: 250px;
 }
 
-
-ul{
-
-    padding: 30px;
-    font-size: 30px;
-    margin-left: 30px;
-    margin-top: 24px;
-
-}
-
-.img-corsi-attesa{
-
-    width: 250px;
-    height: 250px;
-
-}
-
-.btn{
-
-    padding: 20px;
-    margin-bottom: 10px;
-
-
+.btn {
+	padding: 20px;
+	margin-bottom: 10px;
 }

@@ -37,14 +37,6 @@ z-index:-1;
 
 }
 
-
-
-p>span {
-
-    margin-left: 10px;
-
-}
-
 .utente-tab>.btn {
 
     display: block;
@@ -91,13 +83,6 @@ p>span {
 
 }
 
-.position-btn{
-	
-	position: absolute;
-	right:25px;
-	bottom: 15px;
-	
-}
 
 #carouselSlider {
 

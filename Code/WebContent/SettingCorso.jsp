@@ -115,7 +115,7 @@
 				</div>
 				<div class="row">
 					<div class="col-lg-6 col-sm-6">
-						<button type="submit" <%if(corso!=null) 
+						<button type="submit" onclick="return confirm('Sei sicuro di voler continuare?\nVerranno apportate le modifiche effettuate al corso!')" <%if(corso!=null) 
                     {%>
 							formaction="http://localhost:8080/YouLearn/ModCorsoServlet?idCorso=<%=idCorso %>"
 							<%}else{ %>

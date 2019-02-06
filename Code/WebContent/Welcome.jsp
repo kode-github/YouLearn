@@ -68,24 +68,23 @@
 
 	<div id="h" class="header">
 		<div class="row">
-			<div class="image col-lg-5">
-				<img class="" src="Images/Logo1.png" alt="" srcset="" width="150px"
-					height="150px" style="float: right;">
+			<div class="image col-lg-5 col-md-5 col-sm-6 col-xs-6">
+				<img id="img" class="" src="Images/Logo1.png" alt="" >
 			</div>
-			<div class="text col-lg-6">
-				<p class="text-image" style="font-size: 40px; padding-left: 90px;">YouLearn</p>
-				<p class="text-image" style="font-size: 35px;">Increse your
-					knowledges</p>
+			<div class="text col-lg-6 col-md-6 col-sm-6 col-xs-6">
+				<p id="title" class="text-image" >YouLearn</p>
+				<p id="sub-title" class="text-image" >Increse your
+					knowledge</p>
 			</div>
 		</div>
 
 	</div>
 
 
-	<section class="hero-section set-bg" style="height: 1050px;">
+	<section class="hero-section set-bg">
 		<div id="login-register">
 			<div class="row">
-				<div class="col-lg-6">
+				<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
 					<div class="card card-5">
 						<div class="card-header text-center" style="font-size: 30px;">LOGIN</div>
 						<div class="card-body">
@@ -136,8 +135,8 @@
 				</div>
 
 
-				<div class="col-lg-6">
-					<div class="card card-5">
+				<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+					<div class="form-reg card card-5">
 						<div class="card-header text-center " style="font-size: 30px;">REGISTRAZIONE</div>
 						<div class="card-body">
 

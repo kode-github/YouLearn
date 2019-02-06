@@ -44,21 +44,18 @@
 	<%@ include file="Navbar.jsp"%>
 
 
-<!-- MESSAGGIO DI CORSO CONFERMATO SU ATTRIBUTO IN SESSIONE "VERIFICATO" CON VALORE TRUE O FALSE (CONFERMATO O RIFIUTATO) -->
+	<!-- MESSAGGIO DI CORSO CONFERMATO SU ATTRIBUTO IN SESSIONE "VERIFICATO" CON VALORE TRUE O FALSE (CONFERMATO O RIFIUTATO) -->
 
-<%
-	String sup=(String)request.getSession().getAttribute("sup");
+	<%
+		String sup = (String) request.getSession().getAttribute("sup");
 
-	if(sup==null){
-		response.sendRedirect(request.getContextPath()+"//VisualizzaProfiloServlet");
-		return;
-	}
-	else
-		request.getSession().removeAttribute("sup");
-
-%>
-<div id="alert" class="" style="text-align: center;"
-		role="alert"></div>
+		if (sup == null) {
+			response.sendRedirect(request.getContextPath() + "//VisualizzaProfiloServlet");
+			return;
+		} else
+			request.getSession().removeAttribute("sup");
+	%>
+	<div id="alert" class="" style="text-align: center;" role="alert"></div>
 
 	<div class="container-fluid">
 		<div class="row ">
@@ -98,26 +95,31 @@
 
 				<div class="row">
 					<div class="col-6">
-						<a id="btn-utente" class="email btn btn-primary btn-lg btn-block"> Modifica E-mail </a>
-							
+						<a id="btn-utente" class="email btn btn-primary btn-lg btn-block">
+							Modifica E-mail </a>
+
 						<div class="emailToogle">
 							<form name="changeMailForm" id="changeMailForm"
 								onsubmit="return validateMail(changeMailForm)">
-								<div class="card card-body" style="margin-bottom: 10px; text-align: center;">
-								<div class="form-group">
-									<input type="email" name="newMail" class="form-control"
-										
-										placeholder="Inserisci la tua nuova e-mail"></div>
-										<button type="submit" class="btn btn-info btn-lg btn-block"
-									formaction="http://localhost:8080/YouLearn/CambiaMailServlet">Conferma</button>
+								<div class="card card-body"
+									style="margin-bottom: 10px; text-align: center;">
+									<div class="form-group">
+										<input type="email" name="newMail" class="form-control"
+											placeholder="Inserisci la tua nuova e-mail">
+									</div>
+									<button type="submit"
+										onclick="return confirm('Sei sicuro di voler continuare?\nLa tua email verrà moodificata!')"
+										class="btn btn-info btn-lg btn-block"
+										formaction="http://localhost:8080/YouLearn/CambiaMailServlet">Conferma</button>
 								</div>
-								
+
 							</form>
 						</div>
 					</div>
 					<div class="col-6">
 
-						<a id="btn-utente" class="password btn btn-primary btn-lg btn-block"
+						<a id="btn-utente"
+							class="password btn btn-primary btn-lg btn-block"
 							data-toggle="collapse" href="#collapseModPass" role="button"
 							aria-expanded="false" aria-controls="collapseModPass">
 							Modifica Password</a>
@@ -139,7 +141,9 @@
 											placeholder="Conferma tua nuova password">
 									</div>
 
-									<button type="submit" class="btn btn-info btn-lg btn-block"
+									<button type="submit"
+										onclick="return confirm('Sei sicuro di voler continuare?\nLa tua password verrà moodificata!')"
+										class="btn btn-info btn-lg btn-block"
 										formaction="http://localhost:8080/YouLearn/CambiaPassServlet">Conferma</button>
 								</form>
 							</div>
@@ -153,7 +157,7 @@
 		</div>
 
 
-		<div class="card w-75 mx-auto">
+		<div style="margin-bottom: 20px;" class="card w-75 mx-auto">
 			<h5 class="card-h-corsi card-header">CORSI DA SUPERVISIONARE</h5>
 			<%
 				LinkedList<CorsoBean> corsiDaSupervsionare = (LinkedList<CorsoBean>) account.getCorsiDaSupervisionare();
@@ -170,7 +174,8 @@
 				<a
 					href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><img
 					class="img-corsi-attesa rounded float-left"
-					src="Resources\<%=i.getIdCorso()%>\<%=i.getCopertina()%>" alt="FAIL" width="170" height="170"></a>
+					src="Resources\<%=i.getIdCorso()%>\<%=i.getCopertina()%>"
+					alt="FAIL" width="170" height="170"></a>
 				<ul class="informazioni-corso rounded float-left">
 					<li>NOME CORSO: <a
 						href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>"><%=i.getNome()%></a></li>
@@ -182,28 +187,31 @@
 				<div class="float-right ">
 					<form method="post">
 						<button type="submit"
-							formaction="http://localhost:8080/YouLearn/VerificaCorsoServlet?verifica=true&idCorso=<%=i.getIdCorso() %>"
+							onclick="return confirm('Sei sicuro di voler continuare?\nIl corso verrà reso attivo e pubblicato sulla piattaforma!')"
+							formaction="http://localhost:8080/YouLearn/VerificaCorsoServlet?verifica=true&idCorso=<%=i.getIdCorso()%>"
 							class="btn btn-success btn-lg ">Conferma</button>
 						<button type="submit" class="btn btn-outline-secondary btn-lg ">Vai
 							al corso</button>
 						<button type="submit"
-							formaction="http://localhost:8080/YouLearn/VerificaCorsoServlet?verifica=false&idCorso=<%=i.getIdCorso() %>"
+							onclick="return confirm('Sei sicuro di voler continuare?\nIl corso verrà reso nuovamente in Completamento e verrà inviata una notifica al docente creatore.!')"
+							formaction="http://localhost:8080/YouLearn/VerificaCorsoServlet?verifica=false&idCorso=<%=i.getIdCorso()%>"
 							class="btn btn-danger btn-lg">Rifiuta</button>
 					</form>
 				</div>
 			</div>
 
 			<%
-					}
-					}
-				%>
+				}
+				}
+			%>
 
 		</div>
 
-	<!-- FINE -->
+		<!-- FINE -->
 	</div>
+	<%@ include file="Footer.jsp"%>
 
-	 <script src="JS/ValidationHome.js"></script>
+	<script src="JS/ValidationHome.js"></script>
 
 </body>
 

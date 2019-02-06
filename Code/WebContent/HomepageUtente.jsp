@@ -22,6 +22,11 @@
 	href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
 	integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
 	crossorigin="anonymous">
+
+<!-- include the style -->
+<link rel="stylesheet" href="JS/alertifyjs/css/alertify.min.css" />
+<!-- include a theme -->
+<link rel="stylesheet" href="JS/alertifyjs/css/themes/default.min.css"/>
 <link
 	href="https://fonts.googleapis.com/css?family=Permanent+Marker|Ubuntu"
 	rel="stylesheet">
@@ -35,65 +40,73 @@
 <body>
 
 	<%@ include file="Navbar.jsp"%>
-<%
+	<%
+		String seguiti = (String) request.getSession().getAttribute("seguiti");
+		String tenuti = (String) request.getSession().getAttribute("tenuti");
 
-	String seguiti=(String)request.getSession().getAttribute("seguiti");
-	String tenuti=(String)request.getSession().getAttribute("tenuti");
-	
-	
-	if(tenuti==null || seguiti==null){
-		response.sendRedirect(request.getContextPath()+"//VisualizzaProfiloServlet");
-		return;
-	}
-	request.getSession().removeAttribute("seguiti");
-	request.getSession().removeAttribute("tenuti");
-%>
+		if (tenuti == null || seguiti == null) {
+			response.sendRedirect(request.getContextPath() + "//VisualizzaProfiloServlet");
+			return;
+		}
+		request.getSession().removeAttribute("seguiti");
+		request.getSession().removeAttribute("tenuti");
+	%>
 
 
 	<!-- IL NOME DEL CAMPO PER LA NUOVA MAIL HA name="newMail" -->
 
 	<%
-		Boolean emailModificata=(Boolean)request.getSession().getAttribute("emailModificata");
-		if(emailModificata!=null){
+		Boolean emailModificata = (Boolean) request.getSession().getAttribute("emailModificata");
+		if (emailModificata != null) {
 			request.getSession().removeAttribute("emailModificata");
 	%>
-	<div id="alert1" class="alert alert-success d-none" style="text-align: center;"
-		role="alert">E-mail modificata con successo!</div>
+	<div id="alert1" class="alert alert-success d-none"
+		style="text-align: center;" role="alert">E-mail modificata con
+		successo!</div>
 
-
-	<% } %>
 
 	<%
-		Boolean emailGiaEsistente=(Boolean)request.getSession().getAttribute("emailGiaEsistente");
-		if(emailGiaEsistente!=null){
+		}
+	%>
+
+	<%
+		Boolean emailGiaEsistente = (Boolean) request.getSession().getAttribute("emailGiaEsistente");
+		if (emailGiaEsistente != null) {
 			request.getSession().removeAttribute("emailGiaEsistente");
 			System.out.println("KTM");
 	%>
-	<div id="alert1" class="alert alert-warning " style="text-align: center;"
-		role="alert">Ci dispiace! L'e-mail è già in uso. Prova con
-		un'altra!</div>
-	<% } %>
+	<div id="alert1" class="alert alert-warning "
+		style="text-align: center;" role="alert">Ci dispiace! L'e-mail è
+		già in uso. Prova con un'altra!</div>
+	<%
+		}
+	%>
 
 
 	<%
-		Boolean passwordModificata=(Boolean)request.getSession().getAttribute("passwordModificata");
-		if(passwordModificata!=null){
+		Boolean passwordModificata = (Boolean) request.getSession().getAttribute("passwordModificata");
+		if (passwordModificata != null) {
 			request.getSession().removeAttribute("passwordModificata");
 	%>
-	<div id="alert1" class="alert alert-success d-none"  style="text-align: center;"
-		role="alert">Password modificata con successo!</div>
-	<% } %>
+	<div id="alert1" class="alert alert-success d-none"
+		style="text-align: center;" role="alert">Password modificata con
+		successo!</div>
+	<%
+		}
+	%>
 
 	<%
-		Boolean passwordNonModificata=(Boolean)request.getSession().getAttribute("passwordNonModificata");
-		if(passwordNonModificata!=null){
+		Boolean passwordNonModificata = (Boolean) request.getSession().getAttribute("passwordNonModificata");
+		if (passwordNonModificata != null) {
 			request.getSession().removeAttribute("passwordNonModificata");
 	%>
 
-	<div id="alert1" class="alert alert-warning d-none" style="text-align: center;"
-		role="alert">C'è stato un problema! Le password non
-		coincidono, riprova.</div>
-	<% } %>
+	<div id="alert1" class="alert alert-warning d-none"
+		style="text-align: center;" role="alert">C'è stato un problema!
+		Le password non coincidono, riprova.</div>
+	<%
+		}
+	%>
 
 	<!-- FORM PASSWORD -->
 	<!-- <form method="post">
@@ -102,30 +115,35 @@
 	</form> -->
 
 	<%
-		Boolean cartaModificata=(Boolean)request.getSession().getAttribute("cartaModificata");
-		if(cartaModificata!=null){
+		Boolean cartaModificata = (Boolean) request.getSession().getAttribute("cartaModificata");
+		if (cartaModificata != null) {
 			request.getSession().removeAttribute("cartaModificata");
 	%>
-		<div id="alert1" class="alert alert-success d-none" style="text-align: center;"
-		role="alert">Complimenti! La tua carta è stata modificata con successo!</div>
-	<% } %>
+	<div id="alert1" class="alert alert-success d-none"
+		style="text-align: center;" role="alert">Complimenti! La tua
+		carta è stata modificata con successo!</div>
+	<%
+		}
+	%>
 
 	<%
-		Boolean cartaNonModificata=(Boolean)request.getSession().getAttribute("cartaNonModificata");
-		if(cartaNonModificata!=null){
+		Boolean cartaNonModificata = (Boolean) request.getSession().getAttribute("cartaNonModificata");
+		if (cartaNonModificata != null) {
 			request.getSession().removeAttribute("cartaNonModificata");
 	%>
-		<div id="alert1" class="alert alert-warning d-none" style="text-align: center;"
-		role="alert">C'è stato un problema! La carta inserita è già in uso, riprova.</div>
-	<% } %>
+	<div id="alert1" class="alert alert-warning d-none"
+		style="text-align: center;" role="alert">C'è stato un problema!
+		La carta inserita è già in uso, riprova.</div>
+	<%
+		}
+	%>
 
 	<!-- INSERIRE FORM CARTA
 		OGNI LABEL AVRA' NOME UGUALE AL CAMPO NEL DATABASE, cioe name="nomeTabella"
 	 -->
 
-<div id="alert" class="" style="text-align: center;"
-		role="alert"></div>
-	
+	<div id="alert" class="" style="text-align: center;" role="alert"></div>
+
 	<div class="container-fluid">
 
 		<div class="row ">
@@ -133,14 +151,15 @@
 				class="profile-img " src="Images/Image.jpg" alt="FAIL" width="220"
 				height="220">
 			<div class="utente-tab  mx-auto w-75">
-				<%AccountBean account1 = (AccountBean)request.getSession().getAttribute("account");
-            %>
+				<%
+					AccountBean account1 = (AccountBean) request.getSession().getAttribute("account");
+				%>
 				<div class="row">
 					<div class="col-4">
 						<div class="card mb-3 mx-auto">
 							<div class="card-utente card-header">Nome:</div>
 							<div class="card-b-utente card-body ">
-								<h5 class="card-title"><%=account1.getNome() %></h5>
+								<h5 class="card-title"><%=account1.getNome()%></h5>
 							</div>
 						</div>
 					</div>
@@ -148,7 +167,7 @@
 						<div class="card mb-3 mx-auto">
 							<div class="card-utente card-header">Cognome:</div>
 							<div class="card-b-utente card-body ">
-								<h5 class="card-title"><%=account1.getCognome() %></h5>
+								<h5 class="card-title"><%=account1.getCognome()%></h5>
 							</div>
 						</div>
 					</div>
@@ -156,7 +175,7 @@
 						<div class="card mb-3 mx-auto">
 							<div class="card-utente card-header">E-mail:</div>
 							<div class="card-b-utente card-body ">
-								<h5 class="card-title"><%=account1.getMail() %></h5>
+								<h5 class="card-title"><%=account1.getMail()%></h5>
 							</div>
 						</div>
 					</div>
@@ -168,26 +187,29 @@
 				<div class="row">
 					<div class="col-4">
 
-						<a id="btn-utente" class="email btn btn-primary btn-lg btn-block"> Modifica E-mail </a>
-							
+						<a id="btn-utente" class="email btn btn-primary btn-lg btn-block">
+							Modifica E-mail </a>
+
 						<div class="emailToogle">
 							<form name="changeMailForm" id="changeMailForm"
 								onsubmit="return validateMail(changeMailForm)">
-								<div class="card card-body" style="margin-bottom: 10px; text-align: center;">
-								<div class="form-group">
-									<input type="email" name="newMail" class="form-control"
-										
-										placeholder="Inserisci la tua nuova e-mail"></div>
-										<button type="submit" class="btn btn-info btn-lg btn-block"
-									formaction="http://localhost:8080/YouLearn/CambiaMailServlet">Conferma</button>
+								<div class="card card-body"
+									style="margin-bottom: 10px; text-align: center;">
+									<div class="form-group">
+										<input type="email" name="newMail" class="form-control"
+											placeholder="Inserisci la tua nuova e-mail">
+									</div>
+									<button type="submit"  onclick="return confirm('Sei sicuro di voler continuare?\nLa tua email verrà moodificata!')" class="btn btn-info btn-lg btn-block"
+										formaction="http://localhost:8080/YouLearn/CambiaMailServlet">Conferma</button>
 								</div>
-								
+
 							</form>
 						</div>
 					</div>
 					<div class="col-4">
 
-						<a id="btn-utente" class="password btn btn-primary btn-lg btn-block"
+						<a id="btn-utente"
+							class="password btn btn-primary btn-lg btn-block"
 							data-toggle="collapse" href="#collapseModPass" role="button"
 							aria-expanded="false" aria-controls="collapseModPass">
 							Modifica Password</a>
@@ -209,7 +231,7 @@
 											placeholder="Conferma tua nuova password">
 									</div>
 
-									<button type="submit" class="btn btn-info btn-lg btn-block"
+									<button type="submit" onclick="return confirm('Sei sicuro di voler continuare?\nLa tua password verrà moodificata!')" class="btn btn-info btn-lg btn-block"
 										formaction="http://localhost:8080/YouLearn/CambiaPassServlet">Conferma</button>
 								</form>
 							</div>
@@ -272,16 +294,20 @@
 										/
 										<div class="dropdown  d-inline">
 											<select class="form-control1 d-inline" name="scadenzaAnno">
-												<%for(int i=2019; i<=2040;i++){ %>
-												<option value=<%=i %>><%=i %></option>
-												<%} %>
+												<%
+													for (int i = 2019; i <= 2040; i++) {
+												%>
+												<option value=<%=i%>><%=i%></option>
+												<%
+													}
+												%>
 											</select>
 										</div>
 
 									</div>
 
 								</div>
-								<button type="submit" class="btn btn-info btn-lg btn-block"
+								<button type="submit" onclick="return confirm('Sei sicuro di voler continuare?\nLa tua carta verrà moodificata!')"class="btn btn-info btn-lg btn-block"
 									formaction="#">Conferma</button>
 							</form>
 						</div>
@@ -331,16 +357,16 @@
 		<div class="corsi-seguiti card w-75 mx-auto">
 			<h5 class="card-h-corsi card-header">CORSI SEGUITI</h5>
 			<%
-                         	AccountBean a=(AccountBean)request.getSession().getAttribute("account");
-                         	LinkedList<IscrizioneBean> corsi=(LinkedList<IscrizioneBean>) a.getIscrizioni();
-                    		if(corsi.isEmpty()){
-                         %>
+				AccountBean a = (AccountBean) request.getSession().getAttribute("account");
+				LinkedList<IscrizioneBean> corsi = (LinkedList<IscrizioneBean>) a.getIscrizioni();
+				if (corsi.isEmpty()) {
+			%>
 			<div class="card-b-corsi card-body">Non ci sono corsi
 				seguiti....Corri ad iscriverti!</div>
-			<%}
-                    		else{
-                    			for(IscrizioneBean i: corsi){
-                    		%>
+			<%
+				} else {
+					for (IscrizioneBean i : corsi) {
+			%>
 
 			<div class="card-b-corsi card-body">
 				<a
@@ -359,13 +385,15 @@
 
 				<a
 					href="http://localhost:8080/YouLearn/Corso.jsp?from=iscrizioni&idCorso=<%=i.getCorso().getIdCorso()%>"><button
-						style="margin-top:48px;" class="float-right btn btn-success btn-lg ">Vai al Corso</button></a>
+						style="margin-top: 48px;"
+						class="float-right btn btn-success btn-lg ">Vai al Corso</button></a>
 
-				</div>
-				<%
-					}}
-				%>
-			
+			</div>
+			<%
+				}
+				}
+			%>
+
 		</div>
 		<!-- INIZIO CORSI TENUTI -->
 
@@ -382,15 +410,15 @@
 			</div>
 
 			<%
-                         	LinkedList<CorsoBean> corsiTenuti=(LinkedList<CorsoBean>) a.getCorsiTenuti();
-                    		if(corsiTenuti.isEmpty()){
-                         %>
+				LinkedList<CorsoBean> corsiTenuti = (LinkedList<CorsoBean>) a.getCorsiTenuti();
+				if (corsiTenuti.isEmpty()) {
+			%>
 			<div class="card-b-corsi card-body">Non ci sono corsi
 				Tenuti....M'occ a mammt</div>
-			<%}
-                    		else{
-                    			for(CorsoBean i: corsiTenuti){
-                    		%>
+			<%
+				} else {
+					for (CorsoBean i : corsiTenuti) {
+			%>
 			<div class="card-b-corsi card-body">
 				<form method="post">
 					<a
@@ -401,25 +429,27 @@
 					<ul class="informazioni-corso rounded float-left">
 						<li>NOME CORSO: <a
 							href="http://localhost:8080/YouLearn/Corso.jsp?from=tenuti&idCorso=<%=i.getIdCorso()%>"><%=i.getNome()%></a></li>
-						<li>NUMERO ISCRITTI: <%=i.getnIscritti() %></li>
-						<li>SCADENZA ISCRIZIONI: <%=i.getDataFine() %></li>
-						<li>STATO: <%=i.getStato() %></li>
+						<li>NUMERO ISCRITTI: <%=i.getnIscritti()%></li>
+						<li>SCADENZA ISCRIZIONI: <%=i.getDataFine()%></li>
+						<li>STATO: <%=i.getStato()%></li>
 
 					</ul>
-					<%if(i.getStato().equals(Stato.Completamento)){
-                       	%>
+<!--  -->
+					<%
+						if (i.getStato().equals(Stato.Completamento)) {
+					%>
 					<div class="float-lg-right ">
-						<button type="submit"
-							formaction="http://localhost:8080/YouLearn/ConfermaCorsoServlet?idCorso=<%=i.getIdCorso() %>"
-							class="btn btn-success btn-lg ">Conferma</button>
+						<button type="submit" onclick="return confirm('Sei sicuro di voler continuare?\nIl corso verrà assegnato ad un Supervisore!')"
+							formaction="http://localhost:8080/YouLearn/ConfermaCorsoServlet?idCorso=<%=i.getIdCorso()%>"
+							class="btn btn-success btn-lg conferma">Conferma</button>
 						<button type="submit"
 							formaction="http://localhost:8080/YouLearn/SettingCorso.jsp?idCorso=<%=i.getIdCorso()%>"
 							class="btn btn-outline-secondary btn-lg ">Modifica</button>
 						<button type="submit" class="btn btn-outline-secondary btn-lg  ">Gestisci
 							lezioni</button>
-						<button type="submit"
+						<button type="submit" onclick="return confirm('Sei sicuro di voler continuare?\nIl corso verrà cancellato e perderai tutti i dati!')"
 							formaction="http://localhost:8080/YouLearn/CancCorsoServlet?idCorso=<%=i.getIdCorso()%>"
-							class="btn btn-danger btn-lg  ">Elimina Corso</button>
+							class="btn btn-danger btn-lg elimina">Elimina Corso</button>
 					</div>
 
 					<%
@@ -438,13 +468,22 @@
 
 	</div>
 	<!-- FINE -->
+
+	<%@ include file="Footer.jsp"%>
+	<script src="JS/ValidationHome.js"></script>
+	<script src="JS/alertifyjs/alertify.min.js"></script>
 	
-	 <%@ include file="Footer.jsp" %>
-	 <script src="JS/ValidationHome.js"></script>
-	 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+		integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+		integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+		crossorigin="anonymous"></script>
+
 </body>
 
 </html>
