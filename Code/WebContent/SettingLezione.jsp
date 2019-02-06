@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+<%@page import="bean.*" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,9 +19,27 @@
 </head>
 <body>
 
-
-
 	<%@ include file="Navbar.jsp"%>
+	
+	<!-- BLOCCARE LA POSSIBILITA' DI MODIFICARE L'ORDINE DURANTE E DOPO INSERIMENTO -->
+
+	<%
+	int idCorso=0;
+	CorsoBean corso=null;
+	if(request.getParameter("idCorso")!=null){
+		idCorso=Integer.parseInt(request.getParameter("idCorso"));
+		corso=account.getCorsoTenuto(idCorso);
+	}
+	
+	//Se ho inserito delle lezioni o modificato l'ordine,ricarico
+	String updated=(String)request.getSession().getAttribute("updated");
+	if(updated!=null){
+		response.sendRedirect(request.getContextPath()+"\\GetLezioniServlet");
+		return;
+	}
+
+		
+%>
 
 	<div class="card w-50 mx-auto">
 		<div class="card-header text-left" style="font-size: 30px;">

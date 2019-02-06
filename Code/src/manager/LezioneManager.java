@@ -140,19 +140,19 @@ public class LezioneManager {
 	 * @throws SQLException
 	 * @throws IOException
 	 */
-	public void insLezioniMultiple(ArrayList<LezioneBean> lezioni,ArrayList<Part> files) throws DatiErratiException, NotWellFormattedException, SQLException, IOException {
-		if(lezioni==null || files==null || lezioni.size()!=files.size())
-									throw new DatiErratiException("Non c'� un file per ogni lezione");
-		/**Inizio le modifiche */
-		corsoManager= new CorsoManager();
-		int i=0;
-		Connection c=DriverManagerConnectionPool.getConnection();
-		c.setAutoCommit(false);
-		for(Part file: files) {
-			insLezione(lezioni.get(i++),file,c);
-		}
-		c.close();
-	}
+//	public void insLezioniMultiple(ArrayList<LezioneBean> lezioni,ArrayList<Part> files) throws DatiErratiException, NotWellFormattedException, SQLException, IOException {
+//		if(lezioni==null || files==null || lezioni.size()!=files.size())
+//									throw new DatiErratiException("Non c'� un file per ogni lezione");
+//		/**Inizio le modifiche */
+//		corsoManager= new CorsoManager();
+//		int i=0;
+//		Connection c=DriverManagerConnectionPool.getConnection();
+//		c.setAutoCommit(false);
+//		for(Part file: files) {
+//			insLezione(lezioni.get(i++),file,c);
+//		}
+//		c.close();
+//	}
 	
 	/**
 	 * Inserisce una lezione nel database e la salva in un file
@@ -164,7 +164,7 @@ public class LezioneManager {
 	 * @throws DatiErratiException la lezione esiste gi� o non � collegata al corso giusto
 	 * @throws IOException Errore nella scrittura del file su disco
 	 */
-	private void insLezione(LezioneBean lezione,Part file,Connection c) throws NotWellFormattedException, SQLException, DatiErratiException, IOException {
+	 public void insLezione(LezioneBean lezione,Part file) throws NotWellFormattedException, SQLException, DatiErratiException, IOException {
 		if(lezione.getIdLezione()!=null || lezione.getCorso().getIdCorso()==null ||
 									!corsoManager.checkCorso(lezione.getCorso().getIdCorso())) 
 			throw new DatiErratiException("la lezione esiste gi� o il corso non esiste");
@@ -172,9 +172,10 @@ public class LezioneManager {
 										throw new NotWellFormattedException("la lezione non � ben formattata");
 		
 		PreparedStatement statement=null;
+		Connection c = null;
 		String sql="Insert into Lezione (nome,filepath,corsoIdCorso) values (?,?,?)";
 		try{
-			
+			c=DriverManagerConnectionPool.getConnection();
 			Path path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
 					+ "YouLearn\\Code\\WebContent\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni");
 			if(!Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS))
@@ -199,10 +200,16 @@ public class LezioneManager {
 			//In ogni caso la scrittura nel db viene eliminata
 			c.rollback();
 		}finally {
-			if(statement!=null)
-				statement.close();
+			try{
+				if(statement!=null)
+					statement.close();
+			}finally {
+				c.close();
+			}	
 		}
 	}
+	 
+	    
 	
 	/**
 	 * Eimina una lezione dal Db e dal FileSystem 
