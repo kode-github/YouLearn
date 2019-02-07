@@ -1,3 +1,4 @@
+
 function modify(){
 	var nome = $("#nome").text();
 	if($("#b").text()=="Modifica..."){
@@ -65,7 +66,7 @@ var str="";
 var firstStr="";
 var lastStr="";
 var orderList = jQuery.grep($(".collection").sortable('toArray'), function (n, i) {
-	firstStr= firstStr + n+"-"+i + ","; 
+	firstStr= firstStr + n+"-"+(i+1) + ","; 
 
 	return (n !== "" && n != null);
 });
@@ -76,12 +77,12 @@ function sendOrderToServer() {
 	var items = $(".collection").sortable('toArray');
 	var itemList = jQuery.grep(items, function (n, i) {
 
-		lastStr= lastStr+ n+"-"+i + ","; 
+		lastStr= lastStr+ n+"-"+(i+1) + ","; 
 
 		return (n !== "" && n != null);
 	});
 
-	console.log(firstStr+" "+ lastStr);
+	console.log("vecchio: "+firstStr+" nuovo:"+ lastStr);
 	if(firstStr == lastStr) {
 		$("#conferma").fadeOut().removeClass("d-block");
 		$("#conferma").addClass("d-none");
@@ -106,19 +107,41 @@ $('.b-up').click(function () {
 });
 
 
+	
+	var getUrlParameter = function getUrlParameter(sParam) {
+	    var sPageURL = window.location.search.substring(1),
+	        sURLVariables = sPageURL.split('&'),
+	        sParameterName,
+	        i;
+
+	    for (i = 0; i < sURLVariables.length; i++) {
+	        sParameterName = sURLVariables[i].split('=');
+
+	        if (sParameterName[0] === sParam) {
+	            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+	        }
+	    }
+	};	
 
 
+	$( document ).ajaxComplete(function() {
+		  $( ".log" ).text( "Triggered ajaxComplete handler." );
+		  window.location.reload();
+		});
+	
 
 
 function UploadResult()
 {
 	console.log(lastStr);
 	var coppie = lastStr.substring(0, lastStr.length-1);
-
+	var idCorso= getUrlParameter("idCorso");
+	console.log("idcorso: "+ idCorso)
 	$.ajax({
-		type: "GET",
-		url: "http://localhost:8080/YouLearn/ModificaOrdineServlet?",
-		data:{ "coppie": coppie}
+		type: "POST",
+		url: "http://localhost:8080/YouLearn/ModificaOrdineServlet",
+		data:{ "coppie": coppie,
+				"idCorso": idCorso	}
 	});
 }
 

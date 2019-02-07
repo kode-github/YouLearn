@@ -129,6 +129,8 @@ public class AccountManager {
 			preparedStatement.setString(1, newMail);
 			preparedStatement.setString(2, email);
 			preparedStatement.executeUpdate();
+			System.out.println("Modfica mail: "+preparedStatement.toString());
+			connection.commit();
 		} finally {
 			try {
 				if (preparedStatement != null)

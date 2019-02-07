@@ -48,8 +48,9 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
 
                 <form class="form-inline mx-auto">
-                        <input class="form-control mr-sm-2 mx-auto" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success my-2 my-sm-0 mx-auto" type="submit">Search</button>
+                        <input class="form-control mr-sm-2 mx-auto" type="search" name="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0 mx-auto" type="submit"
+                        formaction="http://localhost:8080/YouLearn/SearchCorso" >Search</button>
                     </form>
 
             <ul class="navbar-nav" style="float:right">

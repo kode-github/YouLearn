@@ -38,9 +38,9 @@ public class GetLezioniServlet extends HttpServlet {
 			AccountBean account= (AccountBean)session.getAttribute("account");
 			int idCorso=Integer.parseInt(request.getParameter("idCorso"));
 			CorsoBean corso=account.getCorsoTenuto(idCorso);
+			Collection<LezioneBean> lezione=manager.retrieveLezioniByCorso(corso);
 			account.removeCorsoTenuto(corso);
 			corso.setLezioni(new LinkedList<LezioneBean>()); //Annullo le lezioni che contiene
-			Collection<LezioneBean> lezione=manager.retrieveLezioniByCorso(corso);
 			corso.setLezioni(lezione);
 			account.AddCorsoTenuto(corso);
 			request.getSession().removeAttribute("updated");

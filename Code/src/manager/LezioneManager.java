@@ -50,6 +50,7 @@ public class LezioneManager {
 	 * @throws NoPermissionException 
 	 */
 	public void modificaOrdine(int corso,String coppie) throws SQLException, DatiErratiException, NoPermissionException, NotFoundException, NotWellFormattedException {
+		corsoManager=new CorsoManager();
 		//Recupera le lezioni di un corso
 		LinkedList<LezioneBean> lezione=(LinkedList<LezioneBean>)corsoManager.doRetrieveByKey(corso).getLezioni();
 		
@@ -78,6 +79,11 @@ public class LezioneManager {
     			return 0;
     		}
 		});
+    	
+    	//STAMPIAMO I NUMERI LEZIONE
+    	for(int i=0;i<lezione.size();i++)
+    		System.out.println("idLezione: "+lezione.get(i).getIdLezione()+" nuovo numero: "+map.get(lezione.get(i).getIdLezione())+"\n");
+    	
     	for(int i=0;i<numeriLezione.size();i++) {
     		if(numeriLezione.get(i)!=i+1) throw new DatiErratiException("I numeri lezione non sono consecutivi");
     	}
@@ -97,8 +103,10 @@ public class LezioneManager {
 			for(LezioneBean l: lezione) 
 				changeNumeroLezione(l, c);
 			c.commit();
+			System.out.println("Sono dopo il commit");
 		}catch(SQLException | DatiErratiException  e) {
 			c.rollback();
+			e.printStackTrace();
 		}finally {
 			c.close();
 		}
@@ -116,11 +124,10 @@ public class LezioneManager {
 		PreparedStatement statement=null;
 		String sql="Update Lezione set numeroLezione=? where idLezione=?";
 		try {
-			c=DriverManagerConnectionPool.getConnection();
 			statement=c.prepareStatement(sql);
 			statement.setInt(1, lezione.getNumeroLezione());
 			statement.setInt(2, lezione.getIdLezione());
-			
+			System.out.println("Modifica numero lezione: "+statement.toString());
 			int res=statement.executeUpdate();
 			if(res==0) throw new DatiErratiException("non esiste una lezione con questo codice oppure non appartiene a questo corso");
 		}finally {
@@ -165,7 +172,8 @@ public class LezioneManager {
 	 * @throws IOException Errore nella scrittura del file su disco
 	 */
 	 public void insLezione(LezioneBean lezione,Part file) throws NotWellFormattedException, SQLException, DatiErratiException, IOException {
-		if(lezione.getIdLezione()!=null || lezione.getCorso().getIdCorso()==null ||
+		corsoManager=new CorsoManager();
+		 if(lezione.getIdLezione()!=null || lezione.getCorso().getIdCorso()==null ||
 									!corsoManager.checkCorso(lezione.getCorso().getIdCorso())) 
 			throw new DatiErratiException("la lezione esiste giï¿½ o il corso non esiste");
 		if(!lezioneIsWellFormatted(lezione) )  
@@ -176,19 +184,21 @@ public class LezioneManager {
 		String sql="Insert into Lezione (nome,filepath,corsoIdCorso) values (?,?,?)";
 		try{
 			c=DriverManagerConnectionPool.getConnection();
+			c.setAutoCommit(false);
 			Path path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
 					+ "YouLearn\\Code\\WebContent\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni");
 			if(!Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS))
 					Files.createDirectories(path); 
 			String filename=UUID.randomUUID().toString();
-			String type=file.getSubmittedFileName().substring(file.getSubmittedFileName().indexOf('.'));
+			String type=file.getSubmittedFileName().substring(file.getSubmittedFileName().lastIndexOf('.'));
+			System.out.println("Estensione: "+type+"\n");
 			if(!type.equals(".mp4")) throw new DatiErratiException("Il tipo del file non è .mp4");
 			path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
-					+ "YouLearn\\Code\\WebContent\\\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni"+File.separator+
+					+ "YouLearn\\Code\\WebContent\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni"+File.separator+
 																				filename+type);
 			statement=c.prepareStatement(sql);
 			statement.setString(1, lezione.getNome());
-			statement.setString(2, path.toString());
+			statement.setString(2, filename+type);
 			statement.setInt(3, lezione.getCorso().getIdCorso());
 			statement.executeUpdate(); //inserisce nel db
 			
@@ -196,6 +206,7 @@ public class LezioneManager {
 			
 			c.commit(); //conferma l'inserimento nel db
 		}catch(SQLException | IOException e) {
+			e.printStackTrace();
 			//C'ï¿½ stato un errore nel salvataggio del file o nell'inserimento
 			//In ogni caso la scrittura nel db viene eliminata
 			c.rollback();
@@ -243,9 +254,12 @@ public class LezioneManager {
 			Files.delete(path);
 			
 			connection.commit();
-		} catch (IOException | SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			connection.rollback();
+		} catch (IOException e) {
+			connection.commit();
+			e.printStackTrace();
 		} finally {
 			try {
 				if (preparedStatement != null)
@@ -558,13 +572,13 @@ public class LezioneManager {
 	 * @return
 	 */
 	public boolean lezioneIsWellFormatted(LezioneBean lezione) {
-//		corsoManager=new CorsoManager();
-//		if(lezione.getIdLezione()!=null)
-//			if(lezione.getFilePath()==null || !lezione.getFilePath().matches("^[a-zA-Z0-9\\.-]{10,2048}"))
-//				return false;
-//		return lezione.getNome()!=null && /*lezione.getNome().matches("")*/ 
-//				lezione.getNumeroLezione()>=0 && lezione.getCorso()!=null && corsoManager.isWellFormatted(lezione.getCorso());
-		return true;
+		corsoManager=new CorsoManager();
+		if(lezione.getIdLezione()!=null)
+			if(lezione.getFilePath()==null || !lezione.getFilePath().matches("^[a-zA-Z0-9\\.-]{10,2048}") || lezione.getNumeroLezione()<=0 
+			|| lezione.getVisualizzazioni()<0)
+				return false;
+		return lezione.getNome()!=null && lezione.getNome().matches("^[a-zA-Z0-9\\s:-]{5,40}") &&
+				  lezione.getCorso()!=null;
 				
 				
 	}

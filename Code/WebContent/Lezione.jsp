@@ -29,23 +29,28 @@
 </head>
 <body>
 
+	<%@include file="Navbar.jsp" %>
+
 	<%
 		String idLezione=request.getParameter("idLezione");
-		if(idLezione==null || !idLezione.matches("^[0-9]+")){
+		if(idLezione==null ){
 			//O una pagina di errore
 			response.sendRedirect(request.getContextPath()+"/Welcome.jsp");
 			return;
 		}
+		
 		CorsoBean corso=(CorsoBean) request.getSession().getAttribute("corso");
 		if(corso==null){
 			//O pagina di errore?
-			response.sendRedirect(request.getContextPath()+"//Welcome.jsp");
+			response.sendRedirect(request.getContextPath()+"/Welcome.jsp");
 			return;
 		}
 		LezioneBean lezione=(LezioneBean) request.getSession().getAttribute("lezione");
 		if(lezione==null){
-			response.sendRedirect(request.getContextPath()+"//VisualLezioneServlet?idLezione="+idLezione);
+			response.sendRedirect(request.getContextPath()+"/VisualLezioneServlet?idLezione="+idLezione);
 			return;
+		}else{
+			request.getSession().removeAttribute("lezione");
 		}
 		//Ora abbiamo il corso da cui proviene la lezione e la lezione
 	
@@ -54,7 +59,7 @@
 		<video id="my_video_1" style="width: 100%; height: 100%;"
 			controls="controls" width="100%" height="100%" preload="auto"
 			poster="Images/black.jpg">
-			<source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/mp4/BigBuckBunny.mp4" type='video/mp4'>
+			<source src="Resources\<%=corso.getIdCorso()%>\Lezioni\<%=lezione.getFilePath()%>" type='video/mp4'>
 		</video>
 	</div>
 

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <%@page import="bean.*,java.util.*" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,41 +31,28 @@
 
 	<%@ include file="Navbar.jsp" %>
 
+<%
+	Collection<CorsoBean> corsi=(Collection<CorsoBean>) request.getSession().getAttribute("searched");
+	if(corsi==null){
+		//NON CI SONO CORSI
+	}
+%>
+		
         <div class="card mx-auto w-50">
                 <h5 class="card-header">LISTA CORSI</h5>
+                <% for(CorsoBean corso: corsi){ %>
                 <div class="card-body">
-                    <img class="rounded float-left" src="../Image.jpg" alt="FAIL" srcset="" width="150" height="150">
+                    <img class="rounded float-left" src="Resources\<%=corso.getIdCorso()%>\<%=corso.getCopertina()%>" 
+                    		alt="FAIL" srcset="" width="150" height="150">
                     <ul class="informazioni-corso rounded float-left">
-                        <li>NOME CORSO:</li>
-                        <li>NUMERO ISCRITTI:</li>
-                        <li>SCADENZA ISCRIZIONI:</li>
-
-
+                        <li><a href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=corso.getIdCorso()%>"><%=corso.getNome() %></a></li>
+                        <li>Numero lezioni: <%=corso.getLezioni().size() %></li>
+                        <li>Data Scadenza: <%=corso.getDataFine() %></li>
                     </ul>
                     
                 </div>
-                <div class="card-body">
-                        <img class="rounded float-left" src="../Image.jpg" alt="FAIL" srcset="" width="150" height="150">
-                        <ul class="informazioni-corso rounded float-left">
-                            <li>NOME CORSO:</li>
-                            <li>NUMERO ISCRITTI:</li>
-                            <li>SCADENZA ISCRIZIONI:</li>
-    
-    
-                        </ul>
-                    
-                </div>
-                <div class="card-body">
-                        <img class="rounded float-left" src="../Image.jpg" alt="FAIL" srcset="" width="150" height="150">
-                        <ul class="informazioni-corso rounded float-left">
-                            <li>NOME CORSO:</li>
-                            <li>NUMERO ISCRITTI:</li>
-                            <li>SCADENZA ISCRIZIONI:</li>
-    
-    
-                        </ul>
-                    
-                </div>
+                <%} %>
+                
             </div>
     
 </body>

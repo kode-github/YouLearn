@@ -45,6 +45,8 @@ public class InsLezioneServlet extends HttpServlet {
 		    	CorsoBean corso=account.getCorsoTenuto(idCorso);
 		    	System.out.println(corso.getIdCorso()+"\n");
 		    	String filename=getFilename(file);		      
+				System.out.println("idCorso in insLezione: "+idCorso+"\n id dell'oggetto corso: "+corso.getIdCorso());
+
 		    	
 		        LezioneBean lezione = new LezioneBean();
 		        lezione.setNome(nome);

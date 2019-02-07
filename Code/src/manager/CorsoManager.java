@@ -113,12 +113,13 @@ public class CorsoManager {
 		Collection<CorsoBean> collection=new LinkedList<>();
 		accountManager=new AccountManager();
 		
-		String sql="Select * from corso where nome like ?";
+		String sql="Select * from corso where (nome like ? OR categoria=?) AND stato='Attivo' ";
 		
 		try {
 			connection=DriverManagerConnectionPool.getConnection();
 			statement=connection.prepareStatement(sql);
 			statement.setString(1,"%" + search + "%");
+			statement.setString(2, search);
 			ResultSet rs=statement.executeQuery();
 			while(rs.next()) {
 				CorsoBean corso=new CorsoBean();
@@ -496,8 +497,9 @@ public class CorsoManager {
 				 corso.setCategoria(Categoria.valueOf(rs.getString("Categoria")));
 				 corso.setStato(Stato.valueOf(rs.getString("stato")));
 				 corso.setSupervisore(account);
-				 lezioneManager.retrieveLezioniByCorso(corso);
 				 corso.setDocente(accountManager.doRetrieveByKey(rs.getString("accountCreatore")));
+
+				 lezioneManager.retrieveLezioniByCorso(corso);
 				 collection.add(corso);
 			}
 			account.setCorsiSupervisionati(collection);

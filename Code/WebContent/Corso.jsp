@@ -1,5 +1,5 @@
-<%@page import="bean.IscrizioneBean"%>
-<%@page import="bean.CorsoBean,bean.CorsoBean.*"%>
+<%@page import="bean.*"%>
+<%@page import="bean.CorsoBean.*"%>
 <%@page import="java.util.LinkedList"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -71,7 +71,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div id="" class="div-container col-lg-6" style="text-align: center;">
-				<img id="img-corso" src="Images/Image.jpg" alt="" srcset=""
+				<img id="img-corso" src="Resources\<%=corso.getIdCorso()%>\<%=corso.getCopertina()%>" alt="" srcset=""
 					width="250px" height="250px">
 			</div>
 			<div id="" class="div-container col-lg-6"
@@ -111,26 +111,36 @@
 				</table>
 			</div>
 		</div>
+		
+		<%if(!ruolo.equals("NonIscritto")){ %>
+		
 		<div style="margin-top: 50px;" class="card w-50 mx-auto">
 			<h5 class="card-h-corsi card-header">LEZIONI</h5>
-
-
-			<!-- <div class="card-b-corsi card-body">Non ci sono corsi
-			Tenuti....M'occ a mammt</div>  -->
-
+			<% 
+			for(LezioneBean e: corso.getLezioni()){
+				%>
+			}
 			<div class="mx-auto card-b-corsi card-body">
 				<a href="http://localhost/YouLearn/Corso.jsp?idCorso="><img
 					class="img-corsi-attesa rounded float-left" src="Images/Image.jpg"
 					alt="FAIL" width="170" height="170"></a>
 				<ul class="informazioni-corso rounded float-left">
-					<li>NOME LEZIONE <a href="#"></a></li>
-					<li>VIEWS:</li>
+					<li><a href="http://localhost:8080/YouLearn/Lezione.jsp?idLezione=<%=e.getIdLezione()%>"><%=e.getNome() %></a></li>
+					<li><%=e.getVisualizzazioni() %></li>
 
 
 				</ul>
 			</div>
+			<%} 
+			
+			}
+			else{
+			%>
+				Form
+				<Button ></Button>
 
 
+			<%} %>
 		</div>
 	</div>
 

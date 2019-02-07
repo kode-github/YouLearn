@@ -38,7 +38,8 @@ public class VisualLezioneServlet extends HttpServlet {
 				int idLezione=Integer.parseInt(request.getParameter("idLezione"));
 				LezioneBean lezione=corso.getLezione(idLezione);
 				manager.retrieveCommentiByLezione(lezione);
-				response.sendRedirect(request.getContextPath()+"//Lezione.jsp?idLezione="+idLezione);
+				request.getSession().setAttribute("lezione", lezione);
+				response.sendRedirect(request.getContextPath()+"/Lezione.jsp?idLezione="+idLezione);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

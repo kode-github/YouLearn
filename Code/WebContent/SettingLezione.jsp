@@ -1,3 +1,4 @@
+<%@page import="java.util.Comparator"%>
 <%@page import="java.util.LinkedList"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
@@ -35,11 +36,10 @@
 		//Se ho inserito delle lezioni o modificato l'ordine,ricarico
 		String updated = (String) request.getSession().getAttribute("updated");
 		if (updated != null) {
-			response.sendRedirect(request.getContextPath() + "\\GetLezioniServlet?idCorso="+idCorso);
+			response.sendRedirect(request.getContextPath() + "\\GetLezioniServlet?idCorso=" + idCorso);
 			return;
 		}
 		corso = account.getCorsoTenuto(idCorso);
-
 	%>
 
 	<div class="card w-50 mx-auto">
@@ -54,50 +54,66 @@
 			</h3>
 		</div>
 
-		<%
-			LinkedList<LezioneBean> lezioni = (LinkedList<LezioneBean>) corso.getLezioni();
-		%>
 
-
-
-		<%
-			if (lezioni.isEmpty()) {
-		%>
-
-		<div class="card-body item">
-			<div class="float-left num"></div>
-			<div class="float-left">
-				<p>Non ci sono lezioni in questo corso, aggiungile!</p>
-			</div>
-		</div>
-
-
-		<%
-			} else {
-
-				for (LezioneBean l : lezioni) {
-		%>
+			<%
+				LinkedList<LezioneBean> lezioni = (LinkedList<LezioneBean>) corso.getLezioni();
+				lezioni.sort(new Comparator<LezioneBean>(){
+					public int compare(LezioneBean b1,LezioneBean b2){
+						if(b1.getNumeroLezione()>b2.getNumeroLezione())
+							return 1;
+						if(b1.getNumeroLezione()<b2.getNumeroLezione())
+							return -1;
+						return 0;
+					}
+				});
+			%>
 
 		<div class="collection">
-			<div class="card-body item" id=<%=l.getIdLezione()%>>
-				<div class="float-left num"><%=l.getNumeroLezione()%></div>
+
+
+			<%
+				if (lezioni.isEmpty()) {
+			%>
+
+			<div class="card-body item">
+				<div class="float-left num"></div>
 				<div class="float-left">
-					<ul id="list-lezione">
-						<li id="nome" class="nome-lezione li-lezione"><%=l.getNome()%></li>
-						<li id="file-lezione" class="li-lezione"><%=l.getFilePath()%></li>
-					</ul>
-				</div>
-				<div class="float-right	 Commands">
-					<button id="b-UD" class=" btn btn-outline-secondary b-up"
-						value='up'>
-						<i class="fas fa-arrow-up"></i>
-					</button>
-					<button style="margin-top: 5px;" id="b-UD"
-						class="btn btn-outline-secondary b-up" value='down'>
-						<i class="fas fa-arrow-down"></i>
-					</button>
+					<p>Non ci sono lezioni in questo corso, aggiungile!</p>
 				</div>
 			</div>
+
+
+			<%
+				} else {
+
+					for (LezioneBean l : lezioni) {
+			%>
+
+			  
+				<div class="card-body item" id=<%=l.getIdLezione()%>>
+				<form method="post"> 
+					<div class="float-left num"><%=l.getNumeroLezione()%></div>
+					<div class="float-left">
+						<ul id="list-lezione">
+							<li id="nome" class="nome-lezione li-lezione"><%=l.getNome()%></li>
+							<li id="file-lezione" class="li-lezione"><%=l.getFilePath()%></li>
+						</ul>
+						 <button type="submit"
+							formaction="http://localhost:8080/YouLearn/CancLezioneServelt?idLezione=<%=l.getIdLezione()%>&idCorso=<%=l.getCorso().getIdCorso()%>">Cancella</button>
+					</div>
+					<div class="float-right	 Commands">
+						<button id="b-UD" type="button" class=" btn btn-outline-secondary b-up"
+							value='up'>
+							<i class="fas fa-arrow-up"></i>
+						</button>
+						<button style="margin-top: 5px;" id="b-UD" type="button"
+							class="btn btn-outline-secondary b-up" value='down'>
+							<i class="fas fa-arrow-down"></i>
+						</button>
+					</div>
+					</form>  
+				</div>
+			 
 			<%
 				}
 				}

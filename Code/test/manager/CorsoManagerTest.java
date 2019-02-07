@@ -286,7 +286,7 @@ public class CorsoManagerTest {
 
 	@Test
 	public void testIsWellFormatted() throws NoPermissionException, SQLException, NotFoundException, NotWellFormattedException {
-		assertEquals(managerCorso.isWellFormatted(managerCorso.doRetrieveByKey(1)), true);
+		assertEquals(managerCorso.isWellFormatted(managerCorso.doRetrieveByKey(26)), true);
 	}
 
 }

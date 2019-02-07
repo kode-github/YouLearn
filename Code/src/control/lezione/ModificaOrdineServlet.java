@@ -41,10 +41,12 @@ public class ModificaOrdineServlet extends HttpServlet {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		try {
     		AccountBean account=(AccountBean) request.getSession().getAttribute("account");
-    		int idCorso=Integer.parseInt(request.getParameter("idCorso"));
-        	int idLezione=Integer.parseInt(request.getParameter("idLezione"));
         	String coppie=request.getParameter("coppie");
+        	String id=request.getParameter("idCorso");
+        	System.out.println("coppie: "+coppie+"\n"+" idCorso: "+id+"\n");
         	
+    		int idCorso=Integer.parseInt(request.getParameter("idCorso"));
+
         	
         	manager.modificaOrdine(idCorso, coppie); 
         	request.getSession().setAttribute("updated", "true"); //fa ricaricare le lezioni
@@ -61,7 +63,7 @@ public class ModificaOrdineServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch(IOException e) {
-			
+			e.printStackTrace();
 		} catch (DatiErratiException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
