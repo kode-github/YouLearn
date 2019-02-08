@@ -128,7 +128,7 @@ CREATE TABLE `corso` (
   KEY `corso_ibfk_2` (`accountSupervisore`),
   CONSTRAINT `corso_ibfk_1` FOREIGN KEY (`accountCreatore`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `corso_ibfk_2` FOREIGN KEY (`accountSupervisore`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -137,7 +137,7 @@ CREATE TABLE `corso` (
 
 LOCK TABLES `corso` WRITE;
 /*!40000 ALTER TABLE `corso` DISABLE KEYS */;
-INSERT INTO `corso` VALUES (5,'luigicrisci1997@gmail.com',NULL,'NonBellissimo','         Stupendo                 ','2018-02-02','2030-02-02','141668b4-4eee-4ae4-972b-d6266166c9e2.jpg','90','Attesa','Musica',0,0),(12,'china@gmail.com','pasqualeAmbrosio@gmail.com','SuperComunista','PER IL PROLETARIATO','1917-02-02','2089-02-02','aaa','1','Completamento','Informatica',0,0);
+INSERT INTO `corso` VALUES (5,'luigicrisci1997@gmail.com',NULL,'Non proprio ','Stupendo ooooooooooo              ','2018-02-02','2030-02-02','141668b4-4eee-4ae4-972b-d6266166c9e2.jpg','90','Completamento','Musica',2,0),(12,'china@gmail.com','pasqualeAmbrosio@gmail.com','SuperComunista','PER IL PROLETARIATO','1917-02-02','2089-02-02','azz.jpg','1','Attivo','Informatica',0,0),(24,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','PasqualeBellissimo','Pasquale è stupendo','2019-02-01','2025-09-06','bafa13cf-0077-4ac8-928a-ae5dfc309a49.jpg','100','Attivo','Informatica',0,0),(26,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','Corso di Giusy','Come diventare Giusy e vivere una vita felice','2019-02-04','2025-09-06','135ebdea-e2ff-426a-959d-c2cb6b87eae7.jpg','5','Attivo','Informatica',1,0),(29,'china@gmail.com','pasqualeAmbrosio@gmail.com','CorsoTest','Com\'è bella sta ricerca','2019-01-01','2025-06-06','135ebdea-e2ff-426a-959d-c2cb6b87eae7.jpg','15','Attivo','Musica',0,0),(30,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','LuigiEEEEE',' Il mio corso è il più bello ','2019-02-07','2029-09-06','f7b2cc8f-959a-46b0-9791-6573d1d91a2c.jpg','150','Completamento','Fotografia',0,0);
 /*!40000 ALTER TABLE `corso` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -182,14 +182,14 @@ DROP TABLE IF EXISTS `lezione`;
 CREATE TABLE `lezione` (
   `nome` varchar(255) NOT NULL,
   `visualizzazione` int(32) NOT NULL DEFAULT '0',
-  `numeroLezione` int(10) NOT NULL,
+  `numeroLezione` int(10) DEFAULT '0',
   `IdLezione` int(11) NOT NULL AUTO_INCREMENT,
   `filePath` varchar(2048) NOT NULL,
   `corsoIdCorso` int(11) NOT NULL,
   PRIMARY KEY (`IdLezione`),
   KEY `corso_idx` (`corsoIdCorso`),
   CONSTRAINT `corso` FOREIGN KEY (`corsoIdCorso`) REFERENCES `corso` (`idcorso`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -198,21 +198,26 @@ CREATE TABLE `lezione` (
 
 LOCK TABLES `lezione` WRITE;
 /*!40000 ALTER TABLE `lezione` DISABLE KEYS */;
+INSERT INTO `lezione` VALUES ('Lezione',0,1,20,'b01f6a34-371a-4007-bc84-6423e8e3b852.mp4',26),('Lezione 1',0,2,23,'cd171a96-bf26-4458-974c-19ea51cda60e.mp4',5),('Lezione 2',0,1,24,'b27997f6-7521-4339-86ff-8bc996bbdb84.mp4',5);
 /*!40000 ALTER TABLE `lezione` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `lezione_AFTER_INSERT` AFTER INSERT ON `lezione` FOR EACH ROW BEGIN
-update corso 
-    set nlezioni=nlezioni+1
-    where corso.idCorso=NEW.corsoIdCorso;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `lezione_BEFORE_INSERT` BEFORE INSERT ON `lezione` FOR EACH ROW BEGIN
+	
+    IF((Select MAX(numeroLezione) 
+							from lezione where corsoIdCorso=new.corsoIdCorso) IS NULL)
+	then set new.numeroLezione=1;
+    else set new.numeroLezione=(Select MAX(numeroLezione) 
+							from lezione where corsoIdCorso=new.corsoIdCorso)+1;
+	end if;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -222,9 +227,29 @@ DELIMITER ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `lezione_AFTER_INSERT` AFTER INSERT ON `lezione` FOR EACH ROW begin 
+update corso 
+    set nlezioni=nlezioni+1
+    where corso.idCorso=NEW.corsoIdCorso;
+
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -232,6 +257,9 @@ DELIMITER ;;
 update corso 
     set nlezioni=nlezioni-1
     where corso.idCorso=OLD.corsoIdCorso;
+    
+    
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -246,6 +274,27 @@ DELIMITER ;
 --
 -- Dumping routines for database 'youlearndb'
 --
+/*!50003 DROP PROCEDURE IF EXISTS `adjustLezioni` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `adjustLezioni`()
+BEGIN
+	update lezione
+	set numeroLezione=numeroLezione-1
+    where numeroLezione!=1;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -256,4 +305,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-31 10:24:59
+-- Dump completed on 2019-02-08 18:35:41

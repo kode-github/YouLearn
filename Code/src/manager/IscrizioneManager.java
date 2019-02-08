@@ -1,10 +1,13 @@
 package manager;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 
 import javax.naming.NoPermissionException;
@@ -19,6 +22,7 @@ import bean.CorsoBean.Stato;
 import exception.AlreadyExistingException;
 import exception.NotFoundException;
 import exception.NotWellFormattedException;
+import sun.nio.cs.ext.ISCII91;
 
 public class IscrizioneManager {
 
@@ -254,6 +258,7 @@ public class IscrizioneManager {
 		accountManager=new AccountManager();
 		corsoManager= new CorsoManager();
 		//TODO Verificare perchÃ¨ si usano solo le key per i check
+		if(!isWellFormatted(iscrizione)) throw new NotWellFormattedException("L'iscrizione non è ben formattata");
 		if(checkIscrizione(iscrizione.getCorso().getIdCorso(),iscrizione.getAccount().getMail())) 
 												throw new AlreadyExistingException("L'iscrizione esiste giï¿½");
 		if(!corsoManager.checkCorso(iscrizione.getCorso())) throw new NotFoundException("Il corso non esiste");
@@ -266,6 +271,7 @@ public class IscrizioneManager {
 		
 		try {
 			connection=DriverManagerConnectionPool.getConnection();
+			connection.setAutoCommit(false);
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1,iscrizione.getAccount().getMail());
 			preparedStatement.setInt(2,iscrizione.getCorso().getIdCorso());
@@ -273,6 +279,7 @@ public class IscrizioneManager {
 			preparedStatement.setDouble(4,iscrizione.getImporto());
 			preparedStatement.setInt(5, Integer.parseInt(iscrizione.getFattura()));
 			preparedStatement.executeUpdate();
+			connection.commit();
 		}finally {
 			try {
 			if(preparedStatement!=null)
@@ -281,6 +288,18 @@ public class IscrizioneManager {
 				connection.close();
 			}
 		}
+	}
+	
+	private AccountBean account;
+	private CorsoBean corso;
+	private Date dataPagamento;
+	private double importo;
+	private String fattura;
+
+	public boolean isWellFormatted(IscrizioneBean iscrizione) {
+		Date dataOdierna = new Date();
+		return account!=null && corso!=null && dataPagamento!=null && !dataPagamento.before(dataOdierna) && importo>=0 
+				&& fattura!=null && fattura.matches("^[0-9]$"); //TODO Quanto è grande la fattura?
 	}
 
 	/**
