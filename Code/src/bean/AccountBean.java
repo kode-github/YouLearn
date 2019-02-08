@@ -61,6 +61,28 @@ public class AccountBean{
 		
 	}
 
+	
+	/**
+	 * Costruttore generico
+	 * @param nome
+	 * @param cognome
+	 * @param password
+	 * @param email
+	 * @param ruolo
+	 * @param verificato
+	 * @param carta
+	 */
+	public AccountBean(String nome, String cognome, String password, String email, Ruolo ruolo, boolean verificato,
+			CartaDiCreditoBean carta) {
+		    this.nome = nome;
+		    this.cognome = cognome;
+		    this.password = password;
+		    this.mail = email;
+		    this.tipo = ruolo;
+		    this.verificato = verificato;
+		    this.carta = carta;
+	}
+
 	/**
 	 * Sostituisce il parametro legato alla verifica dell'email dell'account
 	 * @param boolean verificato
@@ -336,7 +358,7 @@ public class AccountBean{
 	/**
 	 * Retrieve di un corso tenuto 
 	 * @param id id del corso
-	 * @return il corso, null se non esiste o l'id del corso è null
+	 * @return il corso, null se non esiste o l'id del corso ï¿½ null
 	 */
 	public CorsoBean getCorsoTenuto(int id) {
 		if(corsiTenuti==null) return null;

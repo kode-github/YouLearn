@@ -86,16 +86,19 @@ public class CartaDiCreditoManager {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		
-		String sql="INSERT INTO Carta VALUES(?,?,?,?,?)";
+		String sql="INSERT INTO CartaDiCredito VALUES(?,?,?,?,?,?)";
 		try {
 			connection=DriverManagerConnectionPool.getConnection();
-			connection.setAutoCommit(false);
+			connection.setAutoCommit(false); 
+			System.out.println(carta.getTipo().toString());
 			preparedStatement= connection.prepareStatement(sql);
-			preparedStatement.setString(1, carta.getNomeIntestatario());
-			preparedStatement.setString(2, carta.getNumeroCarta());
-			preparedStatement.setString(3, carta.getMeseScadenza());
-			preparedStatement.setString(4, carta.getAnnoScadenza());
+			preparedStatement.setString(1, carta.getNumeroCarta());
+			preparedStatement.setString(2, carta.getMeseScadenza());
+			preparedStatement.setString(3, carta.getAnnoScadenza());
+			preparedStatement.setString(4, carta.getNomeIntestatario());
 			preparedStatement.setString(5, carta.getTipo().toString());
+			preparedStatement.setString(6, carta.getAccount().toString());
+			
 			System.out.println("doSave: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
 			connection.commit();

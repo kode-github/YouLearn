@@ -2,10 +2,11 @@ package manager;
 
 import static org.junit.Assert.*;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import javax.naming.NoPermissionException;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,6 +16,7 @@ import bean.AccountBean;
 import bean.AccountBean.Ruolo;
 import bean.CartaDiCreditoBean;
 import bean.CartaDiCreditoBean.CartaEnum;
+import connection.DriverManagerConnectionPool;
 import exception.AlreadyExistingException;
 import exception.NotFoundException;
 import exception.NotWellFormattedException;
@@ -24,22 +26,33 @@ public class CartaDiCreditoManagerTest {
 	
 	private CartaDiCreditoManager managerCarta;
 	private AccountManager managerAccount;
-
+	private CartaDiCreditoBean tmpCarta;
+	private AccountBean tmpAccount;
+	private AccountBean tmpAccount2;
+	private CartaDiCreditoBean tmpCarta2;
+	
 	@Before
 	public void setUp() throws Exception {
-		managerCarta = new CartaDiCreditoManager();
-		managerAccount = new AccountManager();
+		managerCarta = CartaDiCreditoManager.getIstanza();
+		managerAccount = AccountManager.getIstanza();
+		createTmpComponent();
 		assertNotNull(managerCarta);
 		assertNotNull(managerAccount);
 	}
 
 	@After
 	public void TierDown() throws Exception{
+		
+		deleteTmpComponent();
+		assertFalse(managerAccount.checkMail(tmpAccount.getMail()));
+		assertFalse(managerCarta.checkCarta(tmpCarta.getNumeroCarta()));
 		managerCarta = null;
 		managerAccount = null;
 		assertNull(managerAccount);
 		assertNull(managerCarta);
 	}
+	
+	
 
 	/**
 	 * Tests methods for {@link manager.CartaDiCreditoManager#doRetrieveByKey(java.lang.String)}.
@@ -49,14 +62,15 @@ public class CartaDiCreditoManagerTest {
 	 */
 	@Test
 	public void testDoRetrieveByKey() throws NoPermissionException, SQLException, NotFoundException {
-		assertTrue(managerCarta.checkCarta("1111222233334444"));
-		managerCarta.doRetrieveByKey("1111222233334444");
+	
+		assertNotNull(managerCarta.doRetrieveByKey(tmpCarta.getNumeroCarta()));
 	}
 
+	
 	@Test(expected=NotFoundException.class)
 	public void TestDoRetrieveByKeyNotFound() throws NoPermissionException, SQLException, NotFoundException {
-		assertFalse(managerCarta.checkCarta("1234567890123456"));
-		managerCarta.doRetrieveByKey("1234567890123456"); 
+		
+		assertNull(managerCarta.doRetrieveByKey("1234567890123456")); 
 	}
 	
 	
@@ -70,8 +84,8 @@ public class CartaDiCreditoManagerTest {
 	@Test
 	public void testModifyCard() throws NoPermissionException, SQLException, NotFoundException, AlreadyExistingException, NotWellFormattedException {
 		
-		CartaDiCreditoBean oldCarta = managerCarta.doRetrieveByKey("1111222233334444");
-		CartaDiCreditoBean newCarta = managerCarta.doRetrieveByKey("5555666677778888");
+		CartaDiCreditoBean oldCarta = managerCarta.doRetrieveByKey(tmpCarta.getNumeroCarta());
+		CartaDiCreditoBean newCarta = managerCarta.doRetrieveByKey(tmpCarta2.getNumeroCarta());
 		
 		newCarta.setNumeroCarta("999999999991");
 		System.out.println(oldCarta.getNumeroCarta());
@@ -93,7 +107,8 @@ public class CartaDiCreditoManagerTest {
 	
 	@Test
 	public void testRetrieveByAccount() throws NoPermissionException, SQLException, NotFoundException {
-		AccountBean account = managerAccount.doRetrieveByKey("mario@gmail.com");
+		System.out.println("AAAAAAAAAAAAAAAAAAAAAAA" + tmpCarta.getNumeroCarta());
+		AccountBean account = managerAccount.doRetrieveByKey(tmpCarta.getNumeroCarta());
 		managerCarta.retrieveByAccount(account);
 	}
 
@@ -108,5 +123,56 @@ public class CartaDiCreditoManagerTest {
 	public void testIsWellFormatted() throws NoPermissionException, SQLException, NotFoundException {
 		assertEquals(managerCarta.isWellFormatted(managerCarta.doRetrieveByKey("1111222233334444")),true);
 	}
+	
+	/**
+	 * Setting parameters for JUnit Test cases
+	 * @throws NoPermissionException
+	 * @throws NotWellFormattedException
+	 * @throws AlreadyExistingException
+	 * @throws SQLException
+	 */
+
+	private void createTmpComponent() throws NoPermissionException, NotWellFormattedException, AlreadyExistingException, SQLException {
+		
+		tmpCarta= new CartaDiCreditoBean("00001111188882222","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount);
+		tmpCarta.setAccount(tmpAccount);
+		tmpAccount = new AccountBean("Mario", "Sessa", "PentiumD", "Prova@mail.com", Ruolo.Utente, true, tmpCarta);
+		
+		
+		tmpCarta2= new CartaDiCreditoBean("00001111188883333","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount);
+		tmpAccount2 = new AccountBean("Mario", "Sessa", "PentiumD", "Prova2@mail.com", Ruolo.Utente, true, tmpCarta);
+		tmpCarta.setAccount(tmpAccount);
+	
+		managerAccount.setRegistration(tmpAccount);
+		managerAccount.setRegistration(tmpAccount2);
+		
+	}
+	
+	private void deleteTmpComponent() throws SQLException {
+			
+			Connection connection = null;
+			PreparedStatement preparedStatement = null;
+
+			String deleteSQL = "DELETE FROM account WHERE email=? OR email=?;";
+
+			try {
+				connection = DriverManagerConnectionPool.getConnection();
+				preparedStatement = connection.prepareStatement(deleteSQL);
+				preparedStatement.setString(1, tmpAccount.getMail());
+				preparedStatement.setString(2, tmpAccount2.getMail());
+				preparedStatement.executeUpdate();
+				connection.commit();
+			} finally {
+				try {
+					if (preparedStatement != null)
+						preparedStatement.close();
+				} finally {
+					connection.close();
+				}
+			}
+		
+	}
+	
 
 }
+
