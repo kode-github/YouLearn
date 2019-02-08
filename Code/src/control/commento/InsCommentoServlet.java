@@ -22,7 +22,7 @@ public class InsCommentoServlet extends HttpServlet {
 	
     public InsCommentoServlet() {
         super();
-        manager= new LezioneManager();
+        manager= LezioneManager.getIstanza();
     }
 
 

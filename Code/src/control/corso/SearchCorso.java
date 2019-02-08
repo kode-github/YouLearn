@@ -25,7 +25,7 @@ public class SearchCorso extends HttpServlet {
 	
     public SearchCorso() {
         super();
-        manager=new CorsoManager();
+        manager=CorsoManager.getIstanza();
     }
 
 

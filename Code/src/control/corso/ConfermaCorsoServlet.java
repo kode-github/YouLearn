@@ -21,7 +21,7 @@ public class ConfermaCorsoServlet extends HttpServlet {
 	
     public ConfermaCorsoServlet() {
         super();
-        manager=new CorsoManager();
+        manager=CorsoManager.getIstanza();
     }
 
 	

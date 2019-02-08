@@ -25,7 +25,7 @@ public class CambiaMailServlet extends HttpServlet {
 	
     public CambiaMailServlet() {
         super();
-        manager= new AccountManager();
+        manager= AccountManager.getIstanza();
     }
 
 

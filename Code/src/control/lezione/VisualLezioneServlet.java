@@ -26,7 +26,7 @@ public class VisualLezioneServlet extends HttpServlet {
 	
     public VisualLezioneServlet() {
         super();
-        manager=new LezioneManager();
+        manager=LezioneManager.getIstanza();
     }
 
 	

@@ -34,8 +34,8 @@ public class VisualCorsoServlet extends HttpServlet {
 	
     public VisualCorsoServlet() {
         super();
-        manager=new IscrizioneManager();
-        corsoManager=new CorsoManager();
+        manager=IscrizioneManager.getIstanza();
+        corsoManager=CorsoManager.getIstanza();
     }
 
 

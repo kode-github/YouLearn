@@ -29,6 +29,7 @@ public class IscrizioneCorsoServlet extends HttpServlet {
 
     public IscrizioneCorsoServlet() {
         super();
+        iscrizioneManager=IscrizioneManager.getIstanza();
     }
 
 

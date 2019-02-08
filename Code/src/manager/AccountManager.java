@@ -16,11 +16,18 @@ import exception.*;
 
 public class AccountManager {
 	
+	private static AccountManager istanza;
 	private CartaDiCreditoManager managerCarta;
 	private CorsoManager managerCorso;
 	private IscrizioneManager managerIscrizione;
 	
-	public AccountManager() {
+	
+	private AccountManager() {}
+	
+	public static AccountManager getIstanza() {
+		if(istanza==null)
+			istanza=new AccountManager();
+		return istanza;
 	}
 
 	
@@ -157,9 +164,9 @@ public class AccountManager {
 		AccountBean temp=doRetrieveByKey(email); //NotFoundException se non esiste
 		if(!temp.getPassword().equals(password)) throw new DatiErratiException("Le password non corrispondono"); 
 		
-		managerCarta= new CartaDiCreditoManager();
-		managerCorso= new CorsoManager();
-		managerIscrizione= new IscrizioneManager();
+		managerCarta= CartaDiCreditoManager.getIstanza();
+		managerCorso= CorsoManager.getIstanza();
+		managerIscrizione= IscrizioneManager.getIstanza();
 
 		
 		if(temp.getTipo().equals(Ruolo.Utente)) {
@@ -187,7 +194,7 @@ public class AccountManager {
 	public void setRegistration(AccountBean user) throws NotWellFormattedException, AlreadyExistingException, SQLException, NoPermissionException {
 		if(!isWellFormatted(user)) throw new NotWellFormattedException("Dati non corretti");
 		if(checkMail(user.getMail())) throw new AlreadyExistingException("Questo account esiste gi�");
-		managerCarta= new CartaDiCreditoManager();
+		managerCarta= CartaDiCreditoManager.getIstanza();
 		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;

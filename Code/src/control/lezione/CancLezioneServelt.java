@@ -24,7 +24,7 @@ public class CancLezioneServelt extends HttpServlet {
 	
     public CancLezioneServelt() {
         super();
-        manager=new LezioneManager();
+        manager=LezioneManager.getIstanza();
     }
 
 
