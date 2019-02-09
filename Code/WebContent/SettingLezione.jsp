@@ -127,7 +127,7 @@
 	</div>
 
 
-	<div class="card">
+	<div class="card w-50 mx-auto">
 		<div class="card-header">INSERIMENTO LEZIONI</div>
 		<div class="card-body body-ins-lezione">
 			<div id="uploads">

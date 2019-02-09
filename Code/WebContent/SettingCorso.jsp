@@ -60,8 +60,8 @@
 				enctype="multipart/form-data"
 				onsubmit="return validateCorso(formSettingCorso)">
 				<div class="form-group">
-					<label for="InputName">TITOLO DEL CORSO</label> <input
-						required="required" input="text" name="nome" class="form-control"
+					<label for="InputName">TITOLO DEL CORSO</label> <input type="text"
+						required="required" name="nome" class="form-control"
 						id="InputName" placeholder="Titolo" <%if(corso!=null) {%>
 						value=<%=corso.getNome() %> <%} %>>
 				</div>

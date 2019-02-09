@@ -64,12 +64,12 @@
 	</div>
 
 	<div class="card w-75 mx-auto text-center">
-		<div class="card-header text-center">NOME LEZIONE</div>
+		<div class="card-header text-center"><%=lezione.getNome().toUpperCase() %></div>
 		<div class="card-body">
-			<h5 class="card-title"><i class="fas fa-user fa-2x"></i> Nome docente</h5>
+			<h5 class="card-title"><i class="fas fa-user fa-2x"></i><%=lezione.getCorso().getDocente().getNome()+" "+lezione.getCorso().getDocente().getCognome() %></h5>
 		</div>
 		<div class="card-body">
-			<h5 class="card-title"><i class="far fa-laugh-beam fa-2x"></i> Visualizzazioni</h5>
+			<h5 class="card-title"><i class="far fa-laugh-beam fa-2x"></i> <%=lezione.getVisualizzazioni() %></h5>
 		</div>
 	</div>
 

@@ -33,9 +33,14 @@
 </head>
 
 <body>
-
+<%                    	AccountBean account=(AccountBean)request.getSession().getAttribute("account");
+ %>
     <nav id="nav" class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand title" href="#">
+    <%if(account.getTipo().equals(Ruolo.Utente)){ %>
+        <a class="navbar-brand title" href="http://localhost:8080/YouLearn/HomepageUtente.jsp">
+        <%}else { %>
+        <a class="navbar-brand title" href="http://localhost:8080/YouLearn/HomepageSupervisore.jsp">
+        <%} %>
             <img class="logo" src="Images/Logo1.png" width="50px" height="50px" class="d-inline-block align-center" alt="">
            <p>YouLearn</p>
         <p class="sub-title">Increse your knowledges</p> </a>
@@ -60,7 +65,6 @@
                    
                    <!-- Il pulsante di homepage varia in base al tipo di utente -->
                     <%
-                    	AccountBean account=(AccountBean)request.getSession().getAttribute("account");
                     	if(account.getTipo().equals(Ruolo.Utente)){
                     %>
                     <a class="nav-link" href="http://localhost:8080/YouLearn/HomepageUtente.jsp" style="float:right">Homepage <span class="sr-only">(current)</span></a>
