@@ -7,6 +7,7 @@ package manager;
 
 import static org.junit.Assert.*;
 
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -47,10 +48,13 @@ public class AccountManagerTest {
 	private CartaDiCreditoBean tmpCarta2;
 	
 	
+	   
 	
 	@Before
 	public void setUp() throws Exception {
-		
+		Field instance = AccountManager.class.getDeclaredField("istanza");
+		   instance.setAccessible(true);
+		   instance.set(null, null);
 		
 		managerAccount = AccountManager.getIstanza();
 		managerCarta = CartaDiCreditoManager.getIstanza();
@@ -63,10 +67,10 @@ public class AccountManagerTest {
 	
 	@After
 	public void TierDown() throws SQLException {
-		managerAccount = null;
-		managerCarta = null;
-		assertNull(managerAccount);
-		assertNull(managerCarta);
+		//managerAccount = null;
+		//managerCarta = null;
+		//assertNull(managerAccount);
+		//assertNull(managerCarta);
 		deleteTmpComponent(); //Cancella gli utenti prototipi
 	}
 	
@@ -180,8 +184,10 @@ public class AccountManagerTest {
 	
 	@Test
 	public void testLogin() throws NoPermissionException, SQLException, NotFoundException, DatiErratiException, NotWellFormattedException {
-		
-		managerAccount.login("pasquale@gmail.com", "PentiumD");
+		System.out.println("INIZIO IL LOGIN\n\n\n\n");
+		managerAccount.login("Prova@mail.com", "PentiumD");
+		System.out.println("FINISCO IL LOGIN\n\\n\\n\\n");
+
 	}
 
 
@@ -284,19 +290,20 @@ public class AccountManagerTest {
 	 */
 
 	private void createTmpComponent() throws NoPermissionException, NotWellFormattedException, AlreadyExistingException, SQLException {
-		
-		tmpCarta= new CartaDiCreditoBean("00001111188882222","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount);
-		tmpCarta.setAccount(tmpAccount);
+		System.out.println("INIZIO LA CREAZIONE\n");
+		tmpCarta= new CartaDiCreditoBean("1111111111111111","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount);
 		tmpAccount = new AccountBean("Mario", "Sessa", "PentiumD", "Prova@mail.com", Ruolo.Utente, true, tmpCarta);
-		
-		
-		tmpCarta2= new CartaDiCreditoBean("00001111188883333","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount);
-		tmpAccount2 = new AccountBean("Mario", "Sessa", "PentiumD", "Prova2@mail.com", Ruolo.Utente, true, tmpCarta);
+		tmpAccount.setCarta(tmpCarta);
 		tmpCarta.setAccount(tmpAccount);
+		
+		tmpAccount2 = new AccountBean("Mario", "Sessa", "PentiumD", "Prova2@mail.com", Ruolo.Utente, true, tmpCarta2);
+		tmpCarta2= new CartaDiCreditoBean("1111111111114111","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount2);
+		tmpAccount2.setCarta(tmpCarta2);
+		tmpCarta2.setAccount(tmpAccount2);
 	
 		managerAccount.setRegistration(tmpAccount);
 		managerAccount.setRegistration(tmpAccount2);
-		
+		System.out.println("Termino la creazione\n");
 	}
 	
 	private void deleteTmpComponent() throws SQLException {

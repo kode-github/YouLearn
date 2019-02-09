@@ -107,6 +107,7 @@ public class CorsoManagerTest {
 		//addCorsoTest(managerCorso.doRetrieveByKey(3);
 	}
 	
+	@Test
 	private void addCorsoTest(CorsoBean corso) throws SQLException {
 		
 		

@@ -33,7 +33,7 @@ public class DriverManagerConnectionPool {
 
 		System.out.println("Create a new DB connection");
 		newConnection.setAutoCommit(false);
-		newConnection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+		newConnection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
 		return newConnection;
 	}	
 	

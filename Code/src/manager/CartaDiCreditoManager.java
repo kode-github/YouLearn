@@ -113,6 +113,7 @@ public class CartaDiCreditoManager {
 					preparedStatement.close();
 			} finally {
 				DriverManagerConnectionPool.releaseConnection(connection);
+			
 			}
 		}
 	}
