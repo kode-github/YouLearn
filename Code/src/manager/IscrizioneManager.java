@@ -77,7 +77,7 @@ public class IscrizioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return iscrizione;
@@ -140,7 +140,7 @@ public class IscrizioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();//KONO DIO DA
+				DriverManagerConnectionPool.releaseConnection(connection);//KONO DIO DA
 				//SEKAI ICHI!
 				//NANIII!?!?
 			}
@@ -191,7 +191,7 @@ public class IscrizioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return collection;
@@ -231,13 +231,14 @@ public class IscrizioneManager {
 			preparedStatement.setDouble(4,iscrizione.getImporto());
 			preparedStatement.setInt(5, Integer.parseInt(iscrizione.getFattura()));
 			preparedStatement.executeUpdate();
-			connection.commit();
+			if(!connection.getAutoCommit())
+				connection.commit();
 		}finally {
 			try {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 	}
@@ -281,7 +282,7 @@ public class IscrizioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return rs.next();

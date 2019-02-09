@@ -67,7 +67,7 @@ public class AccountManager {
 				preparedStatement.close();
 			}finally {
 				if(connection != null)
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return temp;
@@ -99,12 +99,14 @@ public class AccountManager {
 			preparedStatement.setString(2, email);
 			System.out.println("doUpdate: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
+			if(!connection.getAutoCommit())
+				connection.commit();
 		} finally {
 				try{
 					if (preparedStatement != null)
 						preparedStatement.close();
 				}finally {
-					connection.close();
+					DriverManagerConnectionPool.releaseConnection(connection);
 				}		
 		}
 		
@@ -137,13 +139,14 @@ public class AccountManager {
 			preparedStatement.setString(2, email);
 			preparedStatement.executeUpdate();
 			System.out.println("Modfica mail: "+preparedStatement.toString());
-			connection.commit();
+			if(!connection.getAutoCommit())
+				connection.commit();
 		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 			} finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		
@@ -213,15 +216,17 @@ public class AccountManager {
 			System.out.println("Registrazione Utente: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
 			managerCarta.registerCard(user.getCarta()); //inserisco la carta
-			connection.commit();
+			if(!connection.getAutoCommit())
+				connection.commit();
 		}catch(SQLException e) {
 			connection.rollback();
+			e.printStackTrace();
 		}finally {
 				try{
 					if (preparedStatement != null)
 						preparedStatement.close();
 				}finally {
-					connection.close();
+					DriverManagerConnectionPool.releaseConnection(connection);
 				}		
 		}
 	}
@@ -256,7 +261,7 @@ public class AccountManager {
 				preparedStatement.close();
 			}finally {
 				if(connection != null)
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 	}
@@ -291,7 +296,7 @@ public class AccountManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		
@@ -363,7 +368,7 @@ public class AccountManager {
 				if(statement!=null)
 					statement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return temp;

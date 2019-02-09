@@ -33,6 +33,7 @@ public class DriverManagerConnectionPool {
 
 		System.out.println("Create a new DB connection");
 		newConnection.setAutoCommit(false);
+		newConnection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 		return newConnection;
 	}	
 	
@@ -59,11 +60,10 @@ public class DriverManagerConnectionPool {
 	
 	public static synchronized void releaseConnection(Connection connection) 
 			throws SQLException {
-		if(connection != null && connection.getCatalog().equals("youlearndb")) { //controllo che il db sia lo stesso
 			freeDbConnections.add(connection);
 		}
 			
 	}	
 
 	
-}
+

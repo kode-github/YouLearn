@@ -62,7 +62,7 @@ public class CartaDiCreditoManager {
 				if(preparedStatement!=null)
 					preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 				
 		}
@@ -95,22 +95,24 @@ public class CartaDiCreditoManager {
 			preparedStatement.setString(1, carta.getNumeroCarta());
 			preparedStatement.setString(2, carta.getMeseScadenza());
 			preparedStatement.setString(3, carta.getAnnoScadenza());
-			preparedStatement.setString(4, carta.getNomeIntestatario());
-			preparedStatement.setString(5, carta.getTipo().toString());
-			preparedStatement.setString(6, carta.getAccount().getMail().toString());
+			preparedStatement.setString(4, carta.getTipo().toString());
+			preparedStatement.setString(5, carta.getNomeIntestatario());
+			preparedStatement.setString(6, carta.getAccount().getMail());
 			
 			System.out.println("doSave: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
-			connection.commit();
+			if(!connection.getAutoCommit())
+				connection.commit();
 		}catch(SQLException e) {
 			connection.rollback();
+			e.printStackTrace();
 		}
 		finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 			} finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 	}
@@ -150,13 +152,14 @@ public class CartaDiCreditoManager {
 			preparedStatement.setString(7, newCarta.getNumeroCarta());
 			
 			preparedStatement.executeUpdate();
-			
+			if(!connection.getAutoCommit())
+				connection.commit();
 		}finally {
 			try{
 				if(preparedStatement!=null)
 					preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 				
 		}	
@@ -188,7 +191,7 @@ public class CartaDiCreditoManager {
 					preparedStatement.close();
 			}finally {
 				if(connection != null)
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 	}
@@ -232,7 +235,7 @@ public class CartaDiCreditoManager {
 				if(preparedStatement!=null)
 					preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		

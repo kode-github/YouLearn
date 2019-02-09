@@ -109,13 +109,14 @@ public class LezioneManager {
 			c.setAutoCommit(false);
 			for(LezioneBean l: lezione) 
 				changeNumeroLezione(l, c);
-			c.commit();
+			if(!c.getAutoCommit())
+				c.commit();
 			System.out.println("Sono dopo il commit");
 		}catch(SQLException | DatiErratiException  e) {
 			c.rollback();
 			e.printStackTrace();
 		}finally {
-			c.close();
+			DriverManagerConnectionPool.releaseConnection(c);
 		}
 		
 	}
@@ -165,7 +166,7 @@ public class LezioneManager {
 //		for(Part file: files) {
 //			insLezione(lezioni.get(i++),file,c);
 //		}
-//		c.close();
+//		DriverManagerConnectionPool.releaseConnection(c);
 //	}
 	
 	/**
@@ -211,7 +212,8 @@ public class LezioneManager {
 			
 			file.write(path.toString()); //Scrivo il file sul disco
 			
-			c.commit(); //conferma l'inserimento nel db
+			if(!c.getAutoCommit())
+				c.commit(); //conferma l'inserimento nel db
 		}catch(SQLException | IOException e) {
 			e.printStackTrace();
 			//C'� stato un errore nel salvataggio del file o nell'inserimento
@@ -222,7 +224,7 @@ public class LezioneManager {
 				if(statement!=null)
 					statement.close();
 			}finally {
-				c.close();
+				DriverManagerConnectionPool.releaseConnection(c);
 			}	
 		}
 	}
@@ -260,7 +262,8 @@ public class LezioneManager {
 					+"\\Lezioni\\"+lezione.getFilePath());
 			Files.delete(path);
 			
-			connection.commit();
+			if(!connection.getAutoCommit())
+				connection.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			connection.rollback();
@@ -273,7 +276,7 @@ public class LezioneManager {
 				if (preparedStatement != null)
 					preparedStatement.close();
 			} finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 	}
@@ -293,7 +296,7 @@ public class LezioneManager {
 				if(statement!=null)
 					statement.close();
 			}finally {
-				c.close();
+				DriverManagerConnectionPool.releaseConnection(c);
 			}	
 		}
 	}
@@ -322,7 +325,7 @@ public class LezioneManager {
 				if(statement!=null)
 					statement.close();
 			}finally {
-				c.close();
+				DriverManagerConnectionPool.releaseConnection(c);
 			}	
 		}
 	}
@@ -364,7 +367,7 @@ public class LezioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return collection;
@@ -408,7 +411,7 @@ public class LezioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return temp;
@@ -438,13 +441,14 @@ public class LezioneManager {
 
 			System.out.println("doDelete: "+ preparedStatement.toString());
 			result = preparedStatement.executeUpdate();
-			connection.commit();
+			if(!connection.getAutoCommit())
+				connection.commit();
 		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 			} finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return (result != 0);
@@ -472,7 +476,7 @@ public class LezioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		
@@ -502,13 +506,14 @@ public class LezioneManager {
 			preparedStatement.setString(4, product.getAccountCreatore().getMail());
 			System.out.println("Inserisci commento: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
-			connection.commit();
+			if(!connection.getAutoCommit())
+				connection.commit();
 		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 			} finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 
@@ -553,7 +558,7 @@ public class LezioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return list;
@@ -633,6 +638,8 @@ public class LezioneManager {
 				lezione.setFilePath(path.toString());
 				part.write(path.toString());
 			}
+			if(!c.getAutoCommit())
+				c.commit();
 		}catch (SQLException e) {
 			c.rollback();
 		}
@@ -641,7 +648,7 @@ public class LezioneManager {
 					if(statement!=null)
 						statement.close();
 				}finally {
-					c.close();
+					DriverManagerConnectionPool.releaseConnection(c);
 				}		
 		}
 		

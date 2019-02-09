@@ -95,7 +95,7 @@ public class CorsoManager {
 				if(statement!=null)
 					statement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return corso;
@@ -149,7 +149,7 @@ public class CorsoManager {
 				if(statement!=null)
 					statement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return collection;
@@ -221,7 +221,8 @@ public class CorsoManager {
 					+ "YouLearn\\Code\\WebContent\\Resources\\"+corso.getIdCorso()+File.separator+
 																				filename);
 			copertina.write(path.toString());
-			connection.commit();
+			if(!connection.getAutoCommit())
+				connection.commit();
 		}catch(SQLException |IOException e) {
 			e.printStackTrace();
 			connection.rollback();
@@ -231,7 +232,7 @@ public class CorsoManager {
 					if (preparedStatement != null)
 						preparedStatement.close();
 				}finally {
-					connection.close();
+					DriverManagerConnectionPool.releaseConnection(connection);
 				}		
 		}
 	}
@@ -270,13 +271,14 @@ public class CorsoManager {
 			preparedStatement.setString(11, corso.getCategoria().toString());
 			preparedStatement.setInt(12, corso.getIdCorso());
 			preparedStatement.executeUpdate();
-			connection.commit();
+			if(!connection.getAutoCommit())
+				connection.commit();
 		} finally {
 				try{
 					if (preparedStatement != null)
 						preparedStatement.close();
 				}finally {
-					connection.close();
+					DriverManagerConnectionPool.releaseConnection(connection);
 				}		
 		}
 		
@@ -344,14 +346,15 @@ public class CorsoManager {
 			int result=preparedStatement.executeUpdate();
 			
 			if(result==0) throw new NotFoundException("Il corso non esiste oppure non è in completamento");
-			
+			if(!connection.getAutoCommit())
+				connection.commit();
 			
 		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 			} finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 	}
@@ -426,6 +429,7 @@ public class CorsoManager {
 			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1, account.getMail());
+			System.out.println("RetriveByCreatore: "+preparedStatement.toString());
 			ResultSet rs= preparedStatement.executeQuery();
 			while(rs.next()) {
 			CorsoBean corso= new CorsoBean();
@@ -453,7 +457,7 @@ public class CorsoManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return collection;
@@ -485,6 +489,7 @@ public class CorsoManager {
 			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1, account.getMail());
+			System.out.println("RetriveBySupervisore: "+preparedStatement.toString());
 			ResultSet rs= preparedStatement.executeQuery();
 			while(rs.next()) {
 				CorsoBean corso= new CorsoBean();
@@ -500,6 +505,7 @@ public class CorsoManager {
 				 corso.setnIscritti(rs.getInt("nIscritti"));
 				 corso.setCategoria(Categoria.valueOf(rs.getString("Categoria")));
 				 corso.setStato(Stato.valueOf(rs.getString("stato")));
+				 System.out.println("\n\nStato di corso in retrieve by sup: "+ corso.getStato());
 				 corso.setSupervisore(account);
 				 corso.setDocente(accountManager.doRetrieveByKey(rs.getString("accountCreatore")));
 
@@ -512,7 +518,7 @@ public class CorsoManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return collection;
@@ -556,7 +562,7 @@ public class CorsoManager {
 				if(statement!=null)
 					statement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 	}
@@ -583,7 +589,7 @@ public class CorsoManager {
 				if(statement!=null)
 					statement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 	
