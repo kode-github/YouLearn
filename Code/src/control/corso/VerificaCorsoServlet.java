@@ -22,7 +22,7 @@ public class VerificaCorsoServlet extends HttpServlet {
     
     public VerificaCorsoServlet() {
         super();
-        manager=new CorsoManager();
+        manager=CorsoManager.getIstanza();
     }
 
 

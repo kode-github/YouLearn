@@ -28,7 +28,7 @@ public class GetLezioniServlet extends HttpServlet {
 	
     public GetLezioniServlet() {
         super();
-        manager=new LezioneManager();
+        manager=LezioneManager.getIstanza();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

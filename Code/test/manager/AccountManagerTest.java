@@ -3,14 +3,25 @@
  */
 package manager;
 
+
+
 import static org.junit.Assert.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import javax.naming.NoPermissionException;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import bean.AccountBean;
+import bean.CartaDiCreditoBean;
+import bean.CartaDiCreditoBean.CartaEnum;
+import connection.DriverManagerConnectionPool;
+import bean.AccountBean.Ruolo;
 import exception.AlreadyExistingException;
 import exception.DatiErratiException;
 import exception.NotFoundException;
@@ -29,27 +40,34 @@ public class AccountManagerTest {
 	 */
 	
 	static AccountManager managerAccount;
-	CartaDiCreditoManager managerCarta;
+	static CartaDiCreditoManager managerCarta;
+	private  AccountBean tmpAccount;
+	private  CartaDiCreditoBean tmpCarta;
+	private AccountBean tmpAccount2;
+	private CartaDiCreditoBean tmpCarta2;
 	
 	
 	
 	@Before
 	public void setUp() throws Exception {
 		
-	
-		managerAccount = new AccountManager();
-		managerCarta = new CartaDiCreditoManager();
+		
+		managerAccount = AccountManager.getIstanza();
+		managerCarta = CartaDiCreditoManager.getIstanza();
 		assertNotNull(managerAccount);
 		assertNotNull(managerCarta);
+		createTmpComponent(); //Crea due utenti prototipi per i test
+		assertTrue(managerAccount.checkMail("Prova@mail.com"));
 		
 	}
 	
 	@After
-	public void TierDown() {
+	public void TierDown() throws SQLException {
 		managerAccount = null;
 		managerCarta = null;
 		assertNull(managerAccount);
 		assertNull(managerCarta);
+		deleteTmpComponent(); //Cancella gli utenti prototipi
 	}
 	
 	/**
@@ -62,16 +80,16 @@ public class AccountManagerTest {
 	@Test (expected = NotFoundException.class)
 	public void testDoRetrieveByKeyNotFound() throws SQLException, NotFoundException, NoPermissionException {     
 		
-		assertFalse(managerAccount.checkMail("mario3@gmail.com"));
-		managerAccount.doRetrieveByKey("mario3@gmail.com");
+		
+		assertNull(managerAccount.doRetrieveByKey("mario1000@gmail.com"));
 	}
 	
 	
 	
 	@Test
 	public void testDoRetrieveByKey() throws SQLException, NotFoundException {
-		AccountBean account = managerAccount.doRetrieveByKey("mario@gmail.com");
-		assertEquals(account.getMail(), "mario@gmail.com");
+		AccountBean account = managerAccount.doRetrieveByKey(tmpAccount.getMail());
+		assertEquals(account.getMail(), tmpAccount.getMail());
 	}
 	
 	
@@ -86,16 +104,16 @@ public class AccountManagerTest {
 	
 	@Test(expected=NotFoundException.class)
 	public void testModificaPasswordNotFoundAccount() throws NoPermissionException, SQLException, NotFoundException, NotWellFormattedException{
-		managerAccount.modificaPassword("mario70@gmail.com", "PentiumD");
+		managerAccount.modificaPassword("mario70000@gmail.com", "PentiumD");
 	}
 	
 	
 	@Test
 	public void testModificaPassword() throws NoPermissionException, SQLException, NotFoundException, NotWellFormattedException {		
-	    managerAccount.modificaPassword("mario@gmail.com", "PentiumD");
-	    AccountBean account = managerAccount.doRetrieveByKey("mario@gmail.com");
-		assertEquals(account.getMail(),"mario@gmail.com");
-	    assertEquals(account.getPassword(), "PentiumD");
+	    managerAccount.modificaPassword(tmpAccount.getMail(), tmpAccount.getPassword());
+	    AccountBean account = managerAccount.doRetrieveByKey(tmpAccount.getMail());
+		assertEquals(account.getMail(),tmpAccount.getMail());
+	    assertEquals(account.getPassword(), tmpAccount.getPassword());
 	}
 
 	
@@ -111,9 +129,9 @@ public class AccountManagerTest {
 	
 	@Test(expected=AlreadyExistingException.class)
 	public void testModificaMailAlreadyExist() throws NoPermissionException, SQLException, NotFoundException, AlreadyExistingException {
-		assertTrue(managerAccount.checkMail("pasquale@gmail.com"));
-		assertTrue(managerAccount.checkMail("mario@gmail.com"));
-		managerAccount.modificaMail("mario@gmail.com", "pasquale@gmail.com");
+		assertTrue(managerAccount.checkMail(tmpAccount.getMail()));
+		managerAccount.modificaMail(tmpAccount.getMail(), tmpAccount.getMail());
+		managerAccount.modificaMail("mario@gmail.com", tmpAccount.getMail());
 	}
 	
 	@Test(expected=NotFoundException.class)
@@ -129,19 +147,18 @@ public class AccountManagerTest {
 	public void testModificaMail() throws NoPermissionException, SQLException, AlreadyExistingException, NotFoundException {
 		
 
-		assertNotNull(managerAccount.checkMail("mario@gmail.com"));
+		assertNotNull(managerAccount.checkMail(tmpAccount.getMail()));
 		
-		managerAccount.modificaMail("mario@gmail.com", "mario2@gmail.com");
+		managerAccount.modificaMail(tmpAccount.getMail(), "Prova10291@gmail.com");
 		
-		assertNotNull(managerAccount.checkMail("mario2@gmail.com"));
+		assertNotNull(managerAccount.checkMail("Prova10291@gmail.com"));
 		
 		/* Reset */
 		
-		assertNotNull(managerAccount.checkMail("mario2@gmail.com"));
 		
-		managerAccount.modificaMail("mario@gmail.com", "mario2@gmail.com");
+		managerAccount.modificaMail("Prova10291@gmail.com", tmpAccount.getMail());
 		
-		assertNotNull(managerAccount.checkMail("mario@gmail.com"));
+		assertNotNull(managerAccount.checkMail(tmpAccount.getMail()));
 		
 	}
 	
@@ -158,12 +175,13 @@ public class AccountManagerTest {
 	
 	@Test(expected=DatiErratiException.class)
 	public void testLoginDatiErrati() throws NoPermissionException, SQLException, NotFoundException, DatiErratiException, NotWellFormattedException {
-		managerAccount.login("mario@gmail.com", "PentiumD1");
+		managerAccount.login(tmpAccount.getMail(), "PentiumD1");
 	}
 	
 	@Test
 	public void testLogin() throws NoPermissionException, SQLException, NotFoundException, DatiErratiException, NotWellFormattedException {
-		managerAccount.login("mario@gmail.com", "PentiumD");
+		
+		managerAccount.login("pasquale@gmail.com", "PentiumD");
 	}
 
 
@@ -177,7 +195,7 @@ public class AccountManagerTest {
 	
 	@Test
 	public void testCheckMail() throws NoPermissionException, SQLException {
-		managerAccount.checkMail("mario@gmail.com");
+		managerAccount.checkMail(tmpAccount.getMail());
 	}
 
 	/**
@@ -188,8 +206,8 @@ public class AccountManagerTest {
 	
 	@Test
 	public void testCheckAccount() throws SQLException, NotFoundException {
-		AccountBean account = managerAccount.doRetrieveByKey("pasquale@gmail.com");
-		 managerAccount.checkAccount(account);
+		AccountBean account = managerAccount.doRetrieveByKey(tmpAccount.getMail());
+		 assertTrue(managerAccount.checkAccount(account));
 	}
 
 	/**
@@ -199,8 +217,24 @@ public class AccountManagerTest {
 	 */
 	@Test
 	public void testIsWellFormatted() throws SQLException, NotFoundException {
-		AccountBean account = managerAccount.doRetrieveByKey("pasquale@gmail.com");
-		managerAccount.isWellFormatted(account);
+		AccountBean account = managerAccount.doRetrieveByKey(tmpAccount.getMail());
+		assertTrue(managerAccount.isWellFormatted(account));
+		account.setNome("a");
+		assertFalse(managerAccount.isWellFormatted(account));
+		account.setNome(tmpAccount.getNome());
+		account.setCognome(" ");
+		assertFalse(managerAccount.isWellFormatted(account));
+		account.setCognome(tmpAccount.getCognome());
+//		account.setCarta(null);
+//		assertFalse(managerAccount.isWellFormatted(account));
+//		account.setCarta(tmpAccount.getCarta());
+//		account.setMail("hello");
+//		assertFalse(managerAccount.isWellFormatted(account));
+//		account.setMail(tmpAccount.getMail());
+		account.setTipo(null);
+		assertFalse(managerAccount.isWellFormatted(account));
+		account.setTipo(tmpAccount.getTipo());
+		
 	}
 
 	/**
@@ -214,8 +248,81 @@ public class AccountManagerTest {
 		AccountBean account = managerAccount.retrieveLessUsedSupervisor();
 		assertNotNull(account);
 	}
+	
+	/**
+	 * Tests method for {@link manager.AccountManager#setRegistration(bean.AccountBean)}.
+	 * @throws SQLException 
+	 * @throws AlreadyExistingException 
+	 * @throws NotWellFormattedException 
+	 * @throws NoPermissionException 
+	 */
+	
+	@Test
+	public void testRegistration() throws SQLException, NoPermissionException, NotWellFormattedException, AlreadyExistingException {
+		AccountBean registerTester = tmpAccount;
+		AccountBean registerTester2 = tmpAccount2;
+		deleteTmpComponent();
+		managerAccount.setRegistration(registerTester);
+		managerAccount.setRegistration(registerTester2);
+		assertNotNull(managerAccount.checkMail(registerTester.getMail()));
+		assertNotNull(managerAccount.checkMail(registerTester2.getMail()));
+		deleteTmpComponent();
+		createTmpComponent();
+	}
+	
+	@Test(expected=AlreadyExistingException.class)
+	public void testRegistrationAlreadyExist() throws NoPermissionException, NotWellFormattedException, AlreadyExistingException, SQLException {
+		managerAccount.setRegistration(tmpAccount);
+	}
+	
+	/**
+	 * Setting parameters for JUnit Test cases
+	 * @throws NoPermissionException
+	 * @throws NotWellFormattedException
+	 * @throws AlreadyExistingException
+	 * @throws SQLException
+	 */
 
+	private void createTmpComponent() throws NoPermissionException, NotWellFormattedException, AlreadyExistingException, SQLException {
+		
+		tmpCarta= new CartaDiCreditoBean("00001111188882222","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount);
+		tmpCarta.setAccount(tmpAccount);
+		tmpAccount = new AccountBean("Mario", "Sessa", "PentiumD", "Prova@mail.com", Ruolo.Utente, true, tmpCarta);
+		
+		
+		tmpCarta2= new CartaDiCreditoBean("00001111188883333","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount);
+		tmpAccount2 = new AccountBean("Mario", "Sessa", "PentiumD", "Prova2@mail.com", Ruolo.Utente, true, tmpCarta);
+		tmpCarta.setAccount(tmpAccount);
 	
+		managerAccount.setRegistration(tmpAccount);
+		managerAccount.setRegistration(tmpAccount2);
+		
+	}
 	
+	private void deleteTmpComponent() throws SQLException {
+			
+			Connection connection = null;
+			PreparedStatement preparedStatement = null;
+
+			String deleteSQL = "DELETE FROM account WHERE email=? OR email=?;";
+
+			try {
+				connection = DriverManagerConnectionPool.getConnection();
+				preparedStatement = connection.prepareStatement(deleteSQL);
+				preparedStatement.setString(1, tmpAccount.getMail());
+				preparedStatement.setString(2, tmpAccount2.getMail());
+				preparedStatement.executeUpdate();
+				connection.commit();
+			} finally {
+				try {
+					if (preparedStatement != null)
+						preparedStatement.close();
+				} finally {
+					connection.close();
+				}
+			}
+		
+	}
 
 }
+

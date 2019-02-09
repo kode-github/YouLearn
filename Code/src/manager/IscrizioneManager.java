@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 
 import javax.naming.NoPermissionException;
@@ -22,13 +23,21 @@ import exception.NotWellFormattedException;
 
 public class IscrizioneManager {
 
-	AccountManager accountManager;
-	CorsoManager corsoManager;
-	LezioneManager lezioneManager;
+	private static IscrizioneManager istanza;
+	private AccountManager accountManager;
+	private LezioneManager lezioneManager;
+	private CorsoManager corsoManager;
 	
+	private IscrizioneManager() { }
 	
-	public IscrizioneManager() {	
+	public static IscrizioneManager getIstanza() {
+		if(istanza==null)
+			istanza=new IscrizioneManager();
+		return istanza;
 	}
+	
+	
+	
 	
 	/**
 	 * Questo metodo non viene mai usato ma si dovrï¿½ controllare
@@ -41,12 +50,12 @@ public class IscrizioneManager {
 	 * @throws NoPermissionException
 	 * @throws NotWellFormattedException
 	 */
-	public IscrizioneBean doRetrieveByKey(int id,String mail) throws SQLException, NotFoundException, NoPermissionException, NotWellFormattedException{
+	public synchronized IscrizioneBean doRetrieveByKey(int id,String mail) throws SQLException, NotFoundException, NoPermissionException, NotWellFormattedException{
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		IscrizioneBean iscrizione=new IscrizioneBean();
-		accountManager= new AccountManager();
-		corsoManager= new CorsoManager();
+		accountManager= AccountManager.getIstanza();
+		corsoManager= CorsoManager.getIstanza();
 		
 		String sql="SELECT* FROM iscrizione WHERE accountmail=? AND corsoIdCorso=?";		
 		try {
@@ -68,7 +77,7 @@ public class IscrizioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return iscrizione;
@@ -83,10 +92,10 @@ public class IscrizioneManager {
 	 * @throws NoPermissionException
 	 * @throws NotWellFormattedException 
 	 */
-	public Collection<IscrizioneBean> getIscrizioniUtente(AccountBean account) throws SQLException, NotFoundException, NoPermissionException, NotWellFormattedException {
-		accountManager= new AccountManager();
-		lezioneManager= new LezioneManager();
-		corsoManager=new CorsoManager();
+	public synchronized Collection<IscrizioneBean> getIscrizioniUtente(AccountBean account) throws SQLException, NotFoundException, NoPermissionException, NotWellFormattedException {
+		accountManager= AccountManager.getIstanza();
+		lezioneManager= LezioneManager.getIstanza();
+		corsoManager=CorsoManager.getIstanza();
 		if(!accountManager.checkAccount(account)) throw new NotFoundException("Questo account non esiste");
 		if(!account.getTipo().equals(Ruolo.Utente)) throw new NoPermissionException("Questo utente non puï¿½ avere corsi creati");
 		
@@ -131,66 +140,13 @@ public class IscrizioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();//KONO DIO DA
+				DriverManagerConnectionPool.releaseConnection(connection);//KONO DIO DA
 				//SEKAI ICHI!
 				//NANIII!?!?
 			}
 		}
 		return collection;
-	}
-
-//	
-//	/**
-//	 * Recupera tutti gli utenti iscritti ad un corso
-//	 * @param corso
-//	 * @return
-//	 * @throws SQLException
-//	 * @throws NotFoundException
-//	 * @throws NoPermissionException
-//	 */
-//	public Collection<IscrizioneBean> getIscrittiCorso(int corso) throws SQLException, NotFoundException, NoPermissionException {
-//		accountManager= new AccountManager();
-//		lezioneManager= new LezioneManager();
-//		corsoManager=new CorsoManager();
-//		if(!corsoManager.checkCorso(corso)) throw new NotFoundException("Questo corso non esiste");
-//		CorsoBean tmp=new CorsoBean();
-//		tmp.setIdCorso(corso);
-//		Connection connection=null;
-//		PreparedStatement preparedStatement=null;
-//		Collection<IscrizioneBean> collection= new LinkedList<IscrizioneBean>();
-//		
-//		String sql="SELECT* FROM iscrizione WHERE corsoIdCorso=?";
-//		
-//		try {
-//			connection=DriverManagerConnectionPool.getConnection();
-//			connection.setAutoCommit(false);
-//			preparedStatement= connection.prepareStatement(sql);
-//			preparedStatement.setInt(1, corso);
-//			ResultSet rs= preparedStatement.executeQuery();
-//			while(rs.next()) {
-//				IscrizioneBean iscrizione= new IscrizioneBean();
-//				iscrizione.setDataPagamento(rs.getDate("DataPagamento"));
-//				iscrizione.setFattura(rs.getString("fattura"));
-//				iscrizione.setImporto(rs.getInt("importo"));
-//				iscrizione.setCorso(tmp); //aggiungo il corso
-//				AccountBean account=accountManager.doRetrieveByKey(rs.getString("accountMail")); //recupero l'account
-//				iscrizione.setAccount(account); //aggiungo iscrizione all'account e viceversa
-//				collection.add(iscrizione);
-//			}
-//			connection.commit();
-//		}finally {
-//			try {
-//			if(preparedStatement!=null)
-//				preparedStatement.close();
-//			}finally {
-//				connection.close();
-//			}
-//		}
-//		return collection;
-//	}
-//	
-	
-	
+	}	
 	
 	/**
 	 * Recupera tutti gli utenti iscritti ad un corso
@@ -200,10 +156,10 @@ public class IscrizioneManager {
 	 * @throws NotFoundException
 	 * @throws NoPermissionException
 	 */
-	public Collection<IscrizioneBean> getIscrittiCorso(CorsoBean corso) throws SQLException, NotFoundException, NoPermissionException {
-		accountManager= new AccountManager();
-		lezioneManager= new LezioneManager();
-		corsoManager=new CorsoManager();
+	public synchronized Collection<IscrizioneBean> getIscrittiCorso(CorsoBean corso) throws SQLException, NotFoundException, NoPermissionException {
+		accountManager= AccountManager.getIstanza();
+		lezioneManager= LezioneManager.getIstanza();
+		corsoManager=CorsoManager.getIstanza();
 		if(!corsoManager.checkCorso(corso)) throw new NotFoundException("Questo corso non esiste");
 		
 		Connection connection=null;
@@ -235,7 +191,7 @@ public class IscrizioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return collection;
@@ -250,10 +206,11 @@ public class IscrizioneManager {
 	 * @throws NoPermissionException 
 	 * @throws NotWellFormattedException 
 	 */
-	public void iscriviStudente(IscrizioneBean iscrizione) throws SQLException, NotFoundException, AlreadyExistingException, NoPermissionException, NotWellFormattedException {
-		accountManager=new AccountManager();
-		corsoManager= new CorsoManager();
+	public synchronized void iscriviStudente(IscrizioneBean iscrizione) throws SQLException, NotFoundException, AlreadyExistingException, NoPermissionException, NotWellFormattedException {
+		accountManager=AccountManager.getIstanza();
+		corsoManager= CorsoManager.getIstanza();
 		//TODO Verificare perchÃ¨ si usano solo le key per i check
+		if(!isWellFormatted(iscrizione)) throw new NotWellFormattedException("L'iscrizione non è ben formattata");
 		if(checkIscrizione(iscrizione.getCorso().getIdCorso(),iscrizione.getAccount().getMail())) 
 												throw new AlreadyExistingException("L'iscrizione esiste giï¿½");
 		if(!corsoManager.checkCorso(iscrizione.getCorso())) throw new NotFoundException("Il corso non esiste");
@@ -266,6 +223,7 @@ public class IscrizioneManager {
 		
 		try {
 			connection=DriverManagerConnectionPool.getConnection();
+			connection.setAutoCommit(false);
 			preparedStatement= connection.prepareStatement(sql);
 			preparedStatement.setString(1,iscrizione.getAccount().getMail());
 			preparedStatement.setInt(2,iscrizione.getCorso().getIdCorso());
@@ -273,14 +231,28 @@ public class IscrizioneManager {
 			preparedStatement.setDouble(4,iscrizione.getImporto());
 			preparedStatement.setInt(5, Integer.parseInt(iscrizione.getFattura()));
 			preparedStatement.executeUpdate();
+			if(!connection.getAutoCommit())
+				connection.commit();
 		}finally {
 			try {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
+	}
+	
+	private AccountBean account;
+	private CorsoBean corso;
+	private Date dataPagamento;
+	private double importo;
+	private String fattura;
+
+	public synchronized boolean isWellFormatted(IscrizioneBean iscrizione) {
+		Date dataOdierna = new Date();
+		return account!=null && corso!=null && dataPagamento!=null && !dataPagamento.before(dataOdierna) && importo>=0 
+				&& fattura!=null && fattura.matches("^[0-9]$"); //TODO Quanto è grande la fattura?
 	}
 
 	/**
@@ -310,7 +282,7 @@ public class IscrizioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return rs.next();

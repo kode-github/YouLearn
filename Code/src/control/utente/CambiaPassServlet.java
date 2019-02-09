@@ -24,7 +24,7 @@ public class CambiaPassServlet extends HttpServlet {
 	
     public CambiaPassServlet() {
         super();
-        manager= new AccountManager();
+        manager= AccountManager.getIstanza();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

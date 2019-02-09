@@ -25,7 +25,7 @@ public class LoginServlet extends HttpServlet {
     
     public LoginServlet() {
         super();
-        manager=new AccountManager();
+        manager=AccountManager.getIstanza();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

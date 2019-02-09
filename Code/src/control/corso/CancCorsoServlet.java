@@ -21,7 +21,7 @@ public class CancCorsoServlet extends HttpServlet {
     CorsoManager manager;
     public CancCorsoServlet() {
         super();
-        manager=new CorsoManager();
+        manager=CorsoManager.getIstanza();
     }
 
 	/**

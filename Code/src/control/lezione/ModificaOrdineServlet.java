@@ -33,7 +33,7 @@ public class ModificaOrdineServlet extends HttpServlet {
     
     public ModificaOrdineServlet() {
         super();
-        manager=new LezioneManager();
+        manager=LezioneManager.getIstanza();
     }
 
 	

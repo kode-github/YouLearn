@@ -27,8 +27,8 @@ public class VisualizzaProfiloServlet extends HttpServlet {
 	IscrizioneManager iscrizione;
     public VisualizzaProfiloServlet() {
         super();
-        manager=new CorsoManager();
-        iscrizione=new IscrizioneManager();
+        manager=CorsoManager.getIstanza();
+        iscrizione=IscrizioneManager.getIstanza();
     }
 
 

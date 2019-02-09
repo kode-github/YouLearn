@@ -31,7 +31,7 @@ public class InsLezioneServlet extends HttpServlet {
 	
     public InsLezioneServlet() {
         super();
-        manager=new LezioneManager();
+        manager=LezioneManager.getIstanza();
     }
 
 	

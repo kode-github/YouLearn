@@ -28,7 +28,7 @@ public class ModificaLezioneServlet extends HttpServlet {
 	
     public ModificaLezioneServlet() {
         super();
-        manager=new LezioneManager();
+        manager=LezioneManager.getIstanza();
     }
 
 	

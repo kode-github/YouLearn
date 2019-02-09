@@ -34,7 +34,7 @@ public class LezioneManagerTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		lezioneManager=new LezioneManager();
+		lezioneManager=LezioneManager.getIstanza();
 	}
 
 	/**

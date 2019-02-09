@@ -3,11 +3,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.naming.NoPermissionException;
 import bean.AccountBean;
 import bean.CartaDiCreditoBean;
@@ -20,12 +15,16 @@ import exception.NotWellFormattedException;
 
 public class CartaDiCreditoManager {
 
-	AccountManager accountManager;
+	private static CartaDiCreditoManager istanza;
+	private AccountManager accountManager;
 	
-	public  CartaDiCreditoManager() {
-		
+	private CartaDiCreditoManager() { }
+	
+	public static CartaDiCreditoManager getIstanza() {
+		if(istanza==null)
+			istanza=new CartaDiCreditoManager();
+		return istanza;
 	}
-	
 	
 	/**
 	 * Ottiene una carta dal db con l'account associato
@@ -35,11 +34,11 @@ public class CartaDiCreditoManager {
 	 * @throws NotFoundException La carta non esiste
 	 * @throws NoPermissionException 
 	 */
-	public CartaDiCreditoBean doRetrieveByKey(String code) throws SQLException,NotFoundException, NoPermissionException {
+	public synchronized CartaDiCreditoBean doRetrieveByKey(String code) throws SQLException,NotFoundException, NoPermissionException {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		CartaDiCreditoBean temp=new CartaDiCreditoBean();
-		accountManager= new AccountManager();
+		accountManager= AccountManager.getIstanza();
 		
 		String sql="SELECT* FROM CartaDiCredito WHERE numeroCarta=?";		
 		try {
@@ -63,7 +62,7 @@ public class CartaDiCreditoManager {
 				if(preparedStatement!=null)
 					preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 				
 		}
@@ -80,35 +79,40 @@ public class CartaDiCreditoManager {
 	 * @throws AlreadyExistingException La carta esiste gi�
 	 * @throws NoPermissionException 
 	 */
-	public void registerCard(CartaDiCreditoBean carta) throws SQLException, NotWellFormattedException, AlreadyExistingException, NoPermissionException {
+	public synchronized void registerCard(CartaDiCreditoBean carta) throws SQLException, NotWellFormattedException, AlreadyExistingException, NoPermissionException {
 		if(!isWellFormatted(carta)) throw new NotWellFormattedException("La carta non � formattata bene");
 		if(checkCarta(carta.getNumeroCarta())) throw new AlreadyExistingException("La carta esiste gi�");
 		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		
-		String sql="INSERT INTO Carta VALUES(?,?,?,?,?)";
+		String sql="INSERT INTO CartaDiCredito VALUES(?,?,?,?,?,?)";
 		try {
 			connection=DriverManagerConnectionPool.getConnection();
-			connection.setAutoCommit(false);
+			connection.setAutoCommit(false); 
+			System.out.println(carta.getTipo().toString());
 			preparedStatement= connection.prepareStatement(sql);
-			preparedStatement.setString(1, carta.getNomeIntestatario());
-			preparedStatement.setString(2, carta.getNumeroCarta());
-			preparedStatement.setString(3, carta.getMeseScadenza());
-			preparedStatement.setString(4, carta.getAnnoScadenza());
-			preparedStatement.setString(5, carta.getTipo().toString());
+			preparedStatement.setString(1, carta.getNumeroCarta());
+			preparedStatement.setString(2, carta.getMeseScadenza());
+			preparedStatement.setString(3, carta.getAnnoScadenza());
+			preparedStatement.setString(4, carta.getTipo().toString());
+			preparedStatement.setString(5, carta.getNomeIntestatario());
+			preparedStatement.setString(6, carta.getAccount().getMail());
+			
 			System.out.println("doSave: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
-			connection.commit();
+			if(!connection.getAutoCommit())
+				connection.commit();
 		}catch(SQLException e) {
 			connection.rollback();
+			e.printStackTrace();
 		}
 		finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 			} finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 	}
@@ -124,7 +128,7 @@ public class CartaDiCreditoManager {
 	 * @throws NotWellFormattedException 
 	 * @throws Exception
 	 */
-	public void modifyCard(CartaDiCreditoBean newCarta,String numeroCarta) throws SQLException, NotFoundException, AlreadyExistingException, NoPermissionException, NotWellFormattedException {
+	public synchronized void modifyCard(CartaDiCreditoBean newCarta,String numeroCarta) throws SQLException, NotFoundException, AlreadyExistingException, NoPermissionException, NotWellFormattedException {
 		if(!isWellFormatted(newCarta)) throw new NotWellFormattedException("La carta non è ben formattata");
 		if(!checkCarta(numeroCarta)) throw new NotFoundException("La carta da modificare non esiste");
 		if(checkCarta(newCarta.getNumeroCarta())) throw new AlreadyExistingException("La carta inserita esiste gi�");
@@ -148,13 +152,14 @@ public class CartaDiCreditoManager {
 			preparedStatement.setString(7, newCarta.getNumeroCarta());
 			
 			preparedStatement.executeUpdate();
-			
+			if(!connection.getAutoCommit())
+				connection.commit();
 		}finally {
 			try{
 				if(preparedStatement!=null)
 					preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 				
 		}	
@@ -167,7 +172,7 @@ public class CartaDiCreditoManager {
 	 * @throws SQLException 
 	 * @throws NoPermissionException 
 	 */
-	public boolean checkCarta(String numeroCarta) throws SQLException {
+	public synchronized boolean checkCarta(String numeroCarta) throws SQLException {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		
@@ -186,7 +191,7 @@ public class CartaDiCreditoManager {
 					preparedStatement.close();
 			}finally {
 				if(connection != null)
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 	}
@@ -200,8 +205,8 @@ public class CartaDiCreditoManager {
 	 * @throws NotFoundException Non esiste l'account o la carta associata
 	 * @throws NoPermissionException L'account � un supervisore
 	 */
-	public CartaDiCreditoBean retrieveByAccount(AccountBean account) throws SQLException, NotFoundException, NoPermissionException {
-		accountManager=new AccountManager();
+	public synchronized CartaDiCreditoBean retrieveByAccount(AccountBean account) throws SQLException, NotFoundException, NoPermissionException {
+		accountManager=AccountManager.getIstanza();
 		if(!accountManager.checkAccount(account)) throw new NotFoundException("Questo account non esiste");
 		if(!account.getTipo().equals(Ruolo.Utente)) throw new NoPermissionException("Questo utente non pu� avere corsi creati");
 		
@@ -230,7 +235,7 @@ public class CartaDiCreditoManager {
 				if(preparedStatement!=null)
 					preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		
@@ -242,7 +247,7 @@ public class CartaDiCreditoManager {
 	 * @param carta La carta da controllare
 	 * @return true se � ben formattata, false altrimenti
 	 */
-	public boolean isWellFormatted(CartaDiCreditoBean carta) {
+	public synchronized boolean isWellFormatted(CartaDiCreditoBean carta) {
 		/*String nome=carta.getNomeIntestatario();
 		String numero=carta.getNumeroCarta();
 		Integer mese=Integer.parseInt(carta.getMeseScadenza());

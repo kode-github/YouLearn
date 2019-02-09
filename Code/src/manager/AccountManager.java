@@ -16,11 +16,18 @@ import exception.*;
 
 public class AccountManager {
 	
+	private static AccountManager istanza;
 	private CartaDiCreditoManager managerCarta;
 	private CorsoManager managerCorso;
 	private IscrizioneManager managerIscrizione;
 	
-	public AccountManager() {
+	
+	private AccountManager() {}
+	
+	public static AccountManager getIstanza() {
+		if(istanza==null)
+			istanza=new AccountManager();
+		return istanza;
 	}
 
 	
@@ -60,7 +67,7 @@ public class AccountManager {
 				preparedStatement.close();
 			}finally {
 				if(connection != null)
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return temp;
@@ -92,12 +99,14 @@ public class AccountManager {
 			preparedStatement.setString(2, email);
 			System.out.println("doUpdate: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
+			if(!connection.getAutoCommit())
+				connection.commit();
 		} finally {
 				try{
 					if (preparedStatement != null)
 						preparedStatement.close();
 				}finally {
-					connection.close();
+					DriverManagerConnectionPool.releaseConnection(connection);
 				}		
 		}
 		
@@ -130,13 +139,14 @@ public class AccountManager {
 			preparedStatement.setString(2, email);
 			preparedStatement.executeUpdate();
 			System.out.println("Modfica mail: "+preparedStatement.toString());
-			connection.commit();
+			if(!connection.getAutoCommit())
+				connection.commit();
 		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 			} finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		
@@ -157,9 +167,9 @@ public class AccountManager {
 		AccountBean temp=doRetrieveByKey(email); //NotFoundException se non esiste
 		if(!temp.getPassword().equals(password)) throw new DatiErratiException("Le password non corrispondono"); 
 		
-		managerCarta= new CartaDiCreditoManager();
-		managerCorso= new CorsoManager();
-		managerIscrizione= new IscrizioneManager();
+		managerCarta= CartaDiCreditoManager.getIstanza();
+		managerCorso= CorsoManager.getIstanza();
+		managerIscrizione= IscrizioneManager.getIstanza();
 
 		
 		if(temp.getTipo().equals(Ruolo.Utente)) {
@@ -187,7 +197,7 @@ public class AccountManager {
 	public void setRegistration(AccountBean user) throws NotWellFormattedException, AlreadyExistingException, SQLException, NoPermissionException {
 		if(!isWellFormatted(user)) throw new NotWellFormattedException("Dati non corretti");
 		if(checkMail(user.getMail())) throw new AlreadyExistingException("Questo account esiste gi�");
-		managerCarta= new CartaDiCreditoManager();
+		managerCarta= CartaDiCreditoManager.getIstanza();
 		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
@@ -206,15 +216,17 @@ public class AccountManager {
 			System.out.println("Registrazione Utente: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
 			managerCarta.registerCard(user.getCarta()); //inserisco la carta
-			connection.commit();
+			if(!connection.getAutoCommit())
+				connection.commit();
 		}catch(SQLException e) {
 			connection.rollback();
+			e.printStackTrace();
 		}finally {
 				try{
 					if (preparedStatement != null)
 						preparedStatement.close();
 				}finally {
-					connection.close();
+					DriverManagerConnectionPool.releaseConnection(connection);
 				}		
 		}
 	}
@@ -249,7 +261,7 @@ public class AccountManager {
 				preparedStatement.close();
 			}finally {
 				if(connection != null)
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 	}
@@ -284,7 +296,7 @@ public class AccountManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		
@@ -356,7 +368,7 @@ public class AccountManager {
 				if(statement!=null)
 					statement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return temp;

@@ -32,7 +32,7 @@ public class ModCorsoServlet extends HttpServlet {
 	
     public ModCorsoServlet() {
         super();
-        manager=new CorsoManager();
+        manager=CorsoManager.getIstanza();
     }
 
 	

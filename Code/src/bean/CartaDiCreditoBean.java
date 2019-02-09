@@ -33,6 +33,17 @@ public class CartaDiCreditoBean {
 	public CartaDiCreditoBean() {};
 
 
+	public CartaDiCreditoBean(String numeroCarta, String meseScadenza, String annoScadenza, String nomeIntestatario, CartaEnum tipo,
+			AccountBean account) {
+		this.numeroCarta = numeroCarta;
+		this.meseScadenza = meseScadenza;
+		this.annoScadenza = annoScadenza;
+		this.nomeIntestatario = nomeIntestatario;
+		this.account = account;
+		this.tipo = tipo;
+		
+	}
+
 	/**
 	 * Ritorna il nome dell'intestatario
 	 * @return String : nomeIntestatario

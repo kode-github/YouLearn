@@ -32,11 +32,18 @@ import exception.NotWellFormattedException;
 
 public class LezioneManager {
 	
-	AccountManager accountManager;
-	CorsoManager corsoManager;
+	private static LezioneManager istanza;
+	private AccountManager accountManager;
+	private CorsoManager corsoManager;
 	
-	public LezioneManager() {
+	private LezioneManager() { }
+	
+	public static LezioneManager getIstanza() {
+		if(istanza==null)
+			istanza=new LezioneManager();
+		return istanza;
 	}
+
 
 	/**
 	 * Modifica l'ordine delle lezioni di un corso
@@ -49,8 +56,8 @@ public class LezioneManager {
 	 * @throws NotFoundException 
 	 * @throws NoPermissionException 
 	 */
-	public void modificaOrdine(int corso,String coppie) throws SQLException, DatiErratiException, NoPermissionException, NotFoundException, NotWellFormattedException {
-		corsoManager=new CorsoManager();
+	public synchronized void modificaOrdine(int corso,String coppie) throws SQLException, DatiErratiException, NoPermissionException, NotFoundException, NotWellFormattedException {
+		corsoManager=CorsoManager.getIstanza();
 		//Recupera le lezioni di un corso
 		LinkedList<LezioneBean> lezione=(LinkedList<LezioneBean>)corsoManager.doRetrieveByKey(corso).getLezioni();
 		
@@ -71,7 +78,7 @@ public class LezioneManager {
     	//Controllo che i numeri lezione siano consecutivi e partano da 1
     	numeriLezione.sort(new Comparator<Integer>() {
     		@Override
-    		public int compare(Integer o1, Integer o2) {
+    		public synchronized int compare(Integer o1, Integer o2) {
     			if(o1>o2)
     				return 1;
     			if(o1<o2) 
@@ -102,13 +109,14 @@ public class LezioneManager {
 			c.setAutoCommit(false);
 			for(LezioneBean l: lezione) 
 				changeNumeroLezione(l, c);
-			c.commit();
+			if(!c.getAutoCommit())
+				c.commit();
 			System.out.println("Sono dopo il commit");
 		}catch(SQLException | DatiErratiException  e) {
 			c.rollback();
 			e.printStackTrace();
 		}finally {
-			c.close();
+			DriverManagerConnectionPool.releaseConnection(c);
 		}
 		
 	}
@@ -147,18 +155,18 @@ public class LezioneManager {
 	 * @throws SQLException
 	 * @throws IOException
 	 */
-//	public void insLezioniMultiple(ArrayList<LezioneBean> lezioni,ArrayList<Part> files) throws DatiErratiException, NotWellFormattedException, SQLException, IOException {
+//	public synchronized void insLezioniMultiple(ArrayList<LezioneBean> lezioni,ArrayList<Part> files) throws DatiErratiException, NotWellFormattedException, SQLException, IOException {
 //		if(lezioni==null || files==null || lezioni.size()!=files.size())
 //									throw new DatiErratiException("Non c'ï¿½ un file per ogni lezione");
 //		/**Inizio le modifiche */
-//		corsoManager= new CorsoManager();
+//		corsoManager= CorsoManager.getIstanza();
 //		int i=0;
 //		Connection c=DriverManagerConnectionPool.getConnection();
 //		c.setAutoCommit(false);
 //		for(Part file: files) {
 //			insLezione(lezioni.get(i++),file,c);
 //		}
-//		c.close();
+//		DriverManagerConnectionPool.releaseConnection(c);
 //	}
 	
 	/**
@@ -171,8 +179,8 @@ public class LezioneManager {
 	 * @throws DatiErratiException la lezione esiste giï¿½ o non ï¿½ collegata al corso giusto
 	 * @throws IOException Errore nella scrittura del file su disco
 	 */
-	 public void insLezione(LezioneBean lezione,Part file) throws NotWellFormattedException, SQLException, DatiErratiException, IOException {
-		corsoManager=new CorsoManager();
+	 public synchronized void insLezione(LezioneBean lezione,Part file) throws NotWellFormattedException, SQLException, DatiErratiException, IOException {
+		corsoManager=CorsoManager.getIstanza();
 		 if(lezione.getIdLezione()!=null || lezione.getCorso().getIdCorso()==null ||
 									!corsoManager.checkCorso(lezione.getCorso().getIdCorso())) 
 			throw new DatiErratiException("la lezione esiste giï¿½ o il corso non esiste");
@@ -204,7 +212,8 @@ public class LezioneManager {
 			
 			file.write(path.toString()); //Scrivo il file sul disco
 			
-			c.commit(); //conferma l'inserimento nel db
+			if(!c.getAutoCommit())
+				c.commit(); //conferma l'inserimento nel db
 		}catch(SQLException | IOException e) {
 			e.printStackTrace();
 			//C'ï¿½ stato un errore nel salvataggio del file o nell'inserimento
@@ -215,7 +224,7 @@ public class LezioneManager {
 				if(statement!=null)
 					statement.close();
 			}finally {
-				c.close();
+				DriverManagerConnectionPool.releaseConnection(c);
 			}	
 		}
 	}
@@ -229,7 +238,7 @@ public class LezioneManager {
 	 * @throws DatiErratiException 
 	 * @throws NotFoundException 
 	 */
-	public void delLezione(LezioneBean lezione) throws SQLException, DatiErratiException, NotFoundException {
+	public synchronized void delLezione(LezioneBean lezione) throws SQLException, DatiErratiException, NotFoundException {
 		if(!checkLezione(lezione.getIdLezione())) throw new NotFoundException("La lezione non esiste");
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -253,11 +262,13 @@ public class LezioneManager {
 					+"\\Lezioni\\"+lezione.getFilePath());
 			Files.delete(path);
 			
-			connection.commit();
+			if(!connection.getAutoCommit())
+				connection.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			connection.rollback();
 		} catch (IOException e) {
+			//Il file non esiste
 			connection.commit();
 			e.printStackTrace();
 		} finally {
@@ -265,7 +276,7 @@ public class LezioneManager {
 				if (preparedStatement != null)
 					preparedStatement.close();
 			} finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 	}
@@ -285,12 +296,12 @@ public class LezioneManager {
 				if(statement!=null)
 					statement.close();
 			}finally {
-				c.close();
+				DriverManagerConnectionPool.releaseConnection(c);
 			}	
 		}
 	}
 
-	public boolean checkLezione(LezioneBean lezione) throws SQLException, DatiErratiException {
+	public synchronized boolean checkLezione(LezioneBean lezione) throws SQLException, DatiErratiException {
 		if(lezione==null || lezione.getIdLezione()==null || !lezioneIsWellFormatted(lezione) ) 
 											throw new DatiErratiException("La lezione non ï¿½ corretta");
 		
@@ -314,7 +325,7 @@ public class LezioneManager {
 				if(statement!=null)
 					statement.close();
 			}finally {
-				c.close();
+				DriverManagerConnectionPool.releaseConnection(c);
 			}	
 		}
 	}
@@ -326,8 +337,8 @@ public class LezioneManager {
 	 * @throws NotWellFormattedException 
 	 * @throws SQLException 
 	 */
-	public Collection<LezioneBean> retrieveLezioniByCorso(CorsoBean corso) throws NotWellFormattedException, SQLException{
-		corsoManager=new CorsoManager();
+	public synchronized Collection<LezioneBean> retrieveLezioniByCorso(CorsoBean corso) throws NotWellFormattedException, SQLException{
+		corsoManager=CorsoManager.getIstanza();
 		if(corso.getIdCorso()==null || !corsoManager.isWellFormatted(corso)) 
 								throw new NotWellFormattedException("Il corso non ï¿½ ben formattato");
 		Connection connection=null;
@@ -356,7 +367,7 @@ public class LezioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return collection;
@@ -369,7 +380,7 @@ public class LezioneManager {
 	 * @throws SQLException
 	 * @throws NotFoundException
 	 */
-	public CommentoBean retrieveCommentoById(int id) throws SQLException, NotFoundException {
+	public synchronized CommentoBean retrieveCommentoById(int id) throws SQLException, NotFoundException {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		CommentoBean temp=new CommentoBean();
@@ -400,7 +411,7 @@ public class LezioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return temp;
@@ -413,7 +424,7 @@ public class LezioneManager {
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean delCommento(int code) throws Exception {
+	public synchronized boolean delCommento(int code) throws Exception {
 		if(!checkCommento(code)) throw new NotFoundException("Questo commento non esiste");
 		
 		Connection connection = null;
@@ -430,13 +441,14 @@ public class LezioneManager {
 
 			System.out.println("doDelete: "+ preparedStatement.toString());
 			result = preparedStatement.executeUpdate();
-			connection.commit();
+			if(!connection.getAutoCommit())
+				connection.commit();
 		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 			} finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return (result != 0);
@@ -464,7 +476,7 @@ public class LezioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		
@@ -476,7 +488,7 @@ public class LezioneManager {
 	 * @throws SQLException 
 	 * @throws Exception
 	 */
-	public void insCommento(CommentoBean product) throws NotWellFormattedException, SQLException {
+	public synchronized void insCommento(CommentoBean product) throws NotWellFormattedException, SQLException {
 		if(product.getIdCommento()!=null || !commentoIsWellFormatted(product)) throw new NotWellFormattedException("Il commento non"
 																					+ "ï¿½ ben formattato");
 		
@@ -494,13 +506,14 @@ public class LezioneManager {
 			preparedStatement.setString(4, product.getAccountCreatore().getMail());
 			System.out.println("Inserisci commento: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
-			connection.commit();
+			if(!connection.getAutoCommit())
+				connection.commit();
 		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 			} finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 
@@ -515,7 +528,8 @@ public class LezioneManager {
 	 * @throws NotFoundException
 	 * @throws NotWellFormattedException 
 	 */
-	public Collection<CommentoBean> retrieveCommentiByLezione(LezioneBean lezione) throws SQLException,NotFoundException, NotWellFormattedException {
+	public synchronized Collection<CommentoBean> retrieveCommentiByLezione(LezioneBean lezione) throws SQLException,NotFoundException, NotWellFormattedException {
+		accountManager=AccountManager.getIstanza();
 		if(!lezioneIsWellFormatted(lezione) ) throw new NotWellFormattedException("La lezione non ï¿½ ben formattata");
 		
 		Connection connection=null;
@@ -544,7 +558,7 @@ public class LezioneManager {
 			if(preparedStatement!=null)
 				preparedStatement.close();
 			}finally {
-				connection.close();
+				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
 		return list;
@@ -556,8 +570,8 @@ public class LezioneManager {
 	 * @param commento
 	 * @return
 	 */
-	public boolean commentoIsWellFormatted(CommentoBean commento) {
-		accountManager=new AccountManager();
+	public synchronized boolean commentoIsWellFormatted(CommentoBean commento) {
+		accountManager=AccountManager.getIstanza();
 		//idcommento, testo, accountCreatore, lezione
 		return commento.getTesto()!=null && commento.getTesto().matches("^[a-zA-Z0-9]{1,1024}") &&
 				commento.getAccountCreatore()!=null && accountManager.isWellFormatted(commento.getAccountCreatore()) &&
@@ -571,8 +585,8 @@ public class LezioneManager {
 	 * @param lezione
 	 * @return
 	 */
-	public boolean lezioneIsWellFormatted(LezioneBean lezione) {
-		corsoManager=new CorsoManager();
+	public synchronized boolean lezioneIsWellFormatted(LezioneBean lezione) {
+		corsoManager=CorsoManager.getIstanza();
 		if(lezione.getIdLezione()!=null)
 			if(lezione.getFilePath()==null || !lezione.getFilePath().matches("^[a-zA-Z0-9\\.-]{10,2048}") || lezione.getNumeroLezione()<=0 
 			|| lezione.getVisualizzazioni()<0)
@@ -592,7 +606,7 @@ public class LezioneManager {
 	 * @throws NotWellFormattedException
 	 * @throws IOException
 	 */
-	public void modificaLezione(LezioneBean lezione, Part part) throws SQLException, NotFoundException, NotWellFormattedException, IOException {
+	public synchronized void modificaLezione(LezioneBean lezione, Part part) throws SQLException, NotFoundException, NotWellFormattedException, IOException {
 		if(!checkLezione(lezione.getIdLezione())) throw new NotFoundException("La lezione non esiste");
 		if(!lezioneIsWellFormatted(lezione)) throw new NotWellFormattedException("La lezione non è ben formattata");
 		
@@ -624,6 +638,8 @@ public class LezioneManager {
 				lezione.setFilePath(path.toString());
 				part.write(path.toString());
 			}
+			if(!c.getAutoCommit())
+				c.commit();
 		}catch (SQLException e) {
 			c.rollback();
 		}
@@ -632,7 +648,7 @@ public class LezioneManager {
 					if(statement!=null)
 						statement.close();
 				}finally {
-					c.close();
+					DriverManagerConnectionPool.releaseConnection(c);
 				}		
 		}
 		

@@ -37,7 +37,7 @@ public class CreaCorsoServlet extends HttpServlet {
   
     public CreaCorsoServlet() {
         super();
-        manager=new CorsoManager();
+        manager=CorsoManager.getIstanza();
     }
 
 	
