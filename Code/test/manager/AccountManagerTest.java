@@ -4,6 +4,7 @@
 package manager;
 
 
+
 import static org.junit.Assert.*;
 
 import java.sql.Connection;
@@ -285,15 +286,13 @@ public class AccountManagerTest {
 	private void createTmpComponent() throws NoPermissionException, NotWellFormattedException, AlreadyExistingException, SQLException {
 		
 		tmpCarta= new CartaDiCreditoBean("00001111188882222","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount);
-		
-		tmpAccount = new AccountBean("Mario", "Sessa", "PentiumD", "Prova@mail.com", Ruolo.Utente, true, tmpCarta);
 		tmpCarta.setAccount(tmpAccount);
-		tmpAccount.setCarta(tmpCarta);
+		tmpAccount = new AccountBean("Mario", "Sessa", "PentiumD", "Prova@mail.com", Ruolo.Utente, true, tmpCarta);
 		
-		tmpCarta2= new CartaDiCreditoBean("00001111188883333","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount2);
-		tmpAccount2 = new AccountBean("Mario", "Sessa", "PentiumD", "Prova2@mail.com", Ruolo.Utente, true, tmpCarta2);
-		tmpAccount2.setCarta(tmpCarta2);
-		tmpCarta2.setAccount(tmpAccount2);
+		
+		tmpCarta2= new CartaDiCreditoBean("00001111188883333","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount);
+		tmpAccount2 = new AccountBean("Mario", "Sessa", "PentiumD", "Prova2@mail.com", Ruolo.Utente, true, tmpCarta);
+		tmpCarta.setAccount(tmpAccount);
 	
 		managerAccount.setRegistration(tmpAccount);
 		managerAccount.setRegistration(tmpAccount2);
@@ -326,3 +325,4 @@ public class AccountManagerTest {
 	}
 
 }
+

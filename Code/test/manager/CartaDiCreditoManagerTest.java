@@ -134,12 +134,12 @@ public class CartaDiCreditoManagerTest {
 
 	private void createTmpComponent() throws NoPermissionException, NotWellFormattedException, AlreadyExistingException, SQLException {
 		
-		tmpCarta= new CartaDiCreditoBean("00001111188882222","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount);
+		tmpCarta= new CartaDiCreditoBean("0000111188882222","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount);
 		tmpCarta.setAccount(tmpAccount);
 		tmpAccount = new AccountBean("Mario", "Sessa", "PentiumD", "Prova@mail.com", Ruolo.Utente, true, tmpCarta);
 		
 		
-		tmpCarta2= new CartaDiCreditoBean("00001111188883333","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount);
+		tmpCarta2= new CartaDiCreditoBean("0000111188883333","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount);
 		tmpAccount2 = new AccountBean("Mario", "Sessa", "PentiumD", "Prova2@mail.com", Ruolo.Utente, true, tmpCarta);
 		tmpCarta.setAccount(tmpAccount);
 	

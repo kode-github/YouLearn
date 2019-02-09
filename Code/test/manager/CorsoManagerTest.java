@@ -45,8 +45,8 @@ public class CorsoManagerTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		managerCorso = new CorsoManager(); 
-		managerAccount = new AccountManager();
+		managerCorso = CorsoManager.getIstanza();
+		managerAccount = AccountManager.getIstanza();
 		assertNotNull(managerCorso);
 	}
 

@@ -29,9 +29,9 @@ public class IscrizioneManagerTest{
 	
 	@Before
 	public void setUp() throws Exception {
-		managerIscrizione = new IscrizioneManager();
-		managerCorso = new CorsoManager();
-		managerAccount = new AccountManager();
+		managerIscrizione = IscrizioneManager.getIstanza();
+		managerCorso = CorsoManager.getIstanza();
+		managerAccount = AccountManager.getIstanza();
 		assertNotNull(managerIscrizione);
 		assertNotNull(managerCorso);
 		assertNotNull(managerAccount);

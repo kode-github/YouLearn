@@ -97,7 +97,7 @@ public class CartaDiCreditoManager {
 			preparedStatement.setString(3, carta.getAnnoScadenza());
 			preparedStatement.setString(4, carta.getNomeIntestatario());
 			preparedStatement.setString(5, carta.getTipo().toString());
-			preparedStatement.setString(6, carta.getAccount().toString());
+			preparedStatement.setString(6, carta.getAccount().getMail().toString());
 			
 			System.out.println("doSave: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
