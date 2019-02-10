@@ -44,7 +44,7 @@ public class CorsoBean {
 	}
 	
 	/**
-	 * Costruttore parametrico del corso.
+	 * Costruttori parametrico del corso.
 	 * @param idCorso
 	 * @param nome
 	 * @param descrizione
@@ -82,6 +82,34 @@ public class CorsoBean {
 		this.lezioni= new LinkedList<LezioneBean>();
 	}
 	
+
+	public CorsoBean(Integer idCorso, String nome, String descrizione, Date dataCreazione, Date dataScadenza,
+			Integer prezzo, Categoria categoria, String copertina, Stato stato, int nIscritti, int nLezioni,
+			Collection<IscrizioneBean> iscrizioni, AccountBean docente, AccountBean supervisore,
+			Collection<LezioneBean> lezioni) {
+		this.idCorso=idCorso;
+		this.nome=nome;
+		this.descrizione=descrizione;
+		this.dataCreazione=dataCreazione;
+		this.dataFine=dataScadenza;
+		this.prezzo=prezzo;
+		this.categoria=categoria;
+		this.copertina=copertina;
+		this.stato=stato;
+		this.nIscritti=nIscritti;
+		this.nLezioni=nLezioni;
+		this.iscrizioni=iscrizioni;
+		this.docente=docente;
+		this.supervisore=supervisore;
+		this.lezioni= lezioni;
+		
+	}
+
+	
+
+
+
+
 
 	/**
 	 * Preleva il valore del nome del corso.
