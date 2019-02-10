@@ -1,6 +1,8 @@
+<%@page import="java.util.Collection"%>
+<%@page import="java.util.LinkedList"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@page import="bean.*" %>
+<%@page import="bean.*"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,68 +31,155 @@
 </head>
 <body>
 
-	<%@include file="Navbar.jsp" %>
+	<%@include file="Navbar.jsp"%>
 
 	<%
-		String idLezione=request.getParameter("idLezione");
-		if(idLezione==null ){
+		String idLezione = request.getParameter("idLezione");
+		if (idLezione == null) {
 			//O una pagina di errore
-			response.sendRedirect(request.getContextPath()+"/Welcome.jsp");
+			response.sendRedirect(request.getContextPath() + "/Welcome.jsp");
 			return;
 		}
-		
-		CorsoBean corso=(CorsoBean) request.getSession().getAttribute("corso");
-		if(corso==null){
+
+		CorsoBean corso = (CorsoBean) request.getSession().getAttribute("corso");
+		if (corso == null) {
 			//O pagina di errore?
-			response.sendRedirect(request.getContextPath()+"/Welcome.jsp");
+			response.sendRedirect(request.getContextPath() + "/Welcome.jsp");
 			return;
 		}
-		LezioneBean lezione=(LezioneBean) request.getSession().getAttribute("lezione");
-		if(lezione==null){
-			response.sendRedirect(request.getContextPath()+"/VisualLezioneServlet?idLezione="+idLezione);
+		LezioneBean lezione = (LezioneBean) request.getSession().getAttribute("lezione");
+		if (lezione == null) {
+			response.sendRedirect(request.getContextPath() + "/VisualLezioneServlet?idLezione=" + idLezione);
 			return;
-		}else{
+		} else {
 			request.getSession().removeAttribute("lezione");
 		}
 		//Ora abbiamo il corso da cui proviene la lezione e la lezione
-	
 	%>
 	<div class="videocontent">
-		<video id="my_video_1" style="width: 100%; height: 100%;"
+		<video id="my_video_1" style="width: 100%%; height: 100%%;"
 			controls="controls" width="100%" height="100%" preload="auto"
 			poster="Images/black.jpg">
-			<source src="Resources\<%=corso.getIdCorso()%>\Lezioni\<%=lezione.getFilePath()%>" type='video/mp4'>
+			<source
+				src="Resources\<%=corso.getIdCorso()%>\Lezioni\<%=lezione.getFilePath()%>"
+				type='video/mp4'>
 		</video>
 	</div>
 
 	<div class="card w-75 mx-auto text-center">
-		<div class="card-header text-center"><%=lezione.getNome().toUpperCase() %></div>
+		<div class="card-header text-center"><%=lezione.getNome().toUpperCase()%></div>
 		<div class="card-body">
-			<h5 class="card-title"><i class="fas fa-user fa-2x"></i><%=lezione.getCorso().getDocente().getNome()+" "+lezione.getCorso().getDocente().getCognome() %></h5>
+			<h5 class="card-title">
+				<i class="fas fa-user fa-2x"></i><%=lezione.getCorso().getDocente().getNome() + " " + lezione.getCorso().getDocente().getCognome()%></h5>
 		</div>
 		<div class="card-body">
-			<h5 class="card-title"><i class="far fa-laugh-beam fa-2x"></i> <%=lezione.getVisualizzazioni() %></h5>
+			<h5 class="card-title">
+				<i class="far fa-laugh-beam fa-2x"></i>
+				<%=lezione.getVisualizzazioni()%></h5>
 		</div>
 	</div>
 
-	<div style="margin-bottom:20px;"class="card w-75 mx-auto text-center">
+	<div style="margin-bottom: 20px;" class="card w-75 mx-auto text-center">
 		<div class="card-header text-center">COMMENTI</div>
+		<form action="YouLearn/InsCommentoServlet" method="post">
+			<div class="card-body">
+
+				<textarea id="txtarea" name="testoCommento"
+					placeholder="Inserisci qui il tuo commento!" class="text-center"></textarea>
+			</div>
+			<div>
+				<button type="submit" style="margin:0px 5px 10px;" formaction="http://localhost:8080/YouLearn/InsCommentoServlet" class="btn float-right btn-success">AGGIUNGI COMMENTO</button>
+			</div>
+		</form>
+		<%
+			Collection<CommentoBean> lista = (Collection<CommentoBean>) lezione.getCommenti();
+		%>
+
+
+
+		<%
+			if (lista.isEmpty()) {
+		%>
+		<div style="margin: 10px 20px 0px; " class="card-header rounded border">COMMENTI DEL
+			DOCENTE:</div>
 		<div class="card-body">
-			<textarea id="txtarea" name="commento"
-				placeholder="Inserisci qui il tuo commento!" class="text-center"></textarea>
+			<div id="com-doc" class=" card-body rounded border border-success">
+				Non ci sono commenti da parte del Docente <b><%=lezione.getCorso().getDocente().getNome()%>
+					<%=lezione.getCorso().getDocente().getCognome()%></b>
+			</div>
 		</div>
-		<div>
-			<a href="#" class="btn float-right">AGGIUNGI COMMENTO</a>
-		</div>
-		
+		<div style="margin: 0px 20px;" class="card-header rounded border">COMMENTI DEGLI UTENTI:</div>
+
 		<div class="card-body">
-					<div id="com-doc" class=" card-body rounded border border-success">Commenti Docente</div>
-			
+			<div id="com-doc" class=" card-body rounded border border-primary">
+				Non ci sono commenti da parte degli Utenti, <b><%=account.getNome()%></b>
+				scrivi tu il primo commento!
+			</div>
 		</div>
-		
+		<%
+			} else {
+		%>
+		<div style="margin: 10px 20px 0px;" class="card-header rounded border">COMMENTI DEL
+			DOCENTE:</div>
 		<div class="card-body">
-					<div class="com-ut card-body rounded border border-primary">Commenti Utenti</div>
-			
+
+
+			<%
+				int x = 0;
+					for (CommentoBean c : lista) {
+
+						if (c.getAccountCreatore().getMail().equals(lezione.getCorso().getDocente().getMail())) {
+			%>
+			<div id="com-doc" class=" card-body rounded border border-success"><%=c.getTesto()%></div>
+			<%
+				x = 1;
+
+						}
+					}
+					if (x == 0) {
+			%>
+
+			<div class="card-body">
+				<div id="com-doc" class=" card-body rounded border border-success ">
+					Non ci sono commenti da parte del Docente <b><%=lezione.getCorso().getDocente().getNome()%>
+						<%=lezione.getCorso().getDocente().getCognome()%></b>
+				</div>
+			</div>
+
+			<%
+				}
+			%>
+		</div>
+
+		<div style="margin: 0px 20px;" class="card-header rounded border">COMMENTI DEGLI UTENTI:</div>
+
+		<div class="card-body">
+			<%
+				int y = 0;
+					for (CommentoBean c : lista) {
+
+						if (!c.getAccountCreatore().getMail().equals(lezione.getCorso().getDocente().getMail())) {
+			%>
+
+			<div id="com-doc" class=" card-body rounded border border-success"><%=c.getTesto()%></div>
+
+			<%
+				y = 1;
+						}
+					}
+					if (y == 0) {
+			%>
+
+			<div id="com-doc" class=" card-body rounded border border-primary">
+				Non ci sono commenti da parte degli Utenti, <b><%=account.getNome()%></b>
+				scrivi tu il primo commento!
+			</div>
+
+			<%
+				}
+				}
+			%>
+
 		</div>
 
 	</div>

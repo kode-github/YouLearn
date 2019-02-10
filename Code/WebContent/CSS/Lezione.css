@@ -1,5 +1,5 @@
 .videocontent {
-	width:80%;
+	width:60%;
 	margin: 20px auto;
 	
 }
@@ -9,7 +9,7 @@
 	
 }
 
-.btn {
+.bottone {
 	margin-right: 19px;
 	-moz-box-shadow: 0px 10px 14px -7px #3e7327;
 	-webkit-box-shadow: 0px 10px 14px -7px #3e7327;
@@ -28,7 +28,7 @@
 	border:1px solid #4b8f29;
 	display:inline-block;
 	cursor:pointer;
-	color:#ffffff;
+	color:#ffffff!important;
 	font-family:Verdana;
 	font-size:20px;
 	font-weight:bold;
@@ -36,7 +36,7 @@
 	text-decoration:none;
 	text-shadow:0px 1px 0px #5b8a3c;
 }
-.btn:hover {
+.bottone:hover {
 	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #72b352), color-stop(1, #77b55a));
 	background:-moz-linear-gradient(top, #72b352 5%, #77b55a 100%);
 	background:-webkit-linear-gradient(top, #72b352 5%, #77b55a 100%);
@@ -46,7 +46,7 @@
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#72b352', endColorstr='#77b55a',GradientType=0);
 	background-color:#72b352;
 }
-.btn:active {
+.bottone:active {
 	position:relative;
 	top:1px;
 }

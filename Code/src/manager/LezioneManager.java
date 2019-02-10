@@ -193,6 +193,7 @@ public class LezioneManager {
 		try{
 			c=DriverManagerConnectionPool.getConnection();
 			c.setAutoCommit(false);
+			//
 			Path path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
 					+ "YouLearn\\Code\\WebContent\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni");
 			if(!Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS))
@@ -540,6 +541,7 @@ public class LezioneManager {
 		try {
 			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
+			System.out.println(lezione.getIdLezione());
 			preparedStatement.setInt(1, lezione.getIdLezione());
 			System.out.println("retrieveCommentiByLezione: " + preparedStatement.toString());
 			
@@ -550,7 +552,7 @@ public class LezioneManager {
 				temp.setIdCommento(rs.getInt("idCommento"));
 				temp.setTesto(rs.getString("Testo"));
 				temp.setLezione(lezione);
-				temp.setAccountCreatore(accountManager.doRetrieveByKey(rs.getString("accountCreatore")));
+				temp.setAccountCreatore(accountManager.doRetrieveByKey(rs.getString("accountMail")));
 				list.add(temp);
 			}
 		}finally {

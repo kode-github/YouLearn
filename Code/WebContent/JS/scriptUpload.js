@@ -29,14 +29,26 @@ $(document).ready(function(){
 	
 $( '#upload' ).click(function() {
 		console.log("sono dentro");
+		
+		
 		var div=$(this).parent();
-		var text = div.children("input[type=text]");
-		var f = div.children("input[type=file]");
+		var ul =div.children("ul");
+		console.log(ul);
+		var liText = ul.children("li").eq(0);
+		console.log(liText);
+		var liFile = ul.children("li").eq(1);
+		console.log(liFile);
+		var text = liText.children("input[type=text]");
+		var f = liFile.children("input[type=file]");
+		console.log($(text).val());
+		console.log(f.val());
+		
 
 	
 		
 		var idCorso= getUrlParameter('idCorso');
-
+		console.log(idCorso);
+		
 		f.simpleUpload("http://localhost:8080/YouLearn/InsLezioneServlet?name="+text.val()+"&idCorso="+ idCorso, {
 
 			allowedExts: ["jpg", "jpeg", "jpe", "jif", "jfif", "jfi", "png", "gif", "exe","mp4"],
@@ -79,18 +91,17 @@ $( '#upload' ).click(function() {
 				this.progressBar.remove();
 				this.cancelButton.remove();
 
-//				if (data.success) {
+			if (data.success) {
 					//now fill the block with the format of the uploaded file
 
 					var format = data.format;
 					var formatDiv = $('<div class="format"></div>').text(format);
 					this.block.append(formatDiv);
-//				} else {
-//					//our application returned an error
-//					var error = data.error.message;
-//					var errorDiv = $('<div class="error"></div>').text(error);
-//					this.block.append(errorDiv);
-//				}
+				} else {
+					//our application returned an error
+					var error = data.error.message;
+					var errorDiv = $('<div class="error"></div>').text(error);				this.block.append(errorDiv);
+				}
 
 			},
 
