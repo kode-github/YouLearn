@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `youlearndb` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `youlearndb`;
 -- MySQL dump 10.13  Distrib 8.0.13, for Win64 (x86_64)
 --
 -- Host: localhost    Database: youlearndb
@@ -36,16 +34,6 @@ CREATE TABLE `account` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `account`
---
-
-LOCK TABLES `account` WRITE;
-/*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES ('Mario','Sessa','PentiumD','china@gmail.com','Utente',0),('Luigi','Crisci','PentiumD','luigicrisci1997@gmail.com','Utente',0),('Pasquale','Ambrosio','PentiumD','pasqualeAmbrosio@gmail.com','Supervisore',0);
-/*!40000 ALTER TABLE `account` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `cartadicredito`
 --
 
@@ -66,16 +54,6 @@ CREATE TABLE `cartadicredito` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `cartadicredito`
---
-
-LOCK TABLES `cartadicredito` WRITE;
-/*!40000 ALTER TABLE `cartadicredito` DISABLE KEYS */;
-INSERT INTO `cartadicredito` VALUES ('4023600655123698','02','2020','PayPal','Luigi','luigicrisci1997@gmail.com'),('4023600666666666','02','2089','Visa','Mario','china@gmail.com');
-/*!40000 ALTER TABLE `cartadicredito` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `commento`
 --
 
@@ -92,15 +70,6 @@ CREATE TABLE `commento` (
   CONSTRAINT `creatore` FOREIGN KEY (`AccountMail`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `commento`
---
-
-LOCK TABLES `commento` WRITE;
-/*!40000 ALTER TABLE `commento` DISABLE KEYS */;
-/*!40000 ALTER TABLE `commento` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `corso`
@@ -128,18 +97,8 @@ CREATE TABLE `corso` (
   KEY `corso_ibfk_2` (`accountSupervisore`),
   CONSTRAINT `corso_ibfk_1` FOREIGN KEY (`accountCreatore`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `corso_ibfk_2` FOREIGN KEY (`accountSupervisore`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `corso`
---
-
-LOCK TABLES `corso` WRITE;
-/*!40000 ALTER TABLE `corso` DISABLE KEYS */;
-INSERT INTO `corso` VALUES (5,'luigicrisci1997@gmail.com',NULL,'Non proprio ','Stupendo ooooooooooo              ','2018-02-02','2030-02-02','141668b4-4eee-4ae4-972b-d6266166c9e2.jpg','90','Completamento','Musica',2,0),(12,'china@gmail.com','pasqualeAmbrosio@gmail.com','SuperComunista','PER IL PROLETARIATO','1917-02-02','2089-02-02','azz.jpg','1','Attivo','Informatica',0,0),(24,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','PasqualeBellissimo','Pasquale è stupendo','2019-02-01','2025-09-06','bafa13cf-0077-4ac8-928a-ae5dfc309a49.jpg','100','Attivo','Informatica',0,0),(26,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','Corso di Giusy','Come diventare Giusy e vivere una vita felice','2019-02-04','2025-09-06','135ebdea-e2ff-426a-959d-c2cb6b87eae7.jpg','5','Attivo','Informatica',1,0),(29,'china@gmail.com','pasqualeAmbrosio@gmail.com','CorsoTest','Com\'è bella sta ricerca','2019-01-01','2025-06-06','135ebdea-e2ff-426a-959d-c2cb6b87eae7.jpg','15','Attivo','Musica',0,0),(30,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','LuigiEEEEE',' Il mio corso è il più bello ','2019-02-07','2029-09-06','f7b2cc8f-959a-46b0-9791-6573d1d91a2c.jpg','150','Completamento','Fotografia',0,0);
-/*!40000 ALTER TABLE `corso` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `iscrizione`
@@ -163,16 +122,6 @@ CREATE TABLE `iscrizione` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `iscrizione`
---
-
-LOCK TABLES `iscrizione` WRITE;
-/*!40000 ALTER TABLE `iscrizione` DISABLE KEYS */;
-INSERT INTO `iscrizione` VALUES ('luigicrisci1997@gmail.com',12,'2019-01-10',89,555);
-/*!40000 ALTER TABLE `iscrizione` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `lezione`
 --
 
@@ -191,16 +140,6 @@ CREATE TABLE `lezione` (
   CONSTRAINT `corso` FOREIGN KEY (`corsoIdCorso`) REFERENCES `corso` (`idcorso`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `lezione`
---
-
-LOCK TABLES `lezione` WRITE;
-/*!40000 ALTER TABLE `lezione` DISABLE KEYS */;
-INSERT INTO `lezione` VALUES ('Lezione',0,1,20,'b01f6a34-371a-4007-bc84-6423e8e3b852.mp4',26),('Lezione 1',0,2,23,'cd171a96-bf26-4458-974c-19ea51cda60e.mp4',5),('Lezione 2',0,1,24,'b27997f6-7521-4339-86ff-8bc996bbdb84.mp4',5);
-/*!40000 ALTER TABLE `lezione` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -305,4 +244,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-08 18:35:41
+-- Dump completed on 2019-02-10 19:00:06
