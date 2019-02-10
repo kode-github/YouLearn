@@ -107,9 +107,9 @@ public class CorsoBean {
 
 	
 
-
-
-
+	public void setIscrizioni(Collection<IscrizioneBean> iscrizioni) {
+		this.iscrizioni = iscrizioni;
+	}
 
 	/**
 	 * Preleva il valore del nome del corso.
