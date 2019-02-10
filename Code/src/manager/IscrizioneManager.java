@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Date;
+import java.sql.Date;
 import java.util.LinkedList;
 
 import javax.naming.NoPermissionException;
@@ -210,7 +210,7 @@ public class IscrizioneManager {
 		accountManager=AccountManager.getIstanza();
 		corsoManager= CorsoManager.getIstanza();
 		//TODO Verificare perchÃ¨ si usano solo le key per i check
-		if(!isWellFormatted(iscrizione)) throw new NotWellFormattedException("L'iscrizione non è ben formattata");
+		if(!isWellFormatted(iscrizione)) throw new NotWellFormattedException("L'iscrizione non ï¿½ ben formattata");
 		if(checkIscrizione(iscrizione.getCorso().getIdCorso(),iscrizione.getAccount().getMail())) 
 												throw new AlreadyExistingException("L'iscrizione esiste giï¿½");
 		if(!corsoManager.checkCorso(iscrizione.getCorso())) throw new NotFoundException("Il corso non esiste");
@@ -243,16 +243,20 @@ public class IscrizioneManager {
 		}
 	}
 	
-	private AccountBean account;
-	private CorsoBean corso;
-	private Date dataPagamento;
-	private double importo;
-	private String fattura;
+	
 
 	public synchronized boolean isWellFormatted(IscrizioneBean iscrizione) {
-		Date dataOdierna = new Date();
-		return account!=null && corso!=null && dataPagamento!=null && !dataPagamento.before(dataOdierna) && importo>=0 
-				&& fattura!=null && fattura.matches("^[0-9]$"); //TODO Quanto è grande la fattura?
+		
+
+//		System.out.println(iscrizione.getAccount() != null);
+//		System.out.println(iscrizione.getCorso() != null);
+//		System.out.println(iscrizione.getDataPagamento() != null);
+//		System.out.println(iscrizione.getImporto() >=0);
+//		System.out.println(iscrizione.getFattura().matches("^[0-9]{10}$"));
+		
+		
+		return iscrizione.getAccount()!=null && iscrizione.getCorso()!=null && iscrizione.getDataPagamento()!=null && iscrizione.getImporto()>=0 
+				&& iscrizione.getFattura()!=null && iscrizione.getFattura().matches("^[0-9]{10}$"); //La fattura Ã¨ di 10 numeri secondo il formato del DB
 	}
 
 	/**
@@ -267,6 +271,7 @@ public class IscrizioneManager {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		ResultSet rs;
+		boolean value;
 		String sql="SELECT accountMail FROM iscrizione WHERE accountMail=? AND corsoIdCorso=?";		
 		try {
 			System.out.println(mail);
@@ -276,7 +281,7 @@ public class IscrizioneManager {
 			preparedStatement.setString(1, mail);
 			preparedStatement.setInt(2, id);
 			rs= preparedStatement.executeQuery();
-			
+			value = rs.next();
 		}finally {
 			try {
 			if(preparedStatement!=null)
@@ -285,6 +290,6 @@ public class IscrizioneManager {
 				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
-		return rs.next();
+		return value;
 	}
 }

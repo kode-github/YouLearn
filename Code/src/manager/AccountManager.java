@@ -218,8 +218,9 @@ public class AccountManager {
 			if(!connection.getAutoCommit())
 				connection.commit();
 			System.out.println("Sono dopo la registrazione");
-			managerCarta.registerCard(user.getCarta()); //inserisco la carta
-			
+			if(user.getTipo().equals(Ruolo.Utente))
+			managerCarta.registerCard(user.getCarta()); //inserisco la carta solo se è un utente
+			else;
 		}catch(SQLException e) {
 			connection.rollback();
 			e.printStackTrace();

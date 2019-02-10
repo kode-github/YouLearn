@@ -11,7 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Date;
+import java.sql.Date;
 import java.util.LinkedList;
 import java.util.UUID;
 
@@ -370,8 +370,8 @@ public class CorsoManager {
 	 * @throws SQLException
 	 */
 	public synchronized void convalidaCorso(boolean accetta,CorsoBean corso) throws NotFoundException, NotWellFormattedException, NoPermissionException, SQLException {
-		if(!isWellFormatted(corso) || corso.getIdCorso()==null) throw new NotWellFormattedException("Il corso non � ben formattato");
-		if(!checkCorso(corso)) throw new NotFoundException("Il corso non esiste");
+		//if(!isWellFormatted(corso) || corso.getIdCorso()==null) throw new NotWellFormattedException("Il corso non � ben formattato");
+		if(!checkCorso(corso.getIdCorso())) throw new NotFoundException("Il corso non esiste");
 		if(!corso.getStato().equals(Stato.Attesa)) throw new NoPermissionException("Non si pu� confermare un corso non in attesa");
 		
 		if(accetta)
@@ -391,7 +391,7 @@ public class CorsoManager {
 	 */
 	public synchronized void confermaCorso(CorsoBean corso) throws NotWellFormattedException, NotFoundException, NoPermissionException, SQLException {
 		if(corso==null || !isWellFormatted(corso) || corso.getIdCorso()==null) throw new NotWellFormattedException("Il corso non � ben formattato");
-		if(!checkCorso(corso)) throw new NotFoundException("Il corso non esiste");
+		if(!checkCorso(corso.getIdCorso())) throw new NotFoundException("Il corso non esiste");
 		if(!corso.getStato().equals(Stato.Completamento)) throw new NoPermissionException("Non si pu� confermare un corso non in completamento");
 		
 		accountManager=AccountManager.getIstanza();
@@ -603,13 +603,14 @@ public class CorsoManager {
 	 * @return
 	 */
 	public synchronized boolean isWellFormatted(CorsoBean corso) {
-		Date dataOdierna = new Date();
+		
+		
 		
 		return  corso.getNome()!=null && corso.getNome().matches("^[a-zA-Z\\s]{5,20}")  &&
-				corso.getDataCreazione()!=null && corso.getDataFine()!=null && corso.getDataCreazione().before(corso.getDataFine())
-				&& !corso.getDataCreazione().after(dataOdierna) && 
+				corso.getDataCreazione()!=null && corso.getDataFine()!=null && corso.getDataCreazione().before(corso.getDataFine()) && 
 				corso.getDescrizione()!=null && corso.getDescrizione().length()<400  && corso.getCopertina()!=null && 
-				corso.getCopertina().matches("^[a-zA-Z0-9\\.-]{1,255}") && corso.getDocente()!=null && corso.getCategoria()!=null
+				//corso.getCopertina().matches("^[a-zA-Z0-9\\.-]{1,255}") && corso.getDocente()!=null && corso.getCategoria()!=null
+				corso.getCopertina().matches("^[a-zA-Z0-9/.-]{1,255}") && corso.getDocente()!=null && corso.getCategoria()!=null
 				&& corso.getStato()!=null;
 		
 

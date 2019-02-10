@@ -43,25 +43,45 @@ public class CorsoBean {
 	   lezioni=new LinkedList<>();
 	}
 	
-	public CorsoBean(Integer idCorso2, String nome2, String descrizione2, Date dataCreazione2, Date dataScadenza,
-			int prezzo2, Categoria categoria2, String copertina2, Stato stato2, int i, int j, 
-			Collection<IscrizioneBean> collection, AccountBean accountBean, AccountBean accountBean2,Collection<LezioneBean> lezioni) {
-		idCorso=idCorso2;
-		nome=nome2;
-		descrizione=descrizione2;
-		dataCreazione=dataCreazione2;
-		dataFine=dataScadenza;
-		prezzo=prezzo2;
-		categoria=categoria2;
-		copertina=copertina2;
-		stato=stato2;
-		nIscritti=i;
-		nLezioni=j;
-		iscrizioni=collection;
-		docente=accountBean;
-		supervisore=accountBean2;
-		this.lezioni=lezioni;
+	/**
+	 * Costruttore parametrico del corso.
+	 * @param idCorso
+	 * @param nome
+	 * @param descrizione
+	 * @param dataCreazione
+	 * @param dataScadenza
+	 * @param prezzo
+	 * @param categoria
+	 * @param copertina
+	 * @param stato
+	 * @param nIscritti
+	 * @param nLezioni
+	 * @param collection
+	 * @param docente
+	 * @param supervisore
+	 * 
+	 */
+	
+	public CorsoBean(Integer idCorso, String nome, String descrizione, Date dataCreazione, Date dataScadenza,
+			int prezzo, Categoria categoria, String copertina, Stato stato, int nIscritti, int nLezioni, 
+			 AccountBean docente, AccountBean supervisore) {
+		this.idCorso=idCorso;
+		this.nome=nome;
+		this.descrizione=descrizione;
+		this.dataCreazione=dataCreazione;
+		this.dataFine=dataScadenza;
+		this.prezzo=prezzo;
+		this.categoria=categoria;
+		this.copertina=copertina;
+		this.stato=stato;
+		this.nIscritti=nIscritti;
+		this.nLezioni=nLezioni;
+		this.iscrizioni=new LinkedList<IscrizioneBean>();
+		this.docente=docente;
+		this.supervisore=supervisore;
+		this.lezioni= new LinkedList<LezioneBean>();
 	}
+	
 
 	/**
 	 * Preleva il valore del nome del corso.

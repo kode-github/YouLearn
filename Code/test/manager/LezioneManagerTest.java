@@ -13,6 +13,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import bean.AccountBean;
 import bean.CorsoBean;
 import bean.LezioneBean;
 import exception.DatiErratiException;
@@ -26,8 +27,12 @@ import exception.NotWellFormattedException;
 public class LezioneManagerTest {
 
 	
-	LezioneManager lezioneManager;
-	
+	private LezioneManager lezioneManager;
+	private CorsoManager corsoManager;
+	private LezioneBean tmpLezione;
+	private CorsoBean tmpCorso;
+	private AccountBean tmpAccount;
+	private AccountBean tmpAccount2;
 	
 	/**
 	 * @throws java.lang.Exception
