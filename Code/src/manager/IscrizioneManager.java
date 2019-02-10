@@ -213,7 +213,7 @@ public class IscrizioneManager {
 		if(!isWellFormatted(iscrizione)) throw new NotWellFormattedException("L'iscrizione non � ben formattata");
 		if(checkIscrizione(iscrizione.getCorso().getIdCorso(),iscrizione.getAccount().getMail())) 
 												throw new AlreadyExistingException("L'iscrizione esiste gi�");
-		if(!corsoManager.checkCorso(iscrizione.getCorso())) throw new NotFoundException("Il corso non esiste");
+		if(!corsoManager.checkCorso(iscrizione.getCorso().getIdCorso())) throw new NotFoundException("Il corso non esiste");
 		if(!accountManager.checkAccount(iscrizione.getAccount())) throw new NotFoundException("L'account non esiste");
 		
 		Connection connection=null;

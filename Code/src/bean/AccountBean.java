@@ -58,6 +58,10 @@ public class AccountBean{
 	
 	public AccountBean(CartaDiCreditoBean carta) {
 		setCarta(carta);
+		corsiTenuti=new LinkedList<CorsoBean>();
+		corsiDaSupervisionare=new LinkedList<CorsoBean>();
+		iscrizioni=new LinkedList<IscrizioneBean>();
+		commentiScritti=new LinkedList<CommentoBean>();
 		
 	}
 
@@ -81,6 +85,10 @@ public class AccountBean{
 		    this.tipo = ruolo;
 		    this.verificato = verificato;
 		    this.carta = carta;
+		    corsiTenuti=new LinkedList<CorsoBean>();
+			corsiDaSupervisionare=new LinkedList<CorsoBean>();
+			iscrizioni=new LinkedList<IscrizioneBean>();
+			commentiScritti=new LinkedList<CommentoBean>();
 	}
 
 	/**
@@ -315,6 +323,7 @@ public class AccountBean{
 	 */
 	
 	public void addCorsoDaSupervisionare(CorsoBean corsoDaAggiungere) {
+		System.out.println("IL CORSO DA AGGIUNGERE E" + corsoDaAggiungere);
 		this.corsiDaSupervisionare.add(corsoDaAggiungere);
 		corsoDaAggiungere.setSupervisore(this);
 		

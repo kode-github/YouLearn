@@ -69,30 +69,60 @@ public class IscrizioneManagerTest{
 		deleteTmpComponentIscrizione();
 	}
 	
+	/**
+	 * Preleva un iscrizione dal database ricercata tramite la propria chiave
+	 * @throws NoPermissionException
+	 * @throws SQLException
+	 * @throws NotFoundException
+	 * @throws NotWellFormattedException
+	 */
 	@Test
 	public void testDoRetrieveByKey() throws NoPermissionException, SQLException, NotFoundException, NotWellFormattedException {
 		
 		assertNotNull(managerIscrizione.doRetrieveByKey(tmpIscrizione.getCorso().getIdCorso(), tmpIscrizione.getAccount().getMail()));
 	}
 	
+	/**
+	 * Affronta il caso in cui la chiave non esiste nel database, quindi non viene trovata
+	 * @throws NoPermissionException
+	 * @throws SQLException
+	 * @throws NotFoundException
+	 * @throws NotWellFormattedException
+	 */
 	@Test(expected = NotFoundException.class)
 	public void testDoRetrieveByKeyNotFound() throws NoPermissionException, SQLException, NotFoundException, NotWellFormattedException {
 		assertNull(managerIscrizione.doRetrieveByKey(tmpIscrizione.getCorso().getIdCorso(), tmpCorso.getDocente().getMail())); //Il docente non segue il suo corso
 		
 	}
+	
+	/**
+	 * Torna le iscrizioni di un corso
+	 * @throws NoPermissionException
+	 * @throws SQLException
+	 * @throws NotFoundException
+	 * @throws NotWellFormattedException
+	 */
 
 	@Test
 	public void testGetIscrizioniCorso() throws NoPermissionException, SQLException, NotFoundException, NotWellFormattedException {
 		
-	
-	    Assert.assertTrue(tmpIscrizione.getCorso().getnIscritti() == 1); //Ha solo 1 iscrizione
+	    assertTrue(!managerIscrizione.getIscrittiCorso(tmpCorso).isEmpty());
+
 		
 	}
 
+	/**
+	 * Ritorna la collezione di iscrizioni di un utente
+	 * @throws NoPermissionException
+	 * @throws SQLException
+	 * @throws NotFoundException
+	 * @throws NotWellFormattedException
+	 */
 	@Test
 	public void testGetIscrittiUtente() throws NoPermissionException, SQLException, NotFoundException, NotWellFormattedException {
 		 
-		assertNull(managerIscrizione.getIscrizioniUtente(tmpAccount)); //account docente che non segue corsi
+		
+		assertTrue(managerIscrizione.getIscrizioniUtente(tmpAccount).isEmpty()); //account docente che non segue corsi
 		assertNotNull(managerIscrizione.getIscrizioniUtente(tmpAccount2)); //Account utente che segue 1 corso
 		
 		
@@ -184,7 +214,7 @@ public class IscrizioneManagerTest{
 			connection=DriverManagerConnectionPool.getConnection();
 			connection.setAutoCommit(false);
 			preparedStatement= connection.prepareStatement(sql);
-			preparedStatement.setString(1, null);
+			preparedStatement.setInt(1, tmpCorso.getIdCorso());
 			preparedStatement.setString(2, tmpCorso.getDocente().getMail());
 			preparedStatement.setString(3, null);
 			preparedStatement.setString(4, tmpCorso.getNome());
@@ -195,8 +225,8 @@ public class IscrizioneManagerTest{
 			preparedStatement.setInt(9, tmpCorso.getPrezzo());
 			preparedStatement.setString(10, tmpCorso.getStato().toString());
 			preparedStatement.setString(11, tmpCorso.getCategoria().toString());
-			preparedStatement.setInt(12, 0);
-			preparedStatement.setInt(13, 0);
+			preparedStatement.setInt(12, tmpCorso.getnLezioni());
+			preparedStatement.setInt(13, tmpCorso.getnIscritti());
 			System.out.println("Registrazione corso: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
@@ -216,6 +246,7 @@ public class IscrizioneManagerTest{
 					DriverManagerConnectionPool.releaseConnection(connection);
 				}		
 		}
+		
 		
 		
 		

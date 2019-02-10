@@ -181,6 +181,7 @@ public class LezioneManager {
 	 */
 	 public synchronized void insLezione(LezioneBean lezione,Part file) throws NotWellFormattedException, SQLException, DatiErratiException, IOException {
 		corsoManager=CorsoManager.getIstanza();
+		
 		 if(lezione.getIdLezione()!=null || lezione.getCorso().getIdCorso()==null ||
 									!corsoManager.checkCorso(lezione.getCorso().getIdCorso())) 
 			throw new DatiErratiException("la lezione esiste gi� o il corso non esiste");

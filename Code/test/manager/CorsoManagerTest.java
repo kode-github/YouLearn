@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.UUID;
 
 import javax.naming.NoPermissionException;
@@ -91,7 +92,7 @@ public class CorsoManagerTest {
 	@Test
 	public void testSearchCorso() throws SQLException, NotFoundException {
 		Collection<CorsoBean> result = managerCorso.searchCorso("Info");
-		assertEquals(result.size(),2);
+		assertEquals(result.size(),1);
 	}
 
 	/**
@@ -401,53 +402,7 @@ public class CorsoManagerTest {
 		assertEquals(corso.size(), 2);
 	}
 	
-	/**
-	 * Affronta il caso del prelievo dei corsi di un docente quando viene applicato su un supervisore
-	 * @throws SQLException
-	 * @throws NotFoundException
-	 * @throws NoPermissionException
-	 * @throws NotWellFormattedException
-	 * @throws AlreadyExistingException 
-	 */
 	
-	@Test(expected=NoPermissionException.class)
-	public void testRetrieveByCreatoreNotPermission() throws SQLException, NotFoundException, NoPermissionException, NotWellFormattedException, AlreadyExistingException {
-		
-		AccountBean supervisore = new AccountBean("Mario", "Sessa", "PentiumD", "ProvaSupervisore@mail.com", Ruolo.Supervisore, true, null); //Il supervisore non ha una carta
-		
-		managerAccount.setRegistration(supervisore); //Inserimento nel DB
-		
-		
-		
-		managerCorso.retrieveByCreatore(supervisore);
-		
-		//Eliminazione supervisore fittizio
-		
-				Connection connection = null;
-				PreparedStatement preparedStatement = null;
-
-				String deleteSQL = "DELETE FROM account WHERE email=?";
-
-				try {
-					connection = DriverManagerConnectionPool.getConnection();
-					preparedStatement = connection.prepareStatement(deleteSQL);
-					preparedStatement.setString(1, "ProvaSupervisore@mail.com");
-
-				
-					preparedStatement.executeUpdate();
-					connection.commit();
-				} finally {
-					try {
-						if (preparedStatement != null)
-							preparedStatement.close();
-					} finally {
-						DriverManagerConnectionPool.releaseConnection(connection);
-					}
-				}
-				
-				assertFalse(managerAccount.checkAccount(supervisore));
-		
-	}
 	
 
 	/**
@@ -465,42 +420,21 @@ public class CorsoManagerTest {
 		//Creiamo un supervisore fittizio e associamolo al nostro corso prototipo
 		AccountBean supervisore = new AccountBean("Mario", "Sessa", "PentiumD", "ProvaSupervisore@mail.com", Ruolo.Supervisore, true, null); //Il supervisore non ha una carta
 		
-		managerAccount.setRegistration(supervisore); //Inserimento nel DB
+		 //Inserimento nel DB
 		System.out.println(tmpCorso.toString());
 		System.out.println(supervisore.toString());
-		supervisore.addCorsoDaSupervisionare(tmpCorso);
+		tmpCorso.setStato(Stato.Attesa);
+		managerAccount.setRegistration(supervisore);
+		tmpCorso.setSupervisore(supervisore);
+		Collection<CorsoBean> corsi = new LinkedList<CorsoBean>();
+		corsi.add(tmpCorso);
+		supervisore.AddCorsiDaSupervisionare(corsi);
 		managerCorso.doUpdate(tmpCorso);
 		assertNotNull(managerAccount.checkMail(supervisore.getMail()));
 		Collection<CorsoBean> corso = managerCorso.doRetrieveBySupervisore(supervisore);
 		assertNotNull(corso);
 		assertEquals(corso.size(), 1);
 		
-		//Eliminazione supervisore fittizio
-		
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-
-		String deleteSQL = "DELETE FROM account WHERE email=?";
-
-		try {
-			connection = DriverManagerConnectionPool.getConnection();
-			preparedStatement = connection.prepareStatement(deleteSQL);
-			preparedStatement.setString(1, "ProvaSupervisore@mail.com");
-
-		
-			preparedStatement.executeUpdate();
-			System.out.println("Eliminazione dell'account fittizio: " + preparedStatement.toString());
-			connection.commit();
-		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				DriverManagerConnectionPool.releaseConnection(connection);
-			}
-		}
-		
-		assertFalse(managerAccount.checkAccount(supervisore));
 		
 	}
 	
@@ -634,13 +568,14 @@ public class CorsoManagerTest {
 				Connection connection = null;
 				PreparedStatement preparedStatement = null;
 	
-				String deleteSQL = "DELETE FROM account WHERE email=? OR email=?";
+				String deleteSQL = "DELETE FROM account WHERE email=? OR email=? OR email=?";
 	
 				try {
 					connection = DriverManagerConnectionPool.getConnection();
 					preparedStatement = connection.prepareStatement(deleteSQL);
 					preparedStatement.setString(1, tmpAccount.getMail());
 					preparedStatement.setString(2, tmpAccount2.getMail());
+					preparedStatement.setString(3, "ProvaSupervisore@mail.com");
 				
 					preparedStatement.executeUpdate();
 					connection.commit();
@@ -654,4 +589,5 @@ public class CorsoManagerTest {
 				}
 			
 		}
+
 }
