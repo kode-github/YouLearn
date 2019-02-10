@@ -11,7 +11,8 @@ import junit.framework.TestSuite;
 	AccountManagerTest.class,
 	CartaDiCreditoManagerTest.class,
 	CorsoManagerTest.class,
-	IscrizioneManagerTest.class
+	IscrizioneManagerTest.class,
+	LezioneManagerTest.class
 })
 public class ManagerTest {
 

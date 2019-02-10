@@ -18,9 +18,19 @@ public class IscrizioneBean {
 	private double importo;
 	private String fattura;
 	
+	/**
+	 * Costruttore vuoto
+	 */
 	
 	public IscrizioneBean() {}
 	
+	public IscrizioneBean(AccountBean iscritto, CorsoBean corso, Date dataPagamento, double importo, String fattura) {
+		this.account = iscritto;
+		this.corso = corso;
+		this.dataPagamento = dataPagamento;
+		this.importo = importo;
+		this.fattura = fattura;
+	}
 	/**
 	 * Preleva la data di quando è stato effettuato il pagamento 
 	 * @return String : dataPagamento

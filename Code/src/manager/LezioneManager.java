@@ -201,7 +201,7 @@ public class LezioneManager {
 			String filename=UUID.randomUUID().toString();
 			String type=file.getSubmittedFileName().substring(file.getSubmittedFileName().lastIndexOf('.'));
 			System.out.println("Estensione: "+type+"\n");
-			if(!type.equals(".mp4")) throw new DatiErratiException("Il tipo del file non è .mp4");
+			if(!type.equals(".mp4")) throw new DatiErratiException("Il tipo del file non ï¿½ .mp4");
 			path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
 					+ "YouLearn\\Code\\WebContent\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni"+File.separator+
 																				filename+type);
@@ -386,7 +386,7 @@ public class LezioneManager {
 		PreparedStatement preparedStatement=null;
 		CommentoBean temp=new CommentoBean();
 		
-		String sql="SELECT* FROM commento WHERE id=?";		
+		String sql="SELECT* FROM commento WHERE idcommento=?";		
 		try {
 			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
@@ -610,7 +610,7 @@ public class LezioneManager {
 	 */
 	public synchronized void modificaLezione(LezioneBean lezione, Part part) throws SQLException, NotFoundException, NotWellFormattedException, IOException {
 		if(!checkLezione(lezione.getIdLezione())) throw new NotFoundException("La lezione non esiste");
-		if(!lezioneIsWellFormatted(lezione)) throw new NotWellFormattedException("La lezione non è ben formattata");
+		if(!lezioneIsWellFormatted(lezione)) throw new NotWellFormattedException("La lezione non ï¿½ ben formattata");
 		
 		PreparedStatement statement=null;
 		Connection c = null;

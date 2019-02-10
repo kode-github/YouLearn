@@ -25,7 +25,7 @@ public class AccountManager {
 	private AccountManager() {}
 	
 	public static AccountManager getIstanza() {
-		if(istanza==null)
+		//if(istanza==null)
 			istanza=new AccountManager();
 		return istanza;
 	}
@@ -215,9 +215,12 @@ public class AccountManager {
 			preparedStatement.setBoolean(6, user.getVerificato());
 			System.out.println("Registrazione Utente: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
-			managerCarta.registerCard(user.getCarta()); //inserisco la carta
 			if(!connection.getAutoCommit())
 				connection.commit();
+			System.out.println("Sono dopo la registrazione");
+			if(user.getTipo().equals(Ruolo.Utente))
+			managerCarta.registerCard(user.getCarta()); //inserisco la carta solo se è un utente
+			else;
 		}catch(SQLException e) {
 			connection.rollback();
 			e.printStackTrace();
