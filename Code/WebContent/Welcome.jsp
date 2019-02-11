@@ -19,7 +19,15 @@
 	rel="stylesheet">
 
 <!-- Script-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="JS/alertify.js-0.3.11/lib/alertify.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- include the core styles -->
+<link rel="stylesheet"
+	href="JS/alertify.js-0.3.11/themes/alertify.core.css" />
+<!-- include a theme, can be included into the core instead of 2 separate files -->
+<link rel="stylesheet"
+	href="JS/alertify.js-0.3.11/themes/alertify.default.css" />
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
 	integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
@@ -29,7 +37,7 @@
 	integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
 	crossorigin="anonymous"></script>
 </head>
-<title>YouLearn</title>
+<title>YouLearn - increse your knowledge</title>
 </head>
 <body>
 
@@ -39,10 +47,11 @@
 			
 			request.getSession().removeAttribute("passwordErrata");
 	%>
-	
+
 	<!-- QUI VA ERRORE PER PASSWORD ERRATA -->
-	<div id="alert" class="alert alert-warning d-none" style="text-align: center;" role="alert">Password Errata! Riprova nuovamente.
-		</div>
+	<div id="alert" class="alert alert-warning d-none"
+		style="text-align: center;" role="alert">Password Errata!
+		Riprova nuovamente.</div>
 	<% } %>
 
 	<%
@@ -50,8 +59,9 @@
 		if(erroreLogin!=null){
 			request.getSession().removeAttribute("erroreLogin");
 	%>
-		<div id="alert" class="alert alert-warning d-none" style="text-align: center;" role="alert">Errore login! L'E-mail non esiste, riprova!
-		</div>
+	<div id="alert" class="alert alert-warning d-none"
+		style="text-align: center;" role="alert">Errore login! L'E-mail
+		non esiste, riprova!</div>
 	<%
 		}
 	%>
@@ -62,19 +72,19 @@
 			request.getSession().removeAttribute("erroreConnessione");
 	%>
 	<!-- QUI VA ERRORE PER ERRORE CONNESSIONE (DIRE DI PROVARE PIU' TARDI) -->
-	<div id="alert" class="alert alert-warning d-none" style="text-align: center;" role="alert"> Siamo spiacenti, abbiamo avuto dei problemi di connessione. Riprova più tardi!
-		</div>
+	<div id="alert" class="alert alert-warning d-none"
+		style="text-align: center;" role="alert">Siamo spiacenti,
+		abbiamo avuto dei problemi di connessione. Riprova più tardi!</div>
 	<% } %>
 
 	<div id="h" class="header">
 		<div class="row">
 			<div class="image col-lg-5 col-md-5 col-sm-6 col-xs-6">
-				<img id="img" class="" src="Images/Logo1.png" alt="" >
+				<img id="img" class="" src="Images/Logo1.png" alt="">
 			</div>
 			<div class="text col-lg-6 col-md-6 col-sm-6 col-xs-6">
-				<p id="title" class="text-image" >YouLearn</p>
-				<p id="sub-title" class="text-image" >Increse your
-					knowledge</p>
+				<p id="title" class="text-image">YouLearn</p>
+				<p id="sub-title" class="text-image">Increse your knowledge</p>
 			</div>
 		</div>
 
@@ -140,29 +150,36 @@
 						<div class="card-header text-center " style="font-size: 30px;">REGISTRAZIONE</div>
 						<div class="card-body">
 
-							 <form action="" method="post" class="register" name="formRegistration" id="formRegistration" onsubmit="return validateRegistration(formRegistration)">
-                <div class="form-group">
-                    <label for="name">Nome</label>
-                    <input type="text" name="name" id="name" class="form-control" placeholder="name">
-                </div>
-                <div class="form-group">
-                    <label for="surname">Cognome</label> <input name="surname" id="surname" type="text" class="form-control"
-                        placeholder="Cognome">
-                </div>
-                <div class="form-group">
-                    <label for="email">Indirizzo e-mail</label> <input name="email" id="email" type="email" class="form-control"
-                        aria-describedby="emailHelp" placeholder="Inserisci la tua e-mail"> <small id="emailHelp" class="form-text text-muted">
-                        Non
-                        condivideremo mai la tua e-mail con nessun altro. </small>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" name="password" id="password" class="form-control" placeholder="Password">
-                </div>
-                <div class="form-group">
-                    <label for="passwordConf">Conferma Password</label> <input type="password" class="form-control"
-                        name="passwordConf" id="passwordConf" placeholder="Conferma Password">
-                </div>
+							<form action="" method="get" class="register"
+								name="formRegistration" id="formRegistration">
+								<!-- onsubmit="return validateRegistration(formRegistration)" -->
+								<div class="form-group">
+									<label for="name">Nome</label> <input type="text" name="name"
+										id="name" class="form-control" placeholder="Mario" required="required">
+								</div>
+								<div class="form-group">
+									<label for="surname">Cognome</label> <input name="surname"
+										id="surname" type="text" class="form-control"
+										placeholder="Rossi" required="required">
+								</div>
+								<div class="form-group">
+									<label for="email">Indirizzo e-mail</label> <input name="email"
+										id="email" type="email" class="form-control"
+										aria-describedby="emailHelp"
+										placeholder="Inserisci la tua e-mail" required="required"> <small
+										id="emailHelp" class="form-text text-muted"> Non
+										condivideremo mai la tua e-mail con nessun altro. </small>
+								</div>
+								<div class="form-group">
+									<label for="password">Password</label> <input type="password"
+										name="password" id="password" class="form-control"
+										placeholder="Password" required="required">
+								</div>
+								<div class="form-group">
+									<label for="passwordConf">Conferma Password</label> <input
+										type="password" class="form-control" name="passwordConf"
+										id="passwordConf" placeholder="Conferma Password" required="required">
+								</div>
 
 								<p>
 									<a class="btn btn-primary" data-toggle="collapse"
@@ -170,52 +187,64 @@
 										aria-controls="collapseExample"> Dati Pagamento </a>
 								</p>
 								<div class="collapse" id="pagamento">
-
 									<div class="form-group">
-                    <label for="nCarta">Numero Carta</label> <input type="text" class="form-control" id="nCarta" name="nCarta"
-                        placeholder="0000-0000-0000-0000" maxlength="12">
-                </div>
-                <div class="form-group">
-                    <label for="intestatario">Nome Intestatario</label> <input type="text" name="intestatario" class="form-control"
-                        id="intestatario" placeholder="Mario Rossi">
-                </div>
-                <div class="form-group">
-                    <label for="tipoCarta">Tipo Carta</label>
-                    <div class="dropdown">
-                        <select class="form-control" name="tipoCarta">
-                            <option value="visa">Visa</option>
-                            <option value="mastercard">MasterCard</option>
-                            <option value="americanexpress">AmericanExpress</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group d-inline">
-                    <label for="tipoCarta">Scadenza Carta</label>
-                    <div class="dropdown  d-inline">
+										<label for="tipoCarta">Tipo Carta</label>
+										<div class="dropdown">
+											<select class="form-control" name="tipoCarta" id="tipoCarta">
+												<option value="Visa">Visa</option>
+												<option value="MasterCard">MasterCard</option>
+												<option value="AmericanExpress">AmericanExpress</option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="nCarta">Numero Carta</label> <input type="text"
+											class="form-control" id="nCarta" name="nCarta"
+											placeholder="0000-0000-0000-0000" required="required">
+									</div>
+									<div class="form-group">
+										<label for="intestatario">Nome Intestatario</label> <input
+											type="text" name="nIntestatario" class="form-control"
+											id="nIntestatario" placeholder="Mario Rossi" required="required">
+									</div>
+
+									<div class="form-group d-inline">
+										<label for="tipoCarta">Scadenza Carta</label>
+										<div class="dropdown  d-inline">
 
 
-                        <select class="form-control1 d-inline" name="scadenzaMese">
-                            <option value="paypal">1</option>
-                            <option value="paypal">2</option>
-                            <option value="paypal">3</option>
-                            <option value="paypal">4</option>
-                            <option value="paypal">7</option>
-                            <option value="paypal">8</option>
-                            <option value="paypal">9</option>
-                            <option value="paypal">10</option>
-                            <option value="paypal">11</option>
-                            <option value="paypal">12</option>
-                        </select>
-                    </div> / <div class="dropdown  d-inline">
-                        <select class="form-control1 d-inline" name="scadenzaAnno">
-                            <option value="paypal">2019</option>
-                            <option value="visa">2020</option>
-                            <option value="mastercard">2021</option>
-                        </select>
-                    </div>
+											<select class="form-control1 d-inline" name="meseScadenza">
+												<option value="paypal">1</option>
+												<option value="paypal">2</option>
+												<option value="paypal">3</option>
+												<option value="paypal">4</option>
+												<option value="paypal">7</option>
+												<option value="paypal">8</option>
+												<option value="paypal">9</option>
+												<option value="paypal">10</option>
+												<option value="paypal">11</option>
+												<option value="paypal">12</option>
+											</select>
+										</div>
+										/
+										<div class="dropdown  d-inline">
+											<select class="form-control1 d-inline" name="annoScadenza">
+												<%
+													for (int i = 2019; i <= 2040; i++) {
+												%>
+												<option value=<%=i%>><%=i%></option>
+												<%
+													}
+												%>
+											</select>
+										</div>
 
-								</div> </div>
-								<button type="submit" class="btn btn-primary btn-lg btn-block">Registrati</button>
+									</div>
+								</div>
+								<button type="submit"
+									onclick="return validateRegistration(formRegistration)"
+									formaction="http://localhost:8080/YouLearn/RegistrazioneServlet"
+									class="btn btn-primary btn-lg btn-block">Registrati</button>
 							</form>
 						</div>
 					</div>
@@ -225,9 +254,9 @@
 		</div>
 	</section>
 
-			  <%@ include file="Footer.jsp" %>
-	
-	
-<script src="JS/ValidationWelcome.js"></script>
+	<%@ include file="Footer.jsp"%>
+
+
+	<script src="JS/ValidationWelcome.js"></script>
 </body>
 </html>

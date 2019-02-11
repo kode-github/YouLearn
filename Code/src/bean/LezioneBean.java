@@ -2,6 +2,7 @@ package bean;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * 
@@ -19,7 +20,7 @@ public class LezioneBean {
 	private int numeroLezione;
 	private Integer idLezione;
 	private String filePath;
-	private Collection<CommentoBean> commenti;
+	private Collection<CommentoBean> commenti = new LinkedList<CommentoBean>();
 	
 	/**
 	 * 

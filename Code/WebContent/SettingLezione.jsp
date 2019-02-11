@@ -45,28 +45,25 @@
 	<div class="card w-50 mx-auto">
 		<div class="card-header text-left" style="font-size: 30px;">
 			<h3>
-				GESTIONE LEZIONI
-				<button onclick="" id="insert"
-					class="btn btn-outline-success float-right">Inserisci
-					lezioni</button>
-				<button style="margin: 0px 10px;" onclick="modify()" id="b"
-					class="btn btn-outline-primary float-right">Modifica...</button>
+				GESTIONE LEZIONI <a href="#insLezione"><button onclick=""
+						id="insert" class="btn btn-outline-success float-right">Inserisci
+						lezioni</button></a>
 			</h3>
 		</div>
 
 
-			<%
-				LinkedList<LezioneBean> lezioni = (LinkedList<LezioneBean>) corso.getLezioni();
-				lezioni.sort(new Comparator<LezioneBean>(){
-					public int compare(LezioneBean b1,LezioneBean b2){
-						if(b1.getNumeroLezione()>b2.getNumeroLezione())
-							return 1;
-						if(b1.getNumeroLezione()<b2.getNumeroLezione())
-							return -1;
-						return 0;
-					}
-				});
-			%>
+		<%
+			LinkedList<LezioneBean> lezioni = (LinkedList<LezioneBean>) corso.getLezioni();
+			lezioni.sort(new Comparator<LezioneBean>() {
+				public int compare(LezioneBean b1, LezioneBean b2) {
+					if (b1.getNumeroLezione() > b2.getNumeroLezione())
+						return 1;
+					if (b1.getNumeroLezione() < b2.getNumeroLezione())
+						return -1;
+					return 0;
+				}
+			});
+		%>
 
 		<div class="collection">
 
@@ -89,21 +86,39 @@
 					for (LezioneBean l : lezioni) {
 			%>
 
-			  
-				<div class="card-body item" id=<%=l.getIdLezione()%>>
-				<form method="post"> 
+
+			<div class="card-body item" id=<%=l.getIdLezione()%>>
+				<form method="post">
 					<div class="float-left num"><%=l.getNumeroLezione()%></div>
-					<div class="float-left">
-						<ul id="list-lezione">
-							<li id="nome" class="nome-lezione li-lezione"><%=l.getNome()%></li>
-							<li id="file-lezione" class="li-lezione"><%=l.getFilePath()%></li>
-						</ul>
-						 <button type="submit"
-							formaction="http://localhost:8080/YouLearn/CancLezioneServelt?idLezione=<%=l.getIdLezione()%>&idCorso=<%=l.getCorso().getIdCorso()%>">Cancella</button>
+					<input class="d-none" name="idL" id="idL" type="hidden"
+						value="<%=l.getIdLezione()%>">
+					<div class="float-left" style="margin-bottom: 5px;">
+						<div id="uploads">
+							<ul id="list-lezione">
+								<li id="nome" class="nome-lezione li-lezione"><input
+									type="text" name="nome" readonly="readonly"
+									value="<%=l.getNome()%>"></li>
+								<li id="file-lezione" class="li-lezione"><%=l.getFilePath()%></li>
+								<li style="list-style: none">
+
+									<button name="btnM" type="button" onclick="modifica(this.form)"
+										class="btn btn-primary modifica">Modifica</button>
+									<button name="btnC" type="button" id="uploads1"
+										class="btn btn-success conferma d-none">Conferma
+										modifiche</button>
+
+									<button name="btnA" type="button" onclick="annulla(this.form)"
+										class="btn btn-warning d-none">Annulla</button>
+									<button type="submit" class="btn btn-danger mx-auto"
+										formaction="http://localhost:8080/YouLearn/CancLezioneServelt?idLezione=<%=l.getIdLezione()%>&idCorso=<%=l.getCorso().getIdCorso()%>">Cancella</button>
+								</li>
+							</ul>
+						</div>
+
 					</div>
 					<div class="float-right	 Commands">
-						<button id="b-UD" type="button" class=" btn btn-outline-secondary b-up"
-							value='up'>
+						<button id="b-UD" type="button"
+							class=" btn btn-outline-secondary b-up" value='up'>
 							<i class="fas fa-arrow-up"></i>
 						</button>
 						<button style="margin-top: 5px;" id="b-UD" type="button"
@@ -111,9 +126,12 @@
 							<i class="fas fa-arrow-down"></i>
 						</button>
 					</div>
-					</form>  
-				</div>
-			 
+
+
+
+				</form>
+			</div>
+
 			<%
 				}
 				}
@@ -127,22 +145,28 @@
 	</div>
 
 
-	<div class="card w-50 mx-auto">
-		<div class="card-header">INSERIMENTO LEZIONI</div>
+	<div class="card w-50 mx-auto" id="insLezione">
+		<div class="card-header" style="font-size: 30px">INSERIMENTO
+			LEZIONI</div>
 		<div class="card-body body-ins-lezione">
 			<div id="uploads">
-				<input type="text" id="nome-lezione"> <input type="file"
-					max="1" name="file">
-				<button id="upload">UPLOAD</button>
+				<ul style="list-style: none;">
+					<li class="d-inline"><label>Nome Lezione:</label> <input
+						type="text" id="nome-lezione"></li>
+					<li class="d-inline"><input type="file" max="1" name="file">
+					</li>
+
+				</ul>
+				<button id="upload" class="btn btn-success btn-lg btn-block">UPLOAD</button>
 			</div>
 		</div>
 	</div>
 
 
-
+	<script src="JS/SettingLezione.js"></script>
 	<script src="JS/simpleUpload.min.js"></script>
 	<script src="JS/scriptUpload.js"></script>
-	<script src="JS/SettingLezione.js"></script>
+
 
 </body>
 
