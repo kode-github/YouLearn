@@ -30,11 +30,14 @@ public class LezioneBean {
 	 */
 	
 	public LezioneBean(CorsoBean corso, Collection<CommentoBean> commenti) {
-		setCorso(corso);
-		addCommenti(commenti);	
+		this.corso = corso;
+		this.commenti = commenti;
 	}
 
-	public LezioneBean() {}
+	public LezioneBean() {
+		this.commenti = new LinkedList<CommentoBean>();
+		this.commenti = null;
+	}
 	
 
 	public LezioneBean(CorsoBean corso, String nome, int visualizzazioni, int numeroLezione, Integer idLezione,

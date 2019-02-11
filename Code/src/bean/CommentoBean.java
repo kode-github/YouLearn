@@ -25,11 +25,13 @@ public class CommentoBean {
 	public CommentoBean(Integer id,String t,LezioneBean lezione, AccountBean accountCreatore) {
 		idCommento=id;
 		testo=t;
-		setLezione(lezione);
-		setAccountCreatore(accountCreatore);
+		this.lezione = lezione;
+		this.accountCreatore = accountCreatore;
+		
 	}
 
-	public CommentoBean() {}
+	public CommentoBean() {
+	}
 
 	
 	/**

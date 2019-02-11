@@ -402,9 +402,10 @@ public class LezioneManager {
 			temp.setTesto(rs.getString("Testo"));
 			//Creo la lezione con la sola PK
 			LezioneBean l= new LezioneBean();
-			l.setNumeroLezione(rs.getInt("NumeroLezione"));
+			l.setIdLezione(rs.getInt("idLezione"));
+//			l.setNumeroLezione(rs.getString("numeroLezione")); Senso della riga?
 			CorsoBean corso= new CorsoBean();
-			corso.setIdCorso(rs.getInt("IdCorso"));
+			corso.setIdCorso(rs.getInt("idCorso"));
 			l.setCorso(corso);
 			temp.setLezione(l);
 			
@@ -434,7 +435,7 @@ public class LezioneManager {
 
 		int result = 0;
 
-		String deleteSQL = "DELETE FROM commento WHERE id = ?";
+		String deleteSQL = "DELETE FROM commento WHERE idcommento = ?";
 
 		try {
 			connection = DriverManagerConnectionPool.getConnection();
@@ -466,7 +467,7 @@ public class LezioneManager {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		
-		String sql="SELECT* FROM commento WHERE id=?";		
+		String sql="SELECT* FROM commento WHERE idcommento=?";		
 		try {
 			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
@@ -491,7 +492,7 @@ public class LezioneManager {
 	 * @throws Exception
 	 */
 	public synchronized void insCommento(CommentoBean product) throws NotWellFormattedException, SQLException {
-		if(product.getIdCommento()!=null || !commentoIsWellFormatted(product)) throw new NotWellFormattedException("Il commento non"
+		if(product==null || !commentoIsWellFormatted(product)) throw new NotWellFormattedException("Il commento non"
 																					+ "� ben formattato");
 		
 		Connection connection=null;
@@ -576,7 +577,7 @@ public class LezioneManager {
 	public synchronized boolean commentoIsWellFormatted(CommentoBean commento) {
 		accountManager=AccountManager.getIstanza();
 		//idcommento, testo, accountCreatore, lezione
-		return commento.getTesto()!=null && commento.getTesto().matches("^[a-zA-Z0-9]{1,1024}") &&
+		return commento.getTesto()!=null && commento.getTesto().matches("^[a-zA-Z0-9\\s]{1,1024}") &&
 				commento.getAccountCreatore()!=null && accountManager.isWellFormatted(commento.getAccountCreatore()) &&
 				commento.getLezione()!=null && lezioneIsWellFormatted(commento.getLezione());
 		
@@ -591,7 +592,7 @@ public class LezioneManager {
 	public synchronized boolean lezioneIsWellFormatted(LezioneBean lezione) {
 		corsoManager=CorsoManager.getIstanza();
 		if(lezione.getIdLezione()!=null)
-			if(lezione.getFilePath()==null || !lezione.getFilePath().matches("^[a-zA-Z0-9\\.-]{10,2048}") || lezione.getNumeroLezione()<=0 
+			if(lezione.getFilePath()==null || /* (!lezione.getFilePath().matches("^[a-zA-Z0-9\\.-]{10,2048}") ||*/  !lezione.getFilePath().matches("^[a-z/A-Z0-9/.-]{10,2048}") /*    )   */ || lezione.getNumeroLezione()<=0 
 			|| lezione.getVisualizzazioni()<0)
 				return false;
 		return lezione.getNome()!=null && lezione.getNome().matches("^[a-zA-Z0-9\\s:-]{5,40}") &&

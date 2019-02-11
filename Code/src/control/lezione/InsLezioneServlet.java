@@ -54,7 +54,7 @@ public class InsLezioneServlet extends HttpServlet {
 		        lezione.setCorso(corso);
 		        
 				manager.insLezione(lezione, file);
-				System.out.println("LUIGI è bravo");
+		
 				
 				request.getSession().setAttribute("updated", "true");
 				response.setContentType("application/json");
