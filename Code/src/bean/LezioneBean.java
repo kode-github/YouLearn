@@ -30,13 +30,29 @@ public class LezioneBean {
 	 */
 	
 	public LezioneBean(CorsoBean corso, Collection<CommentoBean> commenti) {
-		setCorso(corso);
-		addCommenti(commenti);	
+		this.corso = corso;
+		this.commenti = commenti;
 	}
 
-	public LezioneBean() {}
+	public LezioneBean() {
+		this.commenti = new LinkedList<CommentoBean>();
+		this.commenti = null;
+	}
 	
 
+	public LezioneBean(CorsoBean corso, String nome, int visualizzazioni, int numeroLezione, Integer idLezione,
+			String filePath, Collection<CommentoBean> commenti) {
+		super();
+		this.corso = corso;
+		this.nome = nome;
+		this.visualizzazioni = visualizzazioni;
+		this.numeroLezione = numeroLezione;
+		this.idLezione = idLezione;
+		this.filePath = filePath;
+		this.commenti = commenti;
+	}
+	
+	
 
 	/**
 	 * Prelievo del nome della lezione 
@@ -186,7 +202,17 @@ public class LezioneBean {
 
 
 
-
+	public static void main(String args[]) {
+		
+		LezioneBean lezione = new LezioneBean();
+		lezione.setIdLezione(1);
+		lezione.setNome("Hello");
+		lezione.setNumeroLezione(1);
+		CommentoBean commento = new CommentoBean();
+		commento.setIdCommento(1);
+		commento.setLezione(lezione);
+		
+	}
 	
 	
 	
