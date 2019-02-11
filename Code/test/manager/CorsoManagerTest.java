@@ -59,7 +59,7 @@ public class CorsoManagerTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		managerCorso = CorsoManager.getIstanza();
+		managerCorso = CorsoManager.getIstanza(System.getProperty("user.dir")+"\\WebContent");
 		managerAccount = AccountManager.getIstanza();
 		managerIscrizione = IscrizioneManager.getIstanza();
 		assertNotNull(managerCorso);
@@ -142,13 +142,11 @@ public class CorsoManagerTest {
 	 * @throws SQLException
 	 * @throws NotFoundException
 	 * @throws NotWellFormattedException
+	 * @throws IOException 
 	 */
 	@Test
-	public void testRemoveCorso() throws NoPermissionException, SQLException, NotFoundException, NotWellFormattedException {
-		
-		
-		
-	
+	public void testRemoveCorso() throws NoPermissionException, SQLException, NotFoundException, NotWellFormattedException, IOException {
+
 		tmpCorso.setStato(Stato.Completamento);
 		managerCorso.doUpdate(tmpCorso); //Facciamo solo l'update dato che l'onDelete
 		assertEquals(tmpCorso.getStato(), Stato.Completamento);

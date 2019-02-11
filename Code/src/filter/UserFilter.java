@@ -28,6 +28,7 @@ public class UserFilter implements Filter {
 
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		System.out.println("USER FILTER");
 		HttpServletRequest httpRequest=(HttpServletRequest) request;
 		HttpServletResponse httpResponse=(HttpServletResponse) response;
 		AccountBean account=(AccountBean) httpRequest.getSession().getAttribute("account");
@@ -38,7 +39,7 @@ public class UserFilter implements Filter {
 				|| uri.contains("/VerificaCorsoServlet") || uri.contains("/VisualizzaProfiloServlet") 
 				|| uri.contains("/VisualCorsoServlet") || uri.contains("Logout") || uri.contains("SearchCorso")
 				|| uri.contains("/RegistrazioneServlet") || uri.contains("/CambiaMail") || uri.contains("/CambiaPass") 
-				|| uri.contains("/Lezione.jsp"))
+				|| uri.contains("/Lezione.jsp") || uri.contains("/Corso.jsp") || uri.contains("/VisualLezioneServlet"))
 			chain.doFilter(request, response);
 		else {
 			if(!account.getTipo().equals(Ruolo.Utente)) {

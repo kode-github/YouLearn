@@ -27,15 +27,17 @@ public class VisualizzaProfiloServlet extends HttpServlet {
 	IscrizioneManager iscrizione;
     public VisualizzaProfiloServlet() {
         super();
-        manager=CorsoManager.getIstanza();
         iscrizione=IscrizioneManager.getIstanza();
     }
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        manager=CorsoManager.getIstanza(getServletContext().getRealPath(""));
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		HttpSession session=request.getSession();
 		AccountBean account=(AccountBean) request.getSession().getAttribute("account");
+		System.out.println(getServletContext().getRealPath(""));
+		
 				try {
 					if(account.getTipo().equals(Ruolo.Utente)) {
 						manager.retrieveByCreatore(account);

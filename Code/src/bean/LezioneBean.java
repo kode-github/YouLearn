@@ -162,6 +162,10 @@ public class LezioneBean {
 		this.commenti.remove(commento);
 		commento.setLezione(null);
 	}
+	
+	public void setCommenti(Collection<CommentoBean> commento) {
+		commenti=commento;
+	}
 
 	public String getFilePath() {
 		return filePath;

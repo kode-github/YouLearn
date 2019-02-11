@@ -21,13 +21,13 @@ public class CancCorsoServlet extends HttpServlet {
     CorsoManager manager;
     public CancCorsoServlet() {
         super();
-        manager=CorsoManager.getIstanza();
     }
 
 	/**
 	 * TODO va aggiunto controllo su appartenenza di corso ad account?
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        manager=CorsoManager.getIstanza(getServletContext().getRealPath(""));
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		AccountBean account=(AccountBean)request.getSession().getAttribute("account");
 		int idCorso=Integer.parseInt(request.getParameter("idCorso"));

@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Comparator;
 import java.sql.Date;
 import java.util.LinkedList;
 import java.util.UUID;
@@ -34,12 +35,14 @@ public class CorsoManager {
 	private LezioneManager lezioneManager;
 	private AccountManager accountManager;
 	private IscrizioneManager iscrizioneManager;
+	private static String PATH;
 	
 	private CorsoManager() {}
 	
-	public static CorsoManager getIstanza() {
+	public static CorsoManager getIstanza(String path) {
 		if(istanza==null)
 			istanza=new CorsoManager();
+		PATH=path;
 		return istanza;
 	}
 	
@@ -56,7 +59,7 @@ public class CorsoManager {
 		Connection connection=null;
 		PreparedStatement statement=null;
 		CorsoBean corso=new CorsoBean();
-		lezioneManager=LezioneManager.getIstanza();
+		lezioneManager=LezioneManager.getIstanza("");
 		iscrizioneManager=IscrizioneManager.getIstanza();
 		accountManager=AccountManager.getIstanza();
 		
@@ -213,14 +216,12 @@ public class CorsoManager {
 			corso.setIdCorso((rs.getInt("idCorso")));
 			
 			/* Salvo la copertina */
-			Path path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
-					+ "YouLearn\\Code\\WebContent\\Resources\\"+corso.getIdCorso());
-			if(!Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS))
-					Files.createDirectories(path); 
-			path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
-					+ "YouLearn\\Code\\WebContent\\Resources\\"+corso.getIdCorso()+File.separator+
-																				filename);
-			copertina.write(path.toString());
+			Path test=Paths.get(PATH+"\\Resources\\"+corso.getIdCorso());
+			if(!Files.isDirectory(test, LinkOption.NOFOLLOW_LINKS))
+				Files.createDirectories(test);
+			test=Paths.get(PATH+"\\Resources\\"+corso.getIdCorso()+File.separator+filename);
+			
+			copertina.write(test.toString());
 			if(!connection.getAutoCommit())
 				connection.commit();
 		}catch(SQLException |IOException e) {
@@ -300,12 +301,9 @@ public class CorsoManager {
 																								+ "completamento");
 		/* Salvo la copertina */
 		if(file!=null) {
-			Path path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
-					+ "YouLearn\\Code\\WebContent\\Resources\\"+corso.getIdCorso());
+			Path path=Paths.get(PATH+"\\Resources\\"+corso.getIdCorso());
 			if(!Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS))
-					Files.createDirectories(path); 
-			
-//			String filename=UUID.randomUUID().toString();
+				Files.createDirectories(path);
 			//Riuso il vecchio nome
 			String filename=corso.getCopertina().substring(corso.getCopertina().indexOf(corso.getIdCorso()+"\\")+2, corso.getCopertina().indexOf('.'));
 			String type=file.getSubmittedFileName().substring(file.getSubmittedFileName().indexOf('.'));
@@ -313,10 +311,7 @@ public class CorsoManager {
 			if(!type.equals(".jpg") && !type.equals(".png") && !type.equals(".jpeg")) 
 				throw new NotWellFormattedException("La copertina non ha un formato adeguato");
 			
-			path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
-					+ "YouLearn\\Code\\WebContent\\Resources\\"+corso.getIdCorso()+File.separator+
-																				filename+type);
-			System.out.println(path.toString());
+			path=Paths.get(PATH+"\\Resources\\"+corso.getIdCorso()+File.separator+filename);
 			file.write(path.toString());
 			corso.setCopertina(filename+type); //Assegno al corso la copertina appena salvata
 		}
@@ -330,8 +325,9 @@ public class CorsoManager {
 	 * @param idCorso
 	 * @throws SQLException
 	 * @throws NotFoundException
+	 * @throws IOException 
 	 */
-	public synchronized void removeCorso(int idCorso) throws SQLException, NotFoundException {
+	public synchronized void removeCorso(int idCorso) throws SQLException, NotFoundException, IOException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
@@ -348,6 +344,15 @@ public class CorsoManager {
 			if(result==0) throw new NotFoundException("Il corso non esiste oppure non Ã¨ in completamento");
 			if(!connection.getAutoCommit())
 				connection.commit();
+			
+			Path toDelete=Paths.get(PATH+"\\Resources\\"+idCorso);
+			/*
+			 * walk: esamina ogni file presente nella directory 
+			 * sorted: ordina le cartelle nell'ordine inverso rispetto a come vengono esaminate da walk, così da avere i file all'inizio
+			 * map: per ogni path, ne restituisce un file
+			 * forEach: per ogni file, cancellalo
+			 */
+			Files.walk(toDelete).sorted(Comparator.reverseOrder()).map(s->s.toFile()).peek(System.out::println).forEach(s->s.delete());
 			
 		} finally {
 			try {
@@ -414,7 +419,7 @@ public class CorsoManager {
 	 */
 	public synchronized Collection<CorsoBean> retrieveByCreatore(AccountBean account) throws NoPermissionException, SQLException, NotFoundException, NotWellFormattedException {
 		accountManager= AccountManager.getIstanza();
-		lezioneManager= LezioneManager.getIstanza();
+		lezioneManager= LezioneManager.getIstanza("");
 		if(!accountManager.isWellFormatted(account)) throw new NotWellFormattedException("L'account non ï¿½ ben formattato");
 		if(!accountManager.checkAccount(account)) throw new NotFoundException("Questo account non esiste");
 		if(!account.getTipo().equals(Ruolo.Utente)) throw new NoPermissionException("Questo utente non puï¿½ avere corsi creati");
@@ -474,7 +479,7 @@ public class CorsoManager {
 	 */
 	public synchronized Collection<CorsoBean> doRetrieveBySupervisore(AccountBean account) throws SQLException, NotFoundException, NoPermissionException, NotWellFormattedException {
 		accountManager= AccountManager.getIstanza();
-		lezioneManager= LezioneManager.getIstanza();
+		lezioneManager= LezioneManager.getIstanza("");
 		if(!accountManager.isWellFormatted(account)) throw new NotWellFormattedException("L'account non ï¿½ ben formattato");
 		if(!accountManager.checkAccount(account)) throw new NotFoundException("Questo account non esiste");
 		if(!account.getTipo().equals(Ruolo.Supervisore)) throw new NoPermissionException("Questo utente non puï¿½ avere corsi da supervisionare");

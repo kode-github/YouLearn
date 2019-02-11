@@ -218,7 +218,9 @@
 
 
 
-
+<%
+	if(ruolo.equals("NonIscritto")){
+%>
 
 	<div id="message-box" class="">
 		<form class="checkout d-none">
@@ -250,8 +252,7 @@
 			</p>
 		</form>
 	</div>
-
-
+<%} %>
 	<script type="text/javascript" src="JS/Corso.js"></script>
 </body>
 

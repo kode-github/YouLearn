@@ -18,8 +18,7 @@ public class AccountManager {
 	
 	private static AccountManager istanza;
 	private CartaDiCreditoManager managerCarta;
-	private CorsoManager managerCorso;
-	private IscrizioneManager managerIscrizione;
+
 	
 	
 	private AccountManager() {}
@@ -168,8 +167,6 @@ public class AccountManager {
 		if(!temp.getPassword().equals(password)) throw new DatiErratiException("Le password non corrispondono"); 
 		
 		managerCarta= CartaDiCreditoManager.getIstanza();
-		managerCorso= CorsoManager.getIstanza();
-		managerIscrizione= IscrizioneManager.getIstanza();
 
 		
 		if(temp.getTipo().equals(Ruolo.Utente)) {

@@ -28,10 +28,10 @@ public class GetLezioniServlet extends HttpServlet {
 	
     public GetLezioniServlet() {
         super();
-        manager=LezioneManager.getIstanza();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		manager=LezioneManager.getIstanza(getServletContext().getRealPath(""));
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		HttpSession session=request.getSession();
 		try {

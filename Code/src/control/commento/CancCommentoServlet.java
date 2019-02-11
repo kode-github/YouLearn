@@ -7,34 +7,42 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Servlet implementation class CancCommentoServlet
- */
+import bean.AccountBean;
+import manager.LezioneManager;
+
+
 @WebServlet("/CancCommentoServlet")
 public class CancCommentoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+	LezioneManager manager;
+
     public CancCommentoServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+    /**
+     * Elimina un commento
+     * Si potrebbe tranquillamente fare in ajax
+     * TODO andrebbe fatto il controllo sull'identità dell'account
+     */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		manager=LezioneManager.getIstanza(getServletContext().getRealPath(""));
 		response.getWriter().append("Served at: ").append(request.getContextPath());
+			try {
+				int idCommento=Integer.parseInt(request.getParameter("idCommento"));
+				int idLezione=Integer.parseInt(request.getParameter("idLezione"));
+				AccountBean account=(AccountBean) request.getSession().getAttribute("account");
+				manager.delCommento(idCommento);
+				response.sendRedirect(request.getContextPath()+"/Lezione.jsp?idLezione="+idLezione);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

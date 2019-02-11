@@ -25,7 +25,6 @@ public class IscrizioneManager {
 
 	private static IscrizioneManager istanza;
 	private AccountManager accountManager;
-	private LezioneManager lezioneManager;
 	private CorsoManager corsoManager;
 	
 	private IscrizioneManager() { }
@@ -55,7 +54,7 @@ public class IscrizioneManager {
 		PreparedStatement preparedStatement=null;
 		IscrizioneBean iscrizione=new IscrizioneBean();
 		accountManager= AccountManager.getIstanza();
-		corsoManager= CorsoManager.getIstanza();
+		corsoManager= CorsoManager.getIstanza("");
 		
 		String sql="SELECT* FROM iscrizione WHERE accountmail=? AND corsoIdCorso=?";		
 		try {
@@ -93,9 +92,8 @@ public class IscrizioneManager {
 	 * @throws NotWellFormattedException 
 	 */
 	public synchronized Collection<IscrizioneBean> getIscrizioniUtente(AccountBean account) throws SQLException, NotFoundException, NoPermissionException, NotWellFormattedException {
-		accountManager= AccountManager.getIstanza();
-		lezioneManager= LezioneManager.getIstanza();
-		corsoManager=CorsoManager.getIstanza();
+		accountManager= AccountManager.getIstanza();		
+		corsoManager=CorsoManager.getIstanza("");
 		if(!accountManager.checkAccount(account)) throw new NotFoundException("Questo account non esiste");
 		if(!account.getTipo().equals(Ruolo.Utente)) throw new NoPermissionException("Questo utente non pu� avere corsi creati");
 		
@@ -158,8 +156,7 @@ public class IscrizioneManager {
 	 */
 	public synchronized Collection<IscrizioneBean> getIscrittiCorso(CorsoBean corso) throws SQLException, NotFoundException, NoPermissionException {
 		accountManager= AccountManager.getIstanza();
-		lezioneManager= LezioneManager.getIstanza();
-		corsoManager=CorsoManager.getIstanza();
+		corsoManager=CorsoManager.getIstanza("");
 		if(!corsoManager.checkCorso(corso)) throw new NotFoundException("Questo corso non esiste");
 		
 		Connection connection=null;
@@ -208,7 +205,7 @@ public class IscrizioneManager {
 	 */
 	public synchronized void iscriviStudente(IscrizioneBean iscrizione) throws SQLException, NotFoundException, AlreadyExistingException, NoPermissionException, NotWellFormattedException {
 		accountManager=AccountManager.getIstanza();
-		corsoManager= CorsoManager.getIstanza();
+		corsoManager= CorsoManager.getIstanza("");
 		//TODO Verificare perchè si usano solo le key per i check
 		if(!isWellFormatted(iscrizione)) throw new NotWellFormattedException("L'iscrizione non � ben formattata");
 		if(checkIscrizione(iscrizione.getCorso().getIdCorso(),iscrizione.getAccount().getMail())) 

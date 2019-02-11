@@ -35,12 +35,14 @@ public class LezioneManager {
 	private static LezioneManager istanza;
 	private AccountManager accountManager;
 	private CorsoManager corsoManager;
+	private static String PATH;
 	
 	private LezioneManager() { }
 	
-	public static LezioneManager getIstanza() {
+	public static LezioneManager getIstanza(String path) {
 		if(istanza==null)
 			istanza=new LezioneManager();
+		PATH=path;
 		return istanza;
 	}
 
@@ -57,7 +59,7 @@ public class LezioneManager {
 	 * @throws NoPermissionException 
 	 */
 	public synchronized void modificaOrdine(int corso,String coppie) throws SQLException, DatiErratiException, NoPermissionException, NotFoundException, NotWellFormattedException {
-		corsoManager=CorsoManager.getIstanza();
+		corsoManager=CorsoManager.getIstanza("");
 		//Recupera le lezioni di un corso
 		LinkedList<LezioneBean> lezione=(LinkedList<LezioneBean>)corsoManager.doRetrieveByKey(corso).getLezioni();
 		
@@ -144,31 +146,7 @@ public class LezioneManager {
 		}
 	}
 	
-	/**
-	 * Inserisce una serie di lezioni nel database
-	 * In caso di errore nell'inserimento di una lezione, l'operazione corrente viene annullata ma gli inserimenti 
-	 * precedenti non vengono annullati
-	 * @param lezioni
-	 * @param files
-	 * @throws DatiErratiException
-	 * @throws NotWellFormattedException
-	 * @throws SQLException
-	 * @throws IOException
-	 */
-//	public synchronized void insLezioniMultiple(ArrayList<LezioneBean> lezioni,ArrayList<Part> files) throws DatiErratiException, NotWellFormattedException, SQLException, IOException {
-//		if(lezioni==null || files==null || lezioni.size()!=files.size())
-//									throw new DatiErratiException("Non c'� un file per ogni lezione");
-//		/**Inizio le modifiche */
-//		corsoManager= CorsoManager.getIstanza();
-//		int i=0;
-//		Connection c=DriverManagerConnectionPool.getConnection();
-//		c.setAutoCommit(false);
-//		for(Part file: files) {
-//			insLezione(lezioni.get(i++),file,c);
-//		}
-//		DriverManagerConnectionPool.releaseConnection(c);
-//	}
-	
+
 	/**
 	 * Inserisce una lezione nel database e la salva in un file
 	 * @param lezione la lezione da inserire
@@ -180,7 +158,7 @@ public class LezioneManager {
 	 * @throws IOException Errore nella scrittura del file su disco
 	 */
 	 public synchronized void insLezione(LezioneBean lezione,Part file) throws NotWellFormattedException, SQLException, DatiErratiException, IOException {
-		corsoManager=CorsoManager.getIstanza();
+		corsoManager=CorsoManager.getIstanza("");
 		 if(lezione.getIdLezione()!=null || lezione.getCorso().getIdCorso()==null ||
 									!corsoManager.checkCorso(lezione.getCorso().getIdCorso())) 
 			throw new DatiErratiException("la lezione esiste gi� o il corso non esiste");
@@ -193,17 +171,14 @@ public class LezioneManager {
 		try{
 			c=DriverManagerConnectionPool.getConnection();
 			c.setAutoCommit(false);
-			//
-			Path path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
-					+ "YouLearn\\Code\\WebContent\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni");
+			
+			Path path=Paths.get(PATH+"\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni");
 			if(!Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS))
 					Files.createDirectories(path); 
 			String filename=UUID.randomUUID().toString();
 			String type=file.getSubmittedFileName().substring(file.getSubmittedFileName().lastIndexOf('.'));
-			System.out.println("Estensione: "+type+"\n");
 			if(!type.equals(".mp4")) throw new DatiErratiException("Il tipo del file non � .mp4");
-			path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
-					+ "YouLearn\\Code\\WebContent\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni"+File.separator+
+			path=Paths.get(PATH+"\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni"+File.separator+
 																				filename+type);
 			statement=c.prepareStatement(sql);
 			statement.setString(1, lezione.getNome());
@@ -258,8 +233,7 @@ public class LezioneManager {
 			callableStatement=connection.prepareCall("{ call adjustLezioni }");
 			callableStatement.execute();
 			//Elimino il file dal disco
-			Path path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
-					+ "YouLearn\\Code\\WebContent\\Resources\\"+lezione.getCorso().getIdCorso()
+			Path path=Paths.get(PATH+"\\Resources\\"+lezione.getCorso().getIdCorso()
 					+"\\Lezioni\\"+lezione.getFilePath());
 			Files.delete(path);
 			
@@ -339,7 +313,7 @@ public class LezioneManager {
 	 * @throws SQLException 
 	 */
 	public synchronized Collection<LezioneBean> retrieveLezioniByCorso(CorsoBean corso) throws NotWellFormattedException, SQLException{
-		corsoManager=CorsoManager.getIstanza();
+		corsoManager=CorsoManager.getIstanza("");
 		if(corso.getIdCorso()==null || !corsoManager.isWellFormatted(corso)) 
 								throw new NotWellFormattedException("Il corso non � ben formattato");
 		Connection connection=null;
@@ -487,24 +461,25 @@ public class LezioneManager {
 	 * Inserisce un nuovo commento nel database
 	 * @param product
 	 * @throws SQLException 
+	 * @throws NotFoundException 
 	 * @throws Exception
 	 */
-	public synchronized void insCommento(CommentoBean product) throws NotWellFormattedException, SQLException {
+	public synchronized void insCommento(CommentoBean product) throws NotWellFormattedException, SQLException, NotFoundException {
 		if(product.getIdCommento()!=null || !commentoIsWellFormatted(product)) throw new NotWellFormattedException("Il commento non"
 																					+ "� ben formattato");
+		if(!checkLezione(product.getLezione().getIdLezione())) throw new NotFoundException("La lezione non esiste");
 		
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		
-		String sql="INSERT INTO commento VALUES(?,?,?,?)";
+		String sql="INSERT INTO commento (idLezione,testo,accountMail) VALUES(?,?,?)";
 		try {
 			connection=DriverManagerConnectionPool.getConnection();
 			preparedStatement= connection.prepareStatement(sql);
 			
-			preparedStatement.setInt(1, product.getIdCommento());
-			preparedStatement.setInt(2, product.getLezione().getIdLezione());
-			preparedStatement.setString(3, product.getTesto());
-			preparedStatement.setString(4, product.getAccountCreatore().getMail());
+			preparedStatement.setInt(1, product.getLezione().getIdLezione());
+			preparedStatement.setString(2, product.getTesto());
+			preparedStatement.setString(3, product.getAccountCreatore().getMail());
 			System.out.println("Inserisci commento: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
 			if(!connection.getAutoCommit())
@@ -555,6 +530,7 @@ public class LezioneManager {
 				temp.setAccountCreatore(accountManager.doRetrieveByKey(rs.getString("accountMail")));
 				list.add(temp);
 			}
+			lezione.setCommenti(list);
 		}finally {
 			try {
 			if(preparedStatement!=null)
@@ -575,9 +551,9 @@ public class LezioneManager {
 	public synchronized boolean commentoIsWellFormatted(CommentoBean commento) {
 		accountManager=AccountManager.getIstanza();
 		//idcommento, testo, accountCreatore, lezione
-		return commento.getTesto()!=null && commento.getTesto().matches("^[a-zA-Z0-9]{1,1024}") &&
+		return commento.getTesto()!=null && commento.getTesto().matches("^[a-zA-Z0-9-.\"'\\s]{1,1024}") &&
 				commento.getAccountCreatore()!=null && accountManager.isWellFormatted(commento.getAccountCreatore()) &&
-				commento.getLezione()!=null && lezioneIsWellFormatted(commento.getLezione());
+				commento.getLezione()!=null;
 		
 	}
 	
@@ -588,7 +564,6 @@ public class LezioneManager {
 	 * @return
 	 */
 	public synchronized boolean lezioneIsWellFormatted(LezioneBean lezione) {
-		corsoManager=CorsoManager.getIstanza();
 		if(lezione.getIdLezione()!=null)
 			if(lezione.getFilePath()==null || !lezione.getFilePath().matches("^[a-zA-Z0-9\\.-]{10,2048}") || lezione.getNumeroLezione()<=0 
 			|| lezione.getVisualizzazioni()<0)
@@ -634,10 +609,9 @@ public class LezioneManager {
 		
 			//salvo il nuovo file sul disco
 			if(part!=null) {
-				Path path=Paths.get("C:\\Users\\Antonio\\Documents\\Universita\\IS\\Progetto\\"
-					+ "YouLearn\\Code\\WebContent\\\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni"+File.separator+
+				Path path=Paths.get(PATH+"\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni"+File.separator+
 																				filename+type);
-				lezione.setFilePath(path.toString());
+				lezione.setFilePath(filename+type);
 				part.write(path.toString());
 			}
 			if(!c.getAutoCommit())

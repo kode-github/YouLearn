@@ -25,11 +25,12 @@ public class SearchCorso extends HttpServlet {
 	
     public SearchCorso() {
         super();
-        manager=CorsoManager.getIstanza();
     }
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        manager=CorsoManager.getIstanza(getServletContext().getRealPath(""));
+
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 			String search=request.getParameter("search");
 			Collection<CorsoBean> corso;

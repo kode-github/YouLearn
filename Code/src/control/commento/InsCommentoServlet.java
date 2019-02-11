@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import bean.AccountBean;
 import bean.CommentoBean;
 import bean.LezioneBean;
+import exception.NotFoundException;
+import exception.NotWellFormattedException;
 import manager.LezioneManager;
 
 @WebServlet("/InsCommentoServlet")
@@ -22,23 +24,31 @@ public class InsCommentoServlet extends HttpServlet {
 	
     public InsCommentoServlet() {
         super();
-        manager= LezioneManager.getIstanza();
     }
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		manager=LezioneManager.getIstanza(getServletContext().getRealPath(""));
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		String testo=request.getParameter("testoCommento");
-		LezioneBean lezione=(LezioneBean)request.getSession().getAttribute("lezione");
-		AccountBean account=(AccountBean)request.getSession().getAttribute("Account");
-		CommentoBean commento=new CommentoBean(null, testo, lezione,account);
-//		try {
-//			manager.insCommento(commento);
-//			response.sendRedirect(request.getContextPath()+"\\Lezione.jsp?idCorso="+idCorso+"+&numeroLezione="+nLezione);
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		
+		int idLezione=Integer.parseInt(request.getParameter("idLezione"));
+		AccountBean account=(AccountBean)request.getSession().getAttribute("account");
+		LezioneBean lezione=new LezioneBean();
+		lezione.setIdLezione(idLezione);
+		CommentoBean commento=new CommentoBean(null, testo,lezione,account);
+		try {
+			manager.insCommento(commento);
+			response.sendRedirect(request.getContextPath()+"\\Lezione.jsp?idLezione="+idLezione);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (NotWellFormattedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 
