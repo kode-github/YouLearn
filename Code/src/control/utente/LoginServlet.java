@@ -44,6 +44,7 @@ public class LoginServlet extends HttpServlet {
 				else
 					response.sendRedirect(request.getContextPath()+"\\HomepageSupervisore.jsp");
 			} catch (NoPermissionException e) {
+				response.sendRedirect(request.getContextPath()+"\\Error.jsp");
 				//Non dovrebbe MAI essere qui
 				e.printStackTrace();
 			} catch (DatiErratiException e) {
@@ -61,6 +62,7 @@ public class LoginServlet extends HttpServlet {
 		} catch (NotWellFormattedException e) {
 				//Non ci andrà mai
 				e.printStackTrace();
+				response.sendRedirect(request.getContextPath()+"\\Error.jsp");
 			}
 	}
 

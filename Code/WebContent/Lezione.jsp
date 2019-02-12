@@ -88,7 +88,7 @@
 					placeholder="Inserisci qui il tuo commento!" class="text-center"></textarea>
 			</div>
 			<div>
-				<button type="submit" style="margin:0px 5px 10px;" formaction="http://localhost:8080/YouLearn/InsCommentoServlet" class="btn float-right btn-success">AGGIUNGI COMMENTO</button>
+				<button type="submit" style="margin:0px 5px 10px;" formaction="http://localhost:8080/YouLearn/InsCommentoServlet?idLezione=<%=lezione.getIdLezione()%>" class="btn float-right btn-success">AGGIUNGI COMMENTO</button>
 			</div>
 		</form>
 		<%

@@ -28,11 +28,11 @@ public class ModificaLezioneServlet extends HttpServlet {
 	
     public ModificaLezioneServlet() {
         super();
-        manager=LezioneManager.getIstanza();
     }
 
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		manager=LezioneManager.getIstanza(getServletContext().getRealPath(""));
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		try {
     		AccountBean account=(AccountBean) request.getSession().getAttribute("account");
@@ -41,7 +41,7 @@ public class ModificaLezioneServlet extends HttpServlet {
         	System.out.println("idCorso="+idCorso +", idLezione="+ idLezione);
         	LezioneBean lezione=account.getCorsoTenuto(idCorso).getLezione(idLezione);
         	//Setto il nuovo nome della lezione
-        	String nome=request.getParameter("nomeLezione");
+        	String nome=request.getParameter("name");
         	lezione.setNome(nome);
         	Part part=request.getPart("file");
 			manager.modificaLezione(lezione,part);

@@ -33,11 +33,11 @@ public class ModificaOrdineServlet extends HttpServlet {
     
     public ModificaOrdineServlet() {
         super();
-        manager=LezioneManager.getIstanza();
     }
 
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		manager=LezioneManager.getIstanza(getServletContext().getRealPath(""));
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		try {
     		AccountBean account=(AccountBean) request.getSession().getAttribute("account");

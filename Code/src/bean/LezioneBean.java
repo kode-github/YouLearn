@@ -36,7 +36,6 @@ public class LezioneBean {
 
 	public LezioneBean() {
 		this.commenti = new LinkedList<CommentoBean>();
-		this.commenti = null;
 	}
 	
 
@@ -177,6 +176,10 @@ public class LezioneBean {
 	public void removeCommento(CommentoBean commento) {
 		this.commenti.remove(commento);
 		commento.setLezione(null);
+	}
+	
+	public void setCommenti(Collection<CommentoBean> commento) {
+		commenti=commento;
 	}
 
 	public String getFilePath() {

@@ -4,6 +4,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> fa5548eb42090af89a61f2f39686bff37fa40d6d
 import junit.framework.TestSuite;
 
 @RunWith(Suite.class)

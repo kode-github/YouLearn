@@ -35,11 +35,12 @@ public class VisualCorsoServlet extends HttpServlet {
     public VisualCorsoServlet() {
         super();
         manager=IscrizioneManager.getIstanza();
-        corsoManager=CorsoManager.getIstanza();
     }
 
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
+        corsoManager=CorsoManager.getIstanza(getServletContext().getRealPath(""));
+
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 			try {
 				String ruolo=null;

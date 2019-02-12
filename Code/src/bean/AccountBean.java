@@ -352,6 +352,12 @@ public class AccountBean{
 	   }
 	}
 	
+	public void addCorsoTenuto(CorsoBean corso) {
+		LinkedList<CorsoBean> l=new LinkedList<>();
+		l.add(corso);
+		AddCorsiTenuti(l);
+	}
+	
 	
 	/**
 	 * Aggiunge un singolo corso tenuto dall'account alla lista dei corsi tenuti dall'account

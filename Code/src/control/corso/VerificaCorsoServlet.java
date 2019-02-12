@@ -22,11 +22,11 @@ public class VerificaCorsoServlet extends HttpServlet {
     
     public VerificaCorsoServlet() {
         super();
-        manager=CorsoManager.getIstanza();
     }
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        manager=CorsoManager.getIstanza(getServletContext().getRealPath(""));
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		try {
 			boolean verifica=Boolean.parseBoolean(request.getParameter("verifica"));
