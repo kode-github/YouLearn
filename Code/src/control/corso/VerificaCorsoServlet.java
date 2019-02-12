@@ -1,6 +1,10 @@
 package control.corso;
 
+import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
+
+import javax.naming.NoPermissionException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +15,8 @@ import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import bean.AccountBean;
 import bean.CorsoBean;
+import exception.NotFoundException;
+import exception.NotWellFormattedException;
 import manager.CorsoManager;
 
 
@@ -28,18 +34,30 @@ public class VerificaCorsoServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         manager=CorsoManager.getIstanza(getServletContext().getRealPath(""));
 		response.getWriter().append("Served at: ").append(request.getContextPath());
-		try {
-			boolean verifica=Boolean.parseBoolean(request.getParameter("verifica"));
-			int idCorso=Integer.parseInt(request.getParameter("idCorso"));
-			AccountBean supervisore=(AccountBean)request.getSession().getAttribute("account");
-			CorsoBean corso=supervisore.getCorsoSupervisionato(idCorso);
-			manager.convalidaCorso(verifica, corso);
-			request.getSession().setAttribute("verificato", verifica);
-			response.sendRedirect(request.getContextPath()+"\\HomepageSupervisore.jsp");
-		}catch(Exception e) {
-			e.printStackTrace();
+			try {
+				boolean verifica=Boolean.parseBoolean(request.getParameter("verifica"));
+				int idCorso=Integer.parseInt(request.getParameter("idCorso"));
+				AccountBean supervisore=(AccountBean)request.getSession().getAttribute("account");
+				CorsoBean corso=supervisore.getCorsoSupervisionato(idCorso);
+				manager.convalidaCorso(verifica, corso);
+				request.getSession().setAttribute("verificato", verifica);
+				response.sendRedirect(request.getContextPath()+"\\HomepageSupervisore.jsp");
+			} catch (NoPermissionException e) {
+				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
+				e.printStackTrace();
+			} catch (NotFoundException e) {
+				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
+				e.printStackTrace();
+			} catch (NotWellFormattedException e) {
+				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
+				e.printStackTrace();
+			} catch (SQLException e) {
+				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
+
+				e.printStackTrace();
+			}
 			
-		}
+
 	}
 
 

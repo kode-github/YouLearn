@@ -2,6 +2,7 @@
 <%@page import="bean.*"%>
 <%@page import="bean.CorsoBean.*"%>
 <%@page import="java.util.LinkedList"%>
+<%@page import="java.util.Comparator"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
@@ -46,6 +47,14 @@
 </head>
 
 <body>
+
+	<!-- 
+		ATTRIBUTI DA GESTIRE (FORMA STRINGA TREU-FALSE), IN SESSIONE E ELIMINALI
+		corsoCancellato
+		verificato (per supervisore)
+		iscrizioneEffettuata
+	 -->
+
 
 	<!--
 	 
@@ -139,6 +148,16 @@
 			<%
 			
 			}else{
+				LinkedList<LezioneBean> lezioni=(LinkedList<LezioneBean>)corso.getLezioni();
+				lezioni.sort(new Comparator<LezioneBean>() {
+					public int compare(LezioneBean b1, LezioneBean b2) {
+						if (b1.getNumeroLezione() > b2.getNumeroLezione())
+							return 1;
+						if (b1.getNumeroLezione() < b2.getNumeroLezione())
+							return -1;
+						return 0;
+					}
+				});
 			for(LezioneBean e: corso.getLezioni()){
 				%>
 

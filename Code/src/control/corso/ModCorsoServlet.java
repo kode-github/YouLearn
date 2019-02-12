@@ -1,5 +1,6 @@
 package control.corso;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -64,21 +65,21 @@ public class ModCorsoServlet extends HttpServlet {
 			manager.modificaCorso(temp, copertina);
 			account.removeCorsoTenuto(corso);
 			account.AddCorsoTenuto(temp);
-			response.sendRedirect(request.getContextPath()+"/HomepageUtente.jsp?corsoModificato=true");
+			request.getSession().setAttribute("corsoModificato", "true");
+			response.sendRedirect(request.getContextPath()+File.separator+"HomepageUtente.jsp?corsoModificato=true");
 			
 		}catch (NullPointerException | IllegalArgumentException | NotWellFormattedException e) {
-			//TODO dati non ben formattati
 			e.printStackTrace();
-			response.sendRedirect(request.getContextPath()+"/SettingCorso.jsp?idCorso="+idCorso);
+			request.getSession().setAttribute("corsoModificato", "false");
+			response.sendRedirect(request.getContextPath()+File.separator+"SettingCorso.jsp?idCorso="+idCorso);
 		} catch (NoPermissionException e) {
-			//TODO Pagina di errore, non dovrebbe mai essere qui
+			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 			e.printStackTrace();
 		} catch (NotFoundException e) {
-			//TODO Pagina di errore, non dovrebbe mai essere qui
-			//Non ha trovato il corso
+			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 			e.printStackTrace();
 		} catch (SQLException e) {
-			//TODO non si connette al database
+			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 			e.printStackTrace();
 		}
 		

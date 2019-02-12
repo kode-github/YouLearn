@@ -1,5 +1,6 @@
 package control.corso;
 
+import java.io.File;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -34,10 +35,13 @@ public class CancCorsoServlet extends HttpServlet {
 		try {
 			manager.removeCorso(idCorso);
 			account.removeCorsoTenuto(account.getCorsoTenuto(idCorso)); //Elimino il corso tenuto dall'oggetto account in sessione
-			response.sendRedirect(request.getContextPath()+"//HomepageUtente.jsp");
+			request.getSession().setAttribute("corsoCancellato", "true");
+			response.sendRedirect(request.getContextPath()+File.separator+"HomepageUtente.jsp");
 		}catch (Exception e) {
 			e.printStackTrace();
-			//TODO SI DEVONO GESTIRE
+			request.getSession().setAttribute("corsoCancellato", "false");
+			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
+
 		}
 		
 	}

@@ -130,7 +130,7 @@ public class LezioneManager {
 	 * @throws SQLException
 	 * @throws DatiErratiException
 	 */
-	private void changeNumeroLezione(LezioneBean lezione,Connection c) throws SQLException, DatiErratiException {
+	void changeNumeroLezione(LezioneBean lezione,Connection c) throws SQLException, DatiErratiException {
 		PreparedStatement statement=null;
 		String sql="Update Lezione set numeroLezione=? where idLezione=?";
 		try {
@@ -172,13 +172,13 @@ public class LezioneManager {
 			c=DriverManagerConnectionPool.getConnection();
 			c.setAutoCommit(false);
 
-			Path path=Paths.get(PATH+"\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni");
+			Path path=Paths.get(PATH+File.separator+"Resources"+File.separator+lezione.getCorso().getIdCorso()+File.separator+"Lezioni");
 			if(!Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS))
 					Files.createDirectories(path);
 			String filename=UUID.randomUUID().toString();
 			String type=file.getSubmittedFileName().substring(file.getSubmittedFileName().lastIndexOf('.'));
 			if(!type.equals(".mp4")) throw new DatiErratiException("Il tipo del file non � .mp4");
-			path=Paths.get(PATH+"\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni"+File.separator+
+			path=Paths.get(PATH+File.separator+"Resources"+File.separator+lezione.getCorso().getIdCorso()+File.separator+"Lezioni"+File.separator+
 																				filename+type);
 			statement=c.prepareStatement(sql);
 			statement.setString(1, lezione.getNome());
@@ -233,8 +233,8 @@ public class LezioneManager {
 			callableStatement=connection.prepareCall("{ call adjustLezioni }");
 			callableStatement.execute();
 			//Elimino il file dal disco
-			Path path=Paths.get(PATH+"\\Resources\\"+lezione.getCorso().getIdCorso()
-					+"\\Lezioni\\"+lezione.getFilePath());
+			Path path=Paths.get(PATH+File.separator+"Resources"+File.separator+lezione.getCorso().getIdCorso()
+					+File.separator+"Lezioni"+File.separator+lezione.getFilePath());
 			Files.delete(path);
 
 			if(!connection.getAutoCommit())
@@ -398,9 +398,11 @@ public class LezioneManager {
 	 * Elimina un commento
 	 * @param code
 	 * @return
+	 * @throws NotFoundException 
+	 * @throws SQLException 
 	 * @throws Exception
 	 */
-	public synchronized boolean delCommento(int code) throws Exception {
+	public synchronized boolean delCommento(int code) throws NotFoundException, SQLException {
 		if(!checkCommento(code)) throw new NotFoundException("Questo commento non esiste");
 
 		Connection connection = null;
@@ -436,7 +438,7 @@ public class LezioneManager {
 	 * @return
 	 * @throws SQLException
 	 */
-	private boolean checkCommento(int code) throws SQLException {
+	public boolean checkCommento(int code) throws SQLException {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 
@@ -613,9 +615,14 @@ public class LezioneManager {
 
 			//salvo il nuovo file sul disco
 			if(part!=null) {
+<<<<<<< HEAD
 				System.out.println("BBBBBBBBBBBBBBBBB");
 				Path path=Paths.get(PATH+"\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni"+File.separator+
 																				filename+type);
+=======
+				Path path=Paths.get(PATH+File.separator+"Resources"+File.separator+lezione.getCorso().getIdCorso()+File.separator+
+						"Lezioni"+File.separator+filename+type);
+>>>>>>> 6a96fdc30c189f926831e0de22ba070ee412da5d
 				lezione.setFilePath(filename+type);
 				part.write(path.toString());
 			}

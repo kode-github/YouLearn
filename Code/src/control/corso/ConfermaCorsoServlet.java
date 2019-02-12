@@ -33,8 +33,7 @@ public class ConfermaCorsoServlet extends HttpServlet {
 			manager.confermaCorso(account.getCorsoTenuto(idCorso));
 			response.sendRedirect(request.getContextPath()+"//HomepageUtente.jsp");
 		}catch (Exception e) {
-			e.printStackTrace();
-			//TODO SI DEVONO GESTIRE
+			response.sendRedirect(request.getContextPath()+"/Error.jsp");
 		}
 	}
 

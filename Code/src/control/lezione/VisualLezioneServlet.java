@@ -41,15 +41,16 @@ public class VisualLezioneServlet extends HttpServlet {
 				request.getSession().setAttribute("lezione", lezione);
 				response.sendRedirect(request.getContextPath()+"/Lezione.jsp?idLezione="+idLezione);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				response.sendRedirect(request.getContextPath()+"/Error.jsp");
 				e.printStackTrace();
 			} catch (NotFoundException e) {
-				// TODO Auto-generated catch block
+				response.sendRedirect(request.getContextPath()+"/Error.jsp");
 				e.printStackTrace();
 			} catch (NotWellFormattedException e) {
-				// TODO Auto-generated catch block
+				response.sendRedirect(request.getContextPath()+"/Error.jsp");
 				e.printStackTrace();
 			} catch(NullPointerException e) {
+				response.sendRedirect(request.getContextPath()+"/Welcome.jsp");
 				e.printStackTrace();
 			}
 			

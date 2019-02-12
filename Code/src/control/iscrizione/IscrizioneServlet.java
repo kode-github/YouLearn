@@ -53,11 +53,13 @@ public class IscrizioneServlet extends HttpServlet {
 			iscrizione.setAccount(account);
 			iscrizione.setCorso(corso);
 			managerIscrizione.iscriviStudente(iscrizione);
+			request.getSession().setAttribute("iscrizioneEffettuata", "true");
 			response.sendRedirect(request.getContextPath()+"\\Corso.jsp?idCorso="+idCorso);
 		} catch (NoPermissionException | SQLException | NotFoundException | NotWellFormattedException e) {
 			response.sendRedirect(request.getContextPath()+"\\Error.jsp");
 			e.printStackTrace();
 		} catch (AlreadyExistingException e) {
+			//request.getSession().setAttribute("iscrizioneEffettuata", "false");
 			account.addCorsoTenuto(corso);
 			response.sendRedirect(request.getContextPath()+"\\Corso.jsp?idCorso="+idCorso);
 			e.printStackTrace();

@@ -1,5 +1,6 @@
 package control.commento;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -38,14 +39,17 @@ public class InsCommentoServlet extends HttpServlet {
 		CommentoBean commento=new CommentoBean(null, testo,lezione,account);
 		try {
 			manager.insCommento(commento);
+			request.getSession().setAttribute("commentoInserito", "true");
 			response.sendRedirect(request.getContextPath()+"\\Lezione.jsp?idLezione="+idLezione);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 		} catch (NotWellFormattedException e) {
-			// TODO Auto-generated catch block
+			request.getSession().setAttribute("commentoInserito", "false");
+			response.sendRedirect(request.getContextPath()+File.separator+"Lezione.jsp?idLezione="+idLezione);
 			e.printStackTrace();
 		} catch (NotFoundException e) {
-			// TODO Auto-generated catch block
+			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 			e.printStackTrace();
 		}
 		

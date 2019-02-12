@@ -71,18 +71,17 @@ public class CreaCorsoServlet extends HttpServlet {
 			response.sendRedirect(request.getContextPath()+"/HomepageUtente.jsp");
 			
 		}catch (NullPointerException | IllegalArgumentException | NotWellFormattedException e) {
-			//TODO dati non ben formattati
 			e.printStackTrace();
-			response.sendRedirect(request.getContextPath()+"/SettingCorso.jsp?erroreInserimento=true");
+			request.getSession().setAttribute("creato", "false");
+			response.sendRedirect(request.getContextPath()+"/SettingCorso.jsp");
 		} catch (NoPermissionException e) {
-			//TODO Pagina di errore, non dovrebbe mai essere qui
+			response.sendRedirect(request.getContextPath()+"/Error.jsp");
 			e.printStackTrace();
 		} catch (NotFoundException e) {
-			//TODO Pagina di errore, non dovrebbe mai essere qui
-			//Non ha trovato il corso
+			response.sendRedirect(request.getContextPath()+"/Error.jsp");
 			e.printStackTrace();
 		} catch (SQLException e) {
-			//TODO non si connette al database
+			response.sendRedirect(request.getContextPath()+"/Error.jsp");
 			e.printStackTrace();
 		}
 		
