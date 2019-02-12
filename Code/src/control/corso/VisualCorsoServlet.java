@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sun.org.apache.regexp.internal.REUtil;
 
 import bean.AccountBean;
 import bean.AccountBean.Ruolo;
@@ -93,7 +92,7 @@ public class VisualCorsoServlet extends HttpServlet {
 							break;
 						}
 					}
-					if(corso==null) throw new NotFoundException("Non è un corso da lui supervisionato");
+					if(corso==null) throw new NotFoundException("Non ï¿½ un corso da lui supervisionato");
 				}
 				manager.getIscrittiCorso(corso); //recupero le iscrizioni
 				request.getSession().setAttribute("ruolo", ruolo); //Setto il ruolo in sessione
