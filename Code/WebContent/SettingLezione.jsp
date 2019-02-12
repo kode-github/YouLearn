@@ -98,8 +98,13 @@
 									type="text" name="nome" readonly="readonly" autocomplete="off"
 									value="<%=l.getNome()%>"></li>
 <<<<<<< HEAD
+<<<<<<< HEAD
 								<li id="file-lezione" class="li-lezione"><input type="file"
 									class="d-none" name="file"><%=l.getFilePath()%> 
+=======
+								<li id="file-lezione" class="li-lezione"><input type="file" 
+									class="d-none" name="fileMod" value="<%=l.getFilePath()%>"><%=l.getFilePath()%> 
+>>>>>>> e38e6be748d59475c8b5e501a55f1eed7da12e1c
 =======
 								<li id="file-lezione" class="li-lezione"><input type="file" 
 									class="d-none" name="fileMod" value="<%=l.getFilePath()%>"><%=l.getFilePath()%> 

@@ -125,10 +125,7 @@ var getUrlParameter = function getUrlParameter(sParam) {
 };	
 
 
-$( document ).ajaxComplete(function() {
-	$( ".log" ).text( "Triggered ajaxComplete handler." );
-	window.location.reload();
-});
+
 
 
 
@@ -348,11 +345,15 @@ function invioDatiLezione(form){
 
 
 	if(!$(btnModLezione).length >0){
+		console.log("Il bottone non esiste: " + $(btnModLezione));
 
 		sendDataUpload(text, f, id);
 
 	} else {
-		updateNomeLezione($(text).val(), $(id).val());
+
+		console.log("Il bottone esiste: " + $(btnModLezione));
+
+		updateNomeLezione($(text).val(), $(id).val(), form);
 
 	}
 
@@ -360,34 +361,182 @@ function invioDatiLezione(form){
 
 }
 
-function updateNomeLezione(nome, idL){
+function updateNomeLezione(nome, idL, form){
 
 	var idCorso= getUrlParameter("idCorso");
 
 	console.log("idCOrso: "+idCorso);
 	console.log("Nome: " + nome + ", idLezione: " + idL);
-
+	file ="";
 
 	$.ajax({
 		type: "POST",
+		enctype : 'multipart/form-data',
 		url: "http://localhost:8080/YouLearn/ModificaLezioneServlet",
-		data:{ "nomeLezione": nome,
-			"file" : null,
+		enctype :'multipart/form-data',
+		data:{ "name": nome,
+			"file": null,
 			"idLezione": idL,
 			"idCorso": idCorso	}
 	});
+	
+	window.location.reload();
+
 
 
 }
 
 
-function sendDataUpload(text, f, idLezione){	
+//function sendDataUpload(text, f, idLezione){	
+//
+//	
+//	var div=$(this).parent();
+//	var ul =div.children("ul");
+//	console.log(ul);
+//	var liText = ul.children("li").eq(0);
+//	console.log(liText);
+//	var liFile = ul.children("li").eq(1);
+//	console.log(liFile);
+//	var text = liText.children("input[type=text]");
+//	var f = liFile.children("input[type=file]");
+//	console.log($(text).val());
+//	console.log(f.val());
+//	
+//
+//	var idCorso= getUrlParameter('idCorso');
+//	console.log("Questo è: "+idCorso);
+//
+//	f.simpleUpload("http://localhost:8080/YouLearn/ModificaLezioneServlet?name="+$(text).val()+"&idCorso="+ idCorso+"&idLezione="+idLezione.value, {
+//
+//		allowedExts: ["jpg", "jpeg", "jpe", "jif", "jfif", "jfi", "png", "gif", "exe","mp4"],
+//		allowedTypes: ["video/mp4" ,"image/pjpeg", "image/jpeg", "image/png", "image/x-png", "image/gif", "image/x-gif", "application/x-dosexe"],
+//		maxFileSize: 50000000, //50 MB in bytes
+//
+//		start: function(file){
+//			//Modificare nome file con file.name=qualcosa
+//
+//			this.block = $('<div class="block"></div>');
+//			this.progressBar = $('<div class="progressBar"></div>');
+//			this.cancelButton = $('<div class="cancelButton">x</div>');
+//
+//			/*
+//			 * Since "this" differs depending on the function in which it is called,
+//			 * we need to assign "this" to a local variable to be able to access
+//			 * this.upload.cancel() inside another function call.
+//			 */
+//
+//			var that = this;
+//
+//			this.cancelButton.click(function(){
+//				that.upload.cancel();
+//				//now, the cancel callback will be called
+//			});
+//
+//			this.block.append(this.progressBar).append(this.cancelButton);
+//			$('#uploads1').append(this.block);
+//
+//		},
+//
+//		progress: function(progress){
+//			//received progress
+//			this.progressBar.width(progress + "%");
+//		},
+//
+//		success: function(data){
+//			//upload successful
+//
+//			this.progressBar.remove();
+//			this.cancelButton.remove();
+//			window.location.reload();
+//			if (data.success) {
+//				//now fill the block with the format of the uploaded file
+//
+//				var format = data.format;
+//				var formatDiv = $('<div class="format"></div>').text(format);
+//				this.block.append(formatDiv);
+//			} else {
+//				//our application returned an error
+//				var error = data.error.message;
+//				var errorDiv = $('<div class="error"></div>').text(error);				this.block.append(errorDiv);
+//			}
+//
+//		},
+//
+//		error: function(error){
+//			//upload failed
+//			this.progressBar.remove();
+//			this.cancelButton.remove();
+//			var error = error.message;
+//			var errorDiv = $('<div class="error"></div>').text(error);
+//			this.block.append(errorDiv);
+//		},
+//
+//		cancel: function(){
+//			//upload cancelled
+//			this.block.fadeOut(400, function(){
+//				$(this).remove();
+//			});
+//		}
+//
+//	});
+//}
 
 
+$(".UPL").click(function(){	
+
+	
+	var div=$(this).parent();
+	//var ul =div.children("ul");
+	var ul = div.parent();
+	var liText = ul.children("li").eq(0);
+
+	var liFile = ul.children("li").eq(1);
+
+	
+	var text = liText.children("input[type=text]");
+	var f = liFile.children("input[type=file]");
+
+	console.log("CIAOO: "+ liFile.children("input[type=file]"));
+	console.log("Ecco il file:" + f.val());
+	var divU = ul.parent();
+	var divX = divU.parent();
+	var divF = divX.parent();
+	var divI = divF.children().eq(1);//div input con id in form
+	//console.log(divU); //div upload
+	//console.log(divX);//div prima di upload
+	//console.log(divF);//form
+
+	//console.log("Questo è l'id:" + idLezione);
+	//console.log(inputID);
+		if(f==null){alert("file non modificato")}
+
+	
+	console.log("Questo è: "+idCorso);
+	console.log("Questo è: "+$(text).val());
+	
 	var idCorso= getUrlParameter('idCorso');
+	var idLezione = $(divI).val();
+	var nome = $(text).val();
 	console.log(idCorso);
-
-	f.simpleUpload("http://localhost:8080/YouLearn/ModificaLezioneServlet?name="+text.val()+"&idCorso="+ idCorso+"&idLezione="+idLezione, {
+	
+	if(f.val()=="") {
+		
+		
+		
+		$.ajax({
+			type: "POST",
+			url: "http://localhost:8080/YouLearn/ModificaLezioneServlet",
+			data:{ "name": nome,
+				"idLezione": idLezione,
+				"idCorso": idCorso,
+				"tipo": "soloNome"
+			}
+		});
+		
+		//window.location.reload();
+	}
+	else{
+	f.simpleUpload("http://localhost:8080/YouLearn/ModificaLezioneServlet?name="+$(text).val()+"&idCorso="+ idCorso+"&idLezione="+$(divI).val(), {
 
 		allowedExts: ["jpg", "jpeg", "jpe", "jif", "jfif", "jfi", "png", "gif", "exe","mp4"],
 		allowedTypes: ["video/mp4" ,"image/pjpeg", "image/jpeg", "image/png", "image/x-png", "image/gif", "image/x-gif", "application/x-dosexe"],
@@ -414,7 +563,7 @@ function sendDataUpload(text, f, idLezione){
 			});
 
 			this.block.append(this.progressBar).append(this.cancelButton);
-			$('#uploads').append(this.block);
+			$('#uploads1').append(this.block);
 
 		},
 
@@ -428,7 +577,7 @@ function sendDataUpload(text, f, idLezione){
 
 			this.progressBar.remove();
 			this.cancelButton.remove();
-
+			window.location.reload();
 			if (data.success) {
 				//now fill the block with the format of the uploaded file
 
@@ -437,8 +586,8 @@ function sendDataUpload(text, f, idLezione){
 				this.block.append(formatDiv);
 			} else {
 				//our application returned an error
-				var error = data.error.message;
-				var errorDiv = $('<div class="error"></div>').text(error);				this.block.append(errorDiv);
+				//var error = data.error.message;
+				//var errorDiv = $('<div class="error"></div>').text(error);				this.block.append(errorDiv);
 			}
 
 		},
@@ -460,4 +609,5 @@ function sendDataUpload(text, f, idLezione){
 		}
 
 	});
-}
+	}
+});

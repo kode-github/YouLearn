@@ -48,6 +48,8 @@ public class UserFilter implements Filter {
 			}else
 				chain.doFilter(request, response);
 		}
+		System.out.println("FINE USER FILTER");
+
 	}
 
 
