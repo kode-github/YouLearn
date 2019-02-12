@@ -608,6 +608,7 @@ public class LezioneManager {
 			statement=c.prepareStatement(sql);
 			statement.setString(i++, lezione.getNome());
 			if(part!=null)
+				statement.setString(i++, filename+type);
 				statement.setInt(i, lezione.getIdLezione());
 			System.out.println("aaaaaaaaaaaaaaaaaaaaa");
 			statement.executeUpdate();
