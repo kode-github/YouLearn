@@ -36,8 +36,12 @@ public class CambiaPassServlet extends HttpServlet {
 				request.getSession().setAttribute("passwordModificata",true);
 			} catch (NoPermissionException e) {
 				//Non ci andrà mai
+				response.sendRedirect(request.getContextPath()+"\\Error.jsp");
+				return;
 			} catch (SQLException | NotFoundException e) {
 				//pagina di errore
+				response.sendRedirect(request.getContextPath()+"\\Error.jsp");
+				return;
 		} catch (NotWellFormattedException e) {
 			request.getSession().setAttribute("passwordNonModificata",true);
 				e.printStackTrace();

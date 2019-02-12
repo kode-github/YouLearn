@@ -223,7 +223,7 @@
 %>
 
 	<div id="message-box" class="">
-		<form class="checkout d-none">
+		<form class="checkout d-none" method="post">
 			<div class="checkout-header">
 				<h1 class="checkout-title">
 					Checkout <span class="checkout-price"><%=corso.getPrezzo() %>&euro;</span>
@@ -247,7 +247,7 @@
 					title="Inserisci il tuo CVC per completare il pagamento!">
 			</p>
 			<p>
-				<input type="submit" formaction="http://localhost:8080/YouLearn/PagamentoServlet" value="Acquista" class="btn btn-success">
+				<input type="submit" formaction="http://localhost:8080/YouLearn/IscrizioneServlet?idCorso=<%=corso.getIdCorso()%>" value="Acquista" class="btn btn-success">
 				<input type="button" id="out" value="Annulla" class="btn btn-danger">
 			</p>
 		</form>

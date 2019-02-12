@@ -465,7 +465,7 @@ public class LezioneManager {
 	 * @throws NotFoundException
 	 * @throws Exception
 	 */
-	public synchronized void insCommento(CommentoBean product) throws NotWellFormattedException, SQLException {
+	public synchronized void insCommento(CommentoBean product) throws NotWellFormattedException, SQLException, NotFoundException {
 		if(product==null || !commentoIsWellFormatted(product)) throw new NotWellFormattedException("Il commento non"
 																					+ "� ben formattato");
 		if(!checkLezione(product.getLezione().getIdLezione())) throw new NotFoundException("La lezione non esiste");

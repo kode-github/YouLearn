@@ -36,7 +36,6 @@ public class LezioneBean {
 
 	public LezioneBean() {
 		this.commenti = new LinkedList<CommentoBean>();
-		this.commenti = null;
 	}
 	
 

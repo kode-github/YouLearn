@@ -55,6 +55,7 @@ public class VisualizzaProfiloServlet extends HttpServlet {
 				} catch (NoPermissionException | SQLException | NotFoundException | NotWellFormattedException e) {
 					e.printStackTrace();
 					//TODO Errore di consistenza dei parametri
+					response.sendRedirect(request.getContextPath()+"\\Error.jsp");
 				}
 	}
 
