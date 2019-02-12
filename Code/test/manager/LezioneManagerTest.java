@@ -15,6 +15,8 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.UUID;
 
 import javax.naming.NoPermissionException;
@@ -63,9 +65,9 @@ public class LezioneManagerTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		managerLezione=LezioneManager.getIstanza();
+		managerLezione=LezioneManager.getIstanza(System.getProperty("user.dir")+"\\WebContent");
 		managerAccount = AccountManager.getIstanza();
-		managerCorso = CorsoManager.getIstanza();
+		managerCorso = CorsoManager.getIstanza(System.getProperty("user.dir")+"\\WebContent");
 //		
 		createTmpComponentLezione();
 	
@@ -96,6 +98,14 @@ public class LezioneManagerTest {
 	
 	@Test
 	public void testModificaOrdine(){
+		
+		//15 id lezione
+		//4 numero lezione
+		//Lezioni di un corso tutti 
+		//Partendo da uno ad N
+		//Per ogni numeroLezione
+		
+		
 		String test="15-4,16-3,17-1,18-2";
 		try {
 			managerLezione.modificaOrdine(5, test);
@@ -104,6 +114,16 @@ public class LezioneManagerTest {
 			
 			e.printStackTrace();
 		}
+	}
+	
+	
+	@Test(expected=DatiErratiException.class)
+	public void testModificaOrdineErrorData() throws NoPermissionException, SQLException, DatiErratiException, NotFoundException, NotWellFormattedException{
+		String test="";
+		String test2="HELLOWORLD";
+			managerLezione.modificaOrdine(5, null);
+			managerLezione.modificaOrdine(5, test2);
+		
 	}
 	
 
@@ -162,17 +182,21 @@ public class LezioneManagerTest {
 	 */
 	@Test
 	public void testDelCommento() throws Exception {
+		LinkedList <CommentoBean> commenti = (LinkedList<CommentoBean>) managerLezione.retrieveCommentiByLezione(tmpLezione);
+	    commenti.get(commenti.size()-1);
 		managerLezione.delCommento(tmpCommento.getIdCommento());
+		}
 		
-	}
+	
 
 	/**
 	 * Test di inserimento del commento
 	 * @throws NotWellFormattedException
 	 * @throws SQLException
+	 * @throws NotFoundException 
 	 */
 	@Test
-	public void testInsCommento() throws NotWellFormattedException, SQLException {
+	public void testInsCommento() throws NotWellFormattedException, SQLException, NotFoundException {
 		CommentoBean commento = new CommentoBean(98, "Hello Text",tmpLezione, tmpAccount2);
 		managerLezione.insCommento(commento);
 	}
@@ -217,6 +241,15 @@ public class LezioneManagerTest {
 	public void testLezioneIsWellFormatted() {
 		assertTrue(managerLezione.lezioneIsWellFormatted(tmpLezione));
 	}
+	
+	
+	@Test
+	public void testchangeNumeroLezione() throws SQLException, DatiErratiException {
+		Connection c = DriverManagerConnectionPool.getConnection();
+		tmpLezione.setNumeroLezione(tmpLezione.getNumeroLezione()+1);
+		managerLezione.changeNumeroLezione(tmpLezione, c);
+		DriverManagerConnectionPool.releaseConnection(c);
+	}
 
 	
 	
@@ -238,7 +271,7 @@ public class LezioneManagerTest {
 		
 		// commento della prima lezione di test
 		
-		tmpCommento = new CommentoBean(30, "Hello Text",tmpLezione, tmpAccount2);
+		tmpCommento = new CommentoBean(40, "Hello Text",tmpLezione, tmpAccount2);
 		//Setting relazione account-carta
 		tmpAccount.setCarta(tmpCarta);
 		tmpCarta.setAccount(tmpAccount);
