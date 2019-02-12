@@ -103,7 +103,9 @@
 			</div>
 		</div>
 		<div class="row">
-			<%if(!ruolo.equals("NonIscritto")){ %>
+			<%
+			System.out.println(ruolo);
+			if(ruolo.equals("docente") || ruolo.equals("iscritto")){ %>
 			<div id="" class="div-container col-12">
 
 				<div class="table-wrapper w-75 mx-auto">
@@ -141,7 +143,9 @@
 		<div style="margin-top: 50px;" class="card w-50 mx-auto">
 			<h5 class="card-h-corsi card-header">LEZIONI</h5>
 			<% 
-			if(corso.getLezioni().isEmpty()){%>
+			if(corso.getLezioni().isEmpty()){
+			System.out.println("Sono vuoto");
+			%>
 
 			<div class=" card-b-corsi card-body">Questo corso non contiene lezioni!</div>
 
@@ -178,7 +182,7 @@
 
 
 		<%}}
-			else{
+			else if (ruolo.equals("NonIscritto")){
 			%>
 	</div>
 	<div class="row">
@@ -271,7 +275,10 @@
 			</p>
 		</form>
 	</div>
-<%} %>
+<%}%>
+
+	<%@ include file="Footer.jsp"%>
+
 	<script type="text/javascript" src="JS/Corso.js"></script>
 </body>
 

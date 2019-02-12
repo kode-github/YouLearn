@@ -92,13 +92,13 @@
 					<div class="float-left num"><%=l.getNumeroLezione()%></div>
 					<input class="d-none" name="idL" value="<%=l.getIdLezione()%>">
 					<div class="float-left" style="margin-bottom: 5px;">
-						<div id="uploads">
+						<div>
 							<ul id="list-lezione">
 								<li id="nome" class="nome-lezione li-lezione"><input
 									type="text" name="nome" readonly="readonly" autocomplete="off"
 									value="<%=l.getNome()%>"></li>
-							<li id="file-lezione" class="li-lezione"><input type="file"
-									class="d-none" name="file"><%=l.getFilePath()%> 
+								<li id="file-lezione" class="li-lezione"><input type="file"
+									class="d-none" name="file"><%=l.getFilePath()%>
 									<button type="button" name="modLezione"
 										style="font-size: 0.9rem;"
 										onclick="modificaLezione(this.form)"
@@ -107,7 +107,7 @@
 
 									<button name="btnM" type="button" onclick="modifica(this.form)"
 										class="btn btn-primary modifica">Modifica</button>
-									<button name="btnC" type="button" 										
+									<button name="btnC" type="button"
 										class="btn btn-success conferma d-none UPL">Conferma
 										modifiche</button>
 
@@ -118,6 +118,7 @@
 								</li>
 							</ul>
 						</div>
+						<div id="uploads"></div>
 
 					</div>
 					<div class="float-right	 Commands">
@@ -150,21 +151,55 @@
 	</div>
 
 
-	<div class="card w-50 mx-auto" id="insLezione">
+	<div class="card w-75 mx-auto" id="insLezione">
 		<div class="card-header" style="font-size: 30px">INSERIMENTO
 			LEZIONI</div>
 		<div class="card-body body-ins-lezione">
-			<div id="uploads">
-				<ul style="list-style: none;">
-					<li class="d-inline"><label>Nome Lezione:</label> <input
-						type="text" id="nome-lezione"></li>
-					<li class="d-inline"><input type="file" max="1" name="file">
-					</li>
 
-				</ul>
-				<button id="upload" class="btn btn-success btn-lg btn-block">UPLOAD</button>
-			</div>
+			<ul style="list-style: none; padding-left: 0px !important">
+				<li class="d-inline"><label>Nome Lezione:</label> <input
+					type="text" id="nome-lezione"></li>
+				<li class="d-inline"><input type="file" max="1" name="file">
+					<button class="btn btn-success upload ">UPLOAD
+						LEZIONE</button> <i id="bLez1" style="font-size: 1.5rem; margin-left: 5px;"
+					class="fas fa-plus-circle fa-2x" id="bLez1"></i></li>
+
+			</ul>
+			<div id="uploadsA"></div>
+
+
 		</div>
+		<div id="lezione2" class=" d-none card-body body-ins-lezione ">
+
+			<ul style="list-style: none; padding-left: 0px !important">
+				<li class="d-inline"><label>Nome Lezione:</label> <input
+					type="text" id="nome-lezione"></li>
+				<li class="d-inline"><input type="file" max="1" name="file">
+					<button  class="btn btn-success upload ">UPLOAD
+						LEZIONE</button> <i id="bLez2" style="font-size: 1.5rem; margin-left: 5px;"
+					class="fas fa-plus-circle fa-2x "></i>
+
+			</ul>
+
+			<div id="uploadsA"></div>
+
+		</div>
+		<div id="lezione3" class=" d-none card-body body-ins-lezione">
+
+			<ul style="list-style: none; padding-left: 0px !important">
+				<li class="d-inline"><label>Nome Lezione:</label> <input
+					type="text" id="nome-lezione"></li>
+				<li class="d-inline"><input type="file" max="1" name="file">
+					<button class="btn btn-success upload ">UPLOAD
+						LEZIONE</button>
+			</ul>
+
+			<div id="uploadsA"></div>
+
+
+		</div>
+		<button onclick="refreshPage()" disabled="disabled" id="btnFine"
+			class="btn btn-success btn-lg btn-block">AGGIUNGI ALLA LISTA LEZIONI </button>
 	</div>
 
 

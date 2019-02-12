@@ -242,7 +242,6 @@
 									</div>
 								</div>
 								<button type="submit"
-									onclick="return validateRegistration(formRegistration)"
 									formaction="http://localhost:8080/YouLearn/RegistrazioneServlet"
 									class="btn btn-primary btn-lg btn-block">Registrati</button>
 							</form>
