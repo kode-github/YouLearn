@@ -55,6 +55,89 @@
 		} else
 			request.getSession().removeAttribute("sup");
 	%>
+	
+	<%
+		Boolean emailModificata = (Boolean) request.getSession().getAttribute("emailModificata");
+		if (emailModificata != null) {
+			request.getSession().removeAttribute("emailModificata");
+	%>
+	<div id="alert1" class="alert alert-success d-none"
+		style="text-align: center;" role="alert">E-mail modificata con
+		successo!</div>
+
+
+	<%
+		}
+	%>
+
+	<%
+		Boolean emailGiaEsistente = (Boolean) request.getSession().getAttribute("emailGiaEsistente");
+		if (emailGiaEsistente != null) {
+			request.getSession().removeAttribute("emailGiaEsistente");
+			System.out.println("KTM");
+	%>
+	<div id="alert1" class="alert alert-warning "
+		style="text-align: center;" role="alert">Ci dispiace! L'e-mail è
+		già in uso. Prova con un'altra!</div>
+	<%
+		}
+	%>
+
+
+	<%
+		Boolean passwordModificata = (Boolean) request.getSession().getAttribute("passwordModificata");
+		if (passwordModificata != null) {
+			request.getSession().removeAttribute("passwordModificata");
+	%>
+	<div id="alert1" class="alert alert-success d-none"
+		style="text-align: center;" role="alert">Password modificata con
+		successo!</div>
+	<%
+		}
+	%>
+
+	<%
+		Boolean passwordNonModificata = (Boolean) request.getSession().getAttribute("passwordNonModificata");
+		if (passwordNonModificata != null) {
+			request.getSession().removeAttribute("passwordNonModificata");
+	%>
+
+	<div id="alert1" class="alert alert-warning d-none"
+		style="text-align: center;" role="alert">C'è stato un problema!
+		Le password non coincidono, riprova.</div>
+	<%
+		}
+	%>
+
+	<!-- FORM PASSWORD -->
+	<!-- <form method="post">
+		<input name="newPass" type="text"> <input type="submit"
+			formaction="http://localhost/YouLearn/CambiaPassServlet">
+	</form> -->
+
+	<%
+		Boolean cartaModificata = (Boolean) request.getSession().getAttribute("cartaModificata");
+		if (cartaModificata != null) {
+			request.getSession().removeAttribute("cartaModificata");
+	%>
+	<div id="alert1" class="alert alert-success d-none"
+		style="text-align: center;" role="alert">Complimenti! La tua
+		carta è stata modificata con successo!</div>
+	<%
+		}
+	%>
+
+	<%
+		Boolean cartaNonModificata = (Boolean) request.getSession().getAttribute("cartaNonModificata");
+		if (cartaNonModificata != null) {
+			request.getSession().removeAttribute("cartaNonModificata");
+	%>
+	<div id="alert1" class="alert alert-warning d-none"
+		style="text-align: center;" role="alert">C'è stato un problema!
+		La carta inserita è già in uso, riprova.</div>
+	<%
+		}
+	%>
 	<div id="alert" class="" style="text-align: center;" role="alert"></div>
 
 	<div class="container-fluid">
@@ -131,12 +214,12 @@
 								<form method="post" name="changePswForm" id="changePswForm"
 									onsubmit="return validatePsw(changePswForm)">
 									<div class="form-group">
-										<input type="password" name="newPass" id="newPass"
+										<input type="password" name="oldPass" id="oldPass"
 											class="form-control"
 											placeholder="Inserisci la tua nuova password">
 									</div>
 									<div class="form-group">
-										<input type="password" name="oldPass" id="oldPass"
+										<input type="password" name="newPass" id="newPass"
 											class="form-control"
 											placeholder="Conferma tua nuova password">
 									</div>

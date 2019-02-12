@@ -14,19 +14,33 @@ if($("#alert").css('display') == 'none'){
 	}, 3000);
 }
 
+function validateLogin(formLogin){
+
+	var psw = formLogin.password;
+	var pswValidator = /^[a-zA-Z 0-9 \@\._\!\?\-]{8,}$/;
+
+	if(!psw.value.match(pswValidator)){
+
+		alertify.error("La password deve contenere almeno 8 caratteri tra lettere, numeri e simboli");
+		return false;
+
+	} else return true;
+
+
+}
+
 function validateRegistration(formRegistration) {
 
 	//Define registration regExp validators
 	var usrValidator = /^(\w+[_\.\-]*\w*){4,}$/;
-	var pswValidator = /^[a-zA-Z 0-9 \@\._\!\?\-]{8,}$/;
-	var nameValidator = /^[a-zA-Z]+([\s\-]?[A-Za-z]+){3,}/;
-	var surnameValidator = /^[A-Za-z]+([\s\'\-]?[A-Za-z]+){3,}/;
+	var pswValidator = /^[a-zA-Z 0-9 \@\._\!\?\-]{8,45}$/;
+	var nameValidator = /^[a-zA-Z]+([\s\-]?[A-Za-z]+){3,25}/;
+	var surnameValidator = /^[A-Za-z]+([\s\'\-]?[A-Za-z]+){3,25}/;
 	var mailValidator = /^\w+([\._\-]?\w+)*@\w+([\.\-]?\w+)*(\.\w+)+$/;
 	var phoneValidator = /^[0-9]{10}$/;
 
 	//Save all matches in a variable
 
-	//var usrIsOK = formRegistration.username.value.match(usrValidator);
 	var nameIsOK = formRegistration.name.value.match(nameValidator);
 	var surnameIsOK = formRegistration.surname.value.match(surnameValidator);
 	var pswIsOK = formRegistration.password.value.match(pswValidator);
@@ -38,8 +52,6 @@ function validateRegistration(formRegistration) {
 	var nIntestatario = formRegistration.nIntestatario;
 	var meseScadenza = formRegistration.meseScadenza;
 	var annoScadenza = formRegistration.annoScadenza;
-	console.log(tipoCarta);
-	//var phoneIsOK = formRegistration.phone.value.match(phoneValidator);
 
 
 	if (!nameIsOK) { //Check name
@@ -64,26 +76,25 @@ function validateRegistration(formRegistration) {
 				return false; //Negate access
 			} else 
 				if(!validatePsw(psw, psw2)){
-				$(psw2).focus(); //Set focus
-				
-			} else
+					$(psw2).focus(); //Set focus
 
-				if (!mailIsOK) { //Check email
-					alertify.error("Inserisci una email valida")
-					document.getElementById("email").focus(); //Set focus
-					return false; //Negate access
-				} else if(!cardnumberTest(tipoCarta, nCarta, nIntestatario)){
-					
-					return false;
-					
-				} else{
-					alertify.success("Ok");
-					return true; //Grant access
-}}
+				} else
+
+					if (!mailIsOK) { //Check email
+						alertify.error("Inserisci una email valida")
+						document.getElementById("email").focus(); //Set focus
+						return false; //Negate access
+					} else if(!cardnumberTest(tipoCarta, nCarta, nIntestatario)){
+
+						return false;
+
+					} else{
+						return true; //Grant access
+					}}
 
 function validatePsw(psw1, psw2){
 	console.log("Password ok")
-	
+
 	console.log(psw1.value + " pass1, pass2" + psw2.value );
 	console.log(psw1.value.match(psw2.value));
 	var pswValidator = /^[a-zA-Z 0-9 \@\._\!\?\-]{8,}$/;
@@ -93,14 +104,14 @@ function validatePsw(psw1, psw2){
 		return false;
 	}else
 
-	if(psw1.value != psw2.value){
-		alertify.error('Le password non corrispondono');
-		console.log("Password no")
+		if(psw1.value != psw2.value){
+			alertify.error('Le password non corrispondono');
+			console.log("Password no")
 
-		return false;
-	}
+			return false;
+		}
 
-	else return true;
+		else return true;
 }
 
 function cardnumberTest(tipoCarta, nCarta, nIntestatario)
@@ -109,14 +120,18 @@ function cardnumberTest(tipoCarta, nCarta, nIntestatario)
 	var name1 = nIntestatario;
 	var nCarta1 = nCarta;
 	var tipoCarta1 = tipoCarta;
-	
-	console.log(name1.value);
 	console.log(nCarta1);
-	console.log(tipoCarta1);
 
 
-	
+	if(nCarta1.length < 16){
+		
+		alertify.error("La lunghezza del numero carta deve essere di 16 numeri");
+		document.getElementById('nIntestatario').focus();
 
+		return false;
+		
+	}else
+		
 	if (tipoCarta1 === "Visa") {
 		var cardno = /^(?:4[0-9]{12}(?:[0-9]{3})?)$/;
 
@@ -126,7 +141,7 @@ function cardnumberTest(tipoCarta, nCarta, nIntestatario)
 				document.getElementById('nIntestatario').focus();
 
 				return false;
-				}			return true;
+			}			return true;
 		} else {
 			alertify.error('Numero di carta di credito Visa, non valido!');
 			document.getElementById('nCarta').focus();
@@ -143,7 +158,7 @@ function cardnumberTest(tipoCarta, nCarta, nIntestatario)
 				document.getElementById('nIntestatario').focus();
 
 				return false;
-				}			return true;
+			}			return true;
 		} else {
 			alertify.error('Numero di carta di credito MasterCard, non valido!');
 			document.getElementById('nCarta').focus();
@@ -161,7 +176,7 @@ function cardnumberTest(tipoCarta, nCarta, nIntestatario)
 				document.getElementById('nIntestatario').focus();
 
 				return false;
-				}
+			}
 			return true;
 		} else {
 			alertify.error('Numero di carta di credito AmericanExpress, non valido!');
@@ -180,17 +195,28 @@ function cardnumberTest(tipoCarta, nCarta, nIntestatario)
 }
 
 function allLetter(name) {
-	var letters = /^[a-zA-Z]+([\s\-]?[A-Za-z]+){3,}/;
+	var letters = /^[a-zA-Z]+$/;
+	console.log(name);
+
 	if(name === ""){
 		alertify.error("Riempi il campo nome intestatario");
-		document.getElementById('nIntestatario').focus();		
-	}
-	
-	else if (name.match(letters)) {
-		return true;
-	} else {
+		document.getElementById('nIntestatario').focus();
+
 		return false;
-	}
+	}else
+
+		if(name.length<8 || name.length>50){
+
+			alertify.error("Il nome del intestatario deve essere compreso tra 8 e 50");
+			document.getElementById('nIntestatario').focus();
+			return false;
+		}else 
+			if (name.match(letters)) {
+				return true;
+
+			} else {
+				return false;
+			}
 }
 
 

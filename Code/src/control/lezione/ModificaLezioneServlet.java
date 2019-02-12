@@ -38,6 +38,7 @@ public class ModificaLezioneServlet extends HttpServlet {
     		AccountBean account=(AccountBean) request.getSession().getAttribute("account");
     		int idCorso=Integer.parseInt(request.getParameter("idCorso"));
         	int idLezione=Integer.parseInt(request.getParameter("idLezione"));
+        	System.out.println("idCorso="+idCorso +", idLezione="+ idLezione);
         	LezioneBean lezione=account.getCorsoTenuto(idCorso).getLezione(idLezione);
         	//Setto il nuovo nome della lezione
         	String nome=request.getParameter("nomeLezione");

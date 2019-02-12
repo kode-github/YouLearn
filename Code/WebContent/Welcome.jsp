@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html>
@@ -98,7 +98,7 @@
 					<div class="card card-5">
 						<div class="card-header text-center" style="font-size: 30px;">LOGIN</div>
 						<div class="card-body">
-							<form name="formLogin" class="login" method="post">
+							<form name="formLogin" class="login" method="post" onsubmit="return validateLogin(formLogin)">
 								<div class="form-group">
 									<label for="exampleInputEmail">E-mail</label> <input
 										name="email" type="email" class="form-control"
@@ -199,7 +199,7 @@
 									</div>
 									<div class="form-group">
 										<label for="nCarta">Numero Carta</label> <input type="text"
-											class="form-control" id="nCarta" name="nCarta"
+											class="form-control" id="nCarta" name="nCarta" maxlength="16"
 											placeholder="0000-0000-0000-0000" required="required">
 									</div>
 									<div class="form-group">

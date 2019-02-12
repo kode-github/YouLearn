@@ -42,7 +42,7 @@
 		corso = account.getCorsoTenuto(idCorso);
 	%>
 
-	<div class="card w-50 mx-auto">
+	<div class="card w-75 mx-auto">
 		<div class="card-header text-left" style="font-size: 30px;">
 			<h3>
 				GESTIONE LEZIONI <a href="#insLezione"><button onclick=""
@@ -90,20 +90,25 @@
 			<div class="card-body item" id=<%=l.getIdLezione()%>>
 				<form method="post">
 					<div class="float-left num"><%=l.getNumeroLezione()%></div>
-					<input class="d-none" name="idL" id="idL" type="hidden"
-						value="<%=l.getIdLezione()%>">
+					<input class="d-none" name="idL" value="<%=l.getIdLezione()%>">
 					<div class="float-left" style="margin-bottom: 5px;">
 						<div id="uploads">
 							<ul id="list-lezione">
 								<li id="nome" class="nome-lezione li-lezione"><input
-									type="text" name="nome" readonly="readonly"
+									type="text" name="nome" readonly="readonly" autocomplete="off"
 									value="<%=l.getNome()%>"></li>
-								<li id="file-lezione" class="li-lezione"><%=l.getFilePath()%></li>
+								<li id="file-lezione" class="li-lezione"><input type="file"
+									class="d-none" name="nomeL"><%=l.getFilePath()%> 
+									<button type="button" name="modLezione"
+										style="font-size: 0.9rem;"
+										onclick="modificaLezione(this.form)"
+										class="d-none btn btn-outline-secondary but"></button></li>
 								<li style="list-style: none">
 
 									<button name="btnM" type="button" onclick="modifica(this.form)"
 										class="btn btn-primary modifica">Modifica</button>
 									<button name="btnC" type="button" id="uploads1"
+										onclick="invioDatiLezione(this.form)"
 										class="btn btn-success conferma d-none">Conferma
 										modifiche</button>
 
@@ -117,12 +122,13 @@
 
 					</div>
 					<div class="float-right	 Commands">
-						<button id="b-UD" type="button"
-							class=" btn btn-outline-secondary b-up" value='up'>
+						<button id="b-UD" name="up" type="button"
+							class=" btn btn-outline-secondary b-up b" value='up'>
 							<i class="fas fa-arrow-up"></i>
 						</button>
-						<button style="margin-top: 5px;" id="b-UD" type="button"
-							class="btn btn-outline-secondary b-up" value='down'>
+						<button name="down" style="margin-top: 5px;" id="b-UD"
+							type="button" class="btn btn-outline-secondary b-up b"
+							value='down'>
 							<i class="fas fa-arrow-down"></i>
 						</button>
 					</div>

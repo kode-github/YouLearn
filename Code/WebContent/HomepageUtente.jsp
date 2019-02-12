@@ -52,9 +52,6 @@
 		request.getSession().removeAttribute("tenuti");
 	%>
 
-
-	<!-- IL NOME DEL CAMPO PER LA NUOVA MAIL HA name="newMail" -->
-
 	<%
 		Boolean emailModificata = (Boolean) request.getSession().getAttribute("emailModificata");
 		if (emailModificata != null) {
@@ -108,11 +105,6 @@
 		}
 	%>
 
-	<!-- FORM PASSWORD -->
-	<!-- <form method="post">
-		<input name="newPass" type="text"> <input type="submit"
-			formaction="http://localhost/YouLearn/CambiaPassServlet">
-	</form> -->
 
 	<%
 		Boolean cartaModificata = (Boolean) request.getSession().getAttribute("cartaModificata");
@@ -137,10 +129,6 @@
 	<%
 		}
 	%>
-
-	<!-- INSERIRE FORM CARTA
-		OGNI LABEL AVRA' NOME UGUALE AL CAMPO NEL DATABASE, cioe name="nomeTabella"
-	 -->
 
 	<div id="alert" class="" style="text-align: center;" role="alert"></div>
 
@@ -217,18 +205,18 @@
 							Modifica Password</a>
 
 
-						<div class="pswToogle" id="collapseModPass">
+						<div class="pswToogle">
 							<div class="card card-body"
 								style="margin-bottom: 10px; text-align: center;">
 								<form method="post" name="changePswForm" id="changePswForm"
 									onsubmit="return validatePsw(changePswForm)">
 									<div class="form-group">
-										<input type="password" name="newPass" id="newPass"
+										<input type="password" name="oldPass" id="oldPass"
 											class="form-control"
 											placeholder="Inserisci la tua nuova password">
 									</div>
 									<div class="form-group">
-										<input type="password" name="oldPass" id="oldPass"
+										<input type="password" name="newPass" id="newPass"
 											class="form-control"
 											placeholder="Conferma tua nuova password">
 									</div>
@@ -273,7 +261,7 @@
 												name="cardname" class="form-control">
 												<option value="Visa">Visa</option>
 												<option value="MasterCard">MasterCard</option>
-												<option value="Maestro">Maestro</option>
+												<option value="AmericanExpress">AmericanExpress</option>
 											</select>
 										</div>
 									</div>
@@ -313,7 +301,7 @@
 								</div>
 								<button type="submit"
 									onclick="return confirm('Sei sicuro di voler continuare?\nLa tua carta verrà moodificata!')"
-									class="btn btn-info btn-lg btn-block" formaction="#">Conferma</button>
+									class="btn btn-info btn-lg btn-block" formaction="http://localhost:8080/YouLearn/CambiaCartaServlet">Conferma</button>
 							</form>
 						</div>
 

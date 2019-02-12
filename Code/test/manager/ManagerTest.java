@@ -4,7 +4,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import bean.AccountBeanTest;
 import junit.framework.TestSuite;
 
 @RunWith(Suite.class)
@@ -13,8 +12,7 @@ import junit.framework.TestSuite;
 	CartaDiCreditoManagerTest.class,
 	CorsoManagerTest.class,
 	IscrizioneManagerTest.class,
-	LezioneManagerTest.class,
-	AccountBeanTest.class
+	LezioneManagerTest.class
 })
 public class ManagerTest {
 

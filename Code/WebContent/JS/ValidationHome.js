@@ -75,27 +75,48 @@ function validateUsr(changeUsrForm){
 
 
 function validatePsw(changePswForm){
-	console.log("Password ok")
+	console.log("Password ok");
 	var pswValidator = /^[a-zA-Z 0-9 \@\._\!\?\-]{8,}$/;
 	var newPsw= changePswForm.newPass.value;
 	var oldPsw= changePswForm.oldPass.value;
+	console.log(oldPsw);
+	console.log(newPsw);
 
-
-	if(!newPsw.match(oldPsw)){
-		showAlert('Le password non corrispondono');
-		console.log("Password no")
-
+	if(newPsw.length === 0 && oldPsw.length === 0){
+		showAlert('Riempi i campi Password');
 		return false;
-	}
 
 
-	if(!newPsw.match(pswValidator)){
-		showAlert('La password deve contenere almeno 8 caratteri tra lettere, numeri e simboli');
-		console.log("Password no")
+	}else
 
-		return false;
-	}
-	else return true;
+		if(newPsw.length === 0){
+			showAlert('Riempi il campi Nuova Password');
+			return false;
+
+
+		}else 
+			if(oldPsw.length === 0){
+
+				showAlert('Riempi il campo Password');
+				return false;
+
+			}else
+
+				if(!newPsw.match(oldPsw)){
+					showAlert('Le password non corrispondono');
+					console.log("Password no");
+
+					return false;
+				} else
+
+
+					if(!newPsw.match(pswValidator)){
+						showAlert('La password deve contenere almeno 8 caratteri tra lettere, numeri e simboli');
+						console.log("Password no");
+
+						return false;
+					}
+					else return true;
 }
 
 
@@ -138,7 +159,7 @@ function cardnumberTest()
 
 		var cardno = /^(?:5[1-5][0-9]{14})$/;
 		if (inputtxt.value.match(cardno)) {
-			if(allLetter(name) == false) return false;
+			if(allLetter(name.value) == false) return false;
 			return true;
 		} else {
 			showAlert('Numero di carta di credito MasterCard, non valido!');
@@ -150,6 +171,7 @@ function cardnumberTest()
 
 		var cardno = /^(?:3[47][0-9]{13})$/;
 		if (inputtxt.value.match(cardno)) {
+			if(allLetter(name.value) == false) return false;
 			return true;
 		} else {
 			showAlert('Numero di carta di credito AmericanExpress, non valido!');
@@ -165,12 +187,19 @@ function cardnumberTest()
 }
 
 function allLetter(name) {
-	var letters = /^[A-Za-z]+$/;
-	if (name.value.match(letters)) {
+	var letters =/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/;
+
+	if(name.length === 0){
+		
+		showAlert('Riempi il campo nome intestatario');
+		return false;
+		
+	}else 
+	
+	if (name.match(letters)) {
 		return true;
 	} else {
-		alert('Username must have alphabet characters only');
-
+		showAlert('Il nome dell\'intestatario non può avere carattei speciali o numeri!');
 		return false;
 	}
 }

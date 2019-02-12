@@ -147,35 +147,58 @@ function UploadResult()
 }
 
 var nomeLezione;
-
+var path;
 function modifica(form){
 
 
 	//inizializzo le variabili
 	var nome = form.nome;
-	var path = $("#file-lezione").text();
-	//var path2 =$("#file-lezione").text("CIAO");
-	$("#file-lezione").text("");
-	$("#file-lezione").append("<input type='text' name='nomeL'>");
+	var btnModLezione = form.modLezione;
+	$(btnModLezione).text("Modifica Lezione...");
 
-	console.log(path)
+	if(path == null){
+		path = document.getElementById("file-lezione").innerHTML;
+		console.log("Modifica con path=null: " +path);
+
+	} else{
+
+		console.log("Modifica con path!=null: " +path);}
 	//console.log(path2)
 	var file = form.nomeL;
 	var btn = form.btnM;
 	var btnA = form.btnA;
-	btnC = form.btnC;
+	var btnUp = form.up;
+	var btnDown = form.down;
+	var btnC = form.btnC;
 	nomeLezione = $(nome).val();
-	
+
+	var li =$(btnA).parent();
+	var ul = li.parent();
+	var liText = ul.children("li").eq(0);
+	console.log(liText);
+	var liFile = ul.children("li").eq(1);
+	console.log(liFile);
+
+
+
+//	button = $('<button />').addClass('d-none btn btn-outline-secondary but').text('Modifica Lezione...');
+//	$(button).css("font-size","0.9rem");
+//	$(button).attr('name', 'modLezione');
+//	$(button).attr('type', 'button');
+//	button.appendTo(liFile);
+
+
+
 	//Diasbilito gli altri bottoni per la modifica
-	disableButton($(btn).text());
-	
+	disableButton($(btn).text(), btnUp, btnDown);
+
+
 	//Rendo l'input text editabile
 	$(btn).removeAttr("disabled");
 	$(nome).attr("readonly", false);
-    $(nome).focus();
-    
-    $(file).attr("type","file");
-    $(file).removeClass("d-none");
+	$(nome).focus();
+
+	//$(file).attr("type","file");
 
 
 
@@ -183,10 +206,14 @@ function modifica(form){
 	$(btn).addClass("d-none");
 	$(btnA).removeClass("d-none");
 	$(btnC).removeClass("d-none");
+	$(btnModLezione).removeClass("d-none")
+	$(btnModLezione).hide();
+	$(btnModLezione).fadeIn();
 }
 
 
-function disableButton(x){
+function disableButton(x, up, down){
+
 
 	if(x == "Conferma modifiche"){
 
@@ -194,11 +221,14 @@ function disableButton(x){
 	} else if($(".modifica").is(":disabled")){
 
 		$(".modifica").removeAttr("disabled");
+		$(".b").removeAttr("disabled");
 
-	}else
+
+	}else{
 
 		$(".modifica").attr("disabled", "disabled");
-
+		$(".b").attr("disabled", "disabled");
+	}
 }
 
 function annulla(form){
@@ -206,8 +236,45 @@ function annulla(form){
 	var nome = form.nome;
 	var btn = form.btnM;
 	var btnA = form.btnA;
-	
-	console.log($(nome).val());
+	var btnC = form.btnC;
+	var btnModLezione = form.modLezione;
+	var fileLezione = form.nomeL;
+
+	var li =$(btnA).parent();
+	var ul = li.parent();
+	var liText = ul.children("li").eq(0);
+	console.log(liText);
+	var liFile = ul.children("li").eq(1);
+	console.log(liFile);
+	var button = liFile.children("button");
+	console.log(button);
+
+//	button = $('<button />').addClass('d-none btn btn-outline-secondary but').text('Modifica Lezione...');
+//	$(button).css("font-size","0.9rem");
+//	$(button).attr('name', 'modLezione');
+//	$(button).attr('type', 'button');
+
+//	var fileLezione = liFile.children("input[type=file]");
+//	$(liFile).text("");
+//	$(liFile).append(path);
+//	console.log($(liFile).text());
+
+	if($(btnModLezione).css("display") == "none"){
+
+		$(liFile).text("");
+		console.log("Annulla con bottone non visibile: " + path);
+		$(liFile).append(path);
+
+	} else {
+
+		$(liFile).text("");
+		console.log("Annulla con bottone visibile: " + path);
+
+		$(btnModLezione).addClass("d-none");	
+		$(liFile).append(path);
+
+	}
+
 
 	$(nome).val(nomeLezione+"");
 	$(nome).attr("readonly", true);
@@ -217,40 +284,58 @@ function annulla(form){
 	$(btnC).addClass("d-none");
 	$(btnA).addClass("d-none");
 
+
+
 }
 
-function applyUpdate(form){
+function modificaLezione(form){
+	var btnA = form.btnA;
+
+	var li =$(btnA).parent();
+	var ul = li.parent();
+	var liText = ul.children("li").eq(0);
+	console.log(liText);
+	var liFile = ul.children("li").eq(1);
+	console.log(liFile);
+	var text = liText.children("input[type=text]");
+	var f = liFile.children("input[type=file]");
+
+//	path = $(liFile)
+//	.clone()    //clone the element
+//	.children() //select all the children
+//	.remove()   //remove all the children
+//	.end()  //again go back to selected element
+//	.text();    //get the text of element
+
+	console.log("ModificaLezione: " +path);
+	$(liFile).text("");
+	$(liFile).append("<input type='file' name='nomeL'>");
+
+	//var path2 =$("#file-lezione").text("CIAO");
+	var fileLezione = liFile.children("input[type=file]");
+	console.log(fileLezione);
+	$(fileLezione).removeClass("d-none");
+
+
+
+
+
+}
+
+
+
+
+function invioDatiLezione(form){
 
 	var nome = form.nome;
-	//var path = $("#file-lezione").html();
-	var idCorso= getUrlParameter("idCorso");
-	
+	var btn = form.btnM;
+	var btnA = form.btnA;
+	var btnC = form.btnC;
+	var btnModLezione = form.modLezione;
+	var fileLezione = form.nomeL;
 	var id = form.idL;
 
-
-	console.log("idcorso: "+ idCorso);
-	console.log("idlezione" + $(id).val());
-	console.log("idlezione" + id);
-
-
-	$.ajax({
-		type: "POST",
-		url: "http://localhost:8080/YouLearn/ModificaLezioneServlet",
-		data:{ "nomeLezione": nome,
-				"idLezione": idLezione,
-				"idCorso": idCorso	}
-	});
-
-
-}
-
-
-$( '#uploads1' ).click(function() {
-	console.log("sono dentro");
-	
-	
-	
-	var li =$(this).parent();
+	var li =$(btnA).parent();
 	var ul = li.parent();
 	var liText = ul.children("li").eq(0);
 	console.log(liText);
@@ -259,13 +344,50 @@ $( '#uploads1' ).click(function() {
 	var text = liText.children("input[type=text]");
 	var f = liFile.children("input[type=file]");
 	console.log($(text).val());
-	console.log(f.val());
-	
-	
+	console.log($(id).val());
+
+
+	if(!$(btnModLezione).length >0){
+
+		sendDataUpload(text, f, id);
+
+	} else {
+		updateNomeLezione($(text).val(), $(id).val());
+
+	}
+
+
+
+}
+
+function updateNomeLezione(nome, idL){
+
+	var idCorso= getUrlParameter("idCorso");
+
+	console.log("idCOrso: "+idCorso);
+	console.log("Nome: " + nome + ", idLezione: " + idL);
+
+
+	$.ajax({
+		type: "POST",
+		url: "http://localhost:8080/YouLearn/ModificaLezioneServlet",
+		data:{ "nomeLezione": nome,
+			"file" : null,
+			"idLezione": idL,
+			"idCorso": idCorso	}
+	});
+
+
+}
+
+
+function sendDataUpload(text, f, idLezione){	
+
+
 	var idCorso= getUrlParameter('idCorso');
 	console.log(idCorso);
-	
-	f.simpleUpload("http://localhost:8080/YouLearn/ModificaLezioneServlet?name="+text.val()+"&idCorso="+ idCorso, {
+
+	f.simpleUpload("http://localhost:8080/YouLearn/ModificaLezioneServlet?name="+text.val()+"&idCorso="+ idCorso+"&idLezione="+idLezione, {
 
 		allowedExts: ["jpg", "jpeg", "jpe", "jif", "jfif", "jfi", "png", "gif", "exe","mp4"],
 		allowedTypes: ["video/mp4" ,"image/pjpeg", "image/jpeg", "image/png", "image/x-png", "image/gif", "image/x-gif", "application/x-dosexe"],
@@ -307,7 +429,7 @@ $( '#uploads1' ).click(function() {
 			this.progressBar.remove();
 			this.cancelButton.remove();
 
-		if (data.success) {
+			if (data.success) {
 				//now fill the block with the format of the uploaded file
 
 				var format = data.format;
@@ -338,4 +460,4 @@ $( '#uploads1' ).click(function() {
 		}
 
 	});
-});
+}

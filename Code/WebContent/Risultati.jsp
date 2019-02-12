@@ -38,7 +38,7 @@
 	}
 %>
 		
-        <div class="card mx-auto w-50">
+        <div  style="margin-top:10px; font-size:1.5rem"class="card mx-auto w-50">
                 <h5 class="card-header">LISTA CORSI</h5>
                 <% for(CorsoBean corso: corsi){ %>
                 <div class="card-body">
