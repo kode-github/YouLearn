@@ -608,40 +608,15 @@ public class LezioneManager {
 			statement=c.prepareStatement(sql);
 			statement.setString(i++, lezione.getNome());
 			if(part!=null)
-				statement.setString(i++, filename+type);
-<<<<<<< HEAD
-<<<<<<< HEAD
-			statement.setInt(i,lezione.getIdLezione());
-=======
-			statement.setInt(i, lezione.getIdLezione());
+				statement.setInt(i, lezione.getIdLezione());
 			System.out.println("aaaaaaaaaaaaaaaaaaaaa");
->>>>>>> e38e6be748d59475c8b5e501a55f1eed7da12e1c
-=======
-			statement.setInt(i, lezione.getIdLezione());
-			System.out.println("aaaaaaaaaaaaaaaaaaaaa");
->>>>>>> e38e6be748d59475c8b5e501a55f1eed7da12e1c
 			statement.executeUpdate();
 
 			//salvo il nuovo file sul disco
 			if(part!=null) {
-<<<<<<< HEAD
-<<<<<<< HEAD
 				System.out.println("lezione inserita");
-=======
-<<<<<<< HEAD
-=======
->>>>>>> e38e6be748d59475c8b5e501a55f1eed7da12e1c
-				System.out.println("BBBBBBBBBBBBBBBBB");
-				Path path=Paths.get(PATH+"\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni"+File.separator+
-																				filename+type);
-=======
-<<<<<<< HEAD
->>>>>>> e38e6be748d59475c8b5e501a55f1eed7da12e1c
-=======
->>>>>>> e38e6be748d59475c8b5e501a55f1eed7da12e1c
 				Path path=Paths.get(PATH+File.separator+"Resources"+File.separator+lezione.getCorso().getIdCorso()+File.separator+
 						"Lezioni"+File.separator+filename+type);
->>>>>>> 6a96fdc30c189f926831e0de22ba070ee412da5d
 				lezione.setFilePath(filename+type);
 				part.write(path.toString());
 			}
