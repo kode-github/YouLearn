@@ -309,19 +309,12 @@ public class AccountManager {
 	 * @param account
 	 */
 	public boolean isWellFormatted(AccountBean account) {
-//		if(account.getTipo()!=null) {
-//			if(account.getTipo().equals(Ruolo.Utente)) 
-//				if(account.getCorsiDaSupervisionare()!=null || account.getCarta()==null)
-//					return false;
-//			else
-//				if(account.getIscrizioni()!=null  || 
-//						account.getCorsiTenuti()!=null || account.getCarta()==null)
-//					return false;
 			String nome=account.getNome();
 			String cognome=account.getCognome();
 			String password=account.getPassword();
-			return nome!=null && nome.matches("^[a-zA-Z]{2,20}") && cognome!=null &&
-			cognome.matches("^[a-zA-Z]{2,20}") && /**password!=null && password.matches("^[a-zA-Z0-9]{5,30}") &&*/ account.getTipo()!=null;
+			return  account.getMail()!=null && account.getMail().matches("[A-z0-9\\.\\+_-]+@[A-z0-9\\._-]+\\.[A-z]{2,6}$")  && 
+					nome!=null && nome.matches("^[a-zA-Z]{4,25}$") && cognome!=null &&
+			cognome.matches("^[a-zA-Z]{4,25}$") && password!=null /*&& password.matches("^[a-zA-Z0-9_-\\.%]{5,30}$")*/ && account.getTipo()!=null;
 	
 //			}
 //		else 

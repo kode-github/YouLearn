@@ -554,7 +554,7 @@ public class LezioneManager {
 	public synchronized boolean commentoIsWellFormatted(CommentoBean commento) {
 		accountManager=AccountManager.getIstanza();
 		//idcommento, testo, accountCreatore, lezione
-		return commento.getTesto()!=null && commento.getTesto().matches("^[a-zA-Z0-9-.\"'\\s]{1,1024}") &&
+		return commento.getTesto()!=null && commento.getTesto().length()<1024 &&
 				commento.getAccountCreatore()!=null && accountManager.isWellFormatted(commento.getAccountCreatore()) &&
 				commento.getLezione()!=null;
 
@@ -568,10 +568,10 @@ public class LezioneManager {
 	 */
 	public synchronized boolean lezioneIsWellFormatted(LezioneBean lezione) {
 		if(lezione.getIdLezione()!=null)
-			if(lezione.getFilePath()==null || /* (!lezione.getFilePath().matches("^[a-zA-Z0-9\\.-]{10,2048}") ||*/  !lezione.getFilePath().matches("^[a-z/A-Z0-9/.-]{10,2048}") /*    )   */ || lezione.getNumeroLezione()<=0
+			if(lezione.getFilePath()==null || lezione.getNumeroLezione()<=0
 			|| lezione.getVisualizzazioni()<0)
 				return false;
-		return lezione.getNome()!=null && lezione.getNome().matches("^[a-zA-Z0-9\\s:-]{5,40}") &&
+		return lezione.getNome()!=null && lezione.getNome().matches("^[a-zA-Z0-9\\s:-]{5,30}") &&
 				  lezione.getCorso()!=null;
 
 

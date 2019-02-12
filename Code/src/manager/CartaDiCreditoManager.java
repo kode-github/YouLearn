@@ -3,6 +3,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
+
 import javax.naming.NoPermissionException;
 import bean.AccountBean;
 import bean.CartaDiCreditoBean;
@@ -249,15 +252,14 @@ public class CartaDiCreditoManager {
 	 * @return true se � ben formattata, false altrimenti
 	 */
 	public synchronized boolean isWellFormatted(CartaDiCreditoBean carta) {
-		/*String nome=carta.getNomeIntestatario();
+		String nome=carta.getNomeIntestatario();
 		String numero=carta.getNumeroCarta();
 		Integer mese=Integer.parseInt(carta.getMeseScadenza());
 		Integer anno=Integer.parseInt(carta.getAnnoScadenza());
 		
-		return nome.matches("[a-zA-Z]{2,20}") &&
-				numero.matches("^[0-9]{16}") &&
-				mese!=null && mese>0 && mese<13 && anno!=null && anno>Calendar.YEAR;*/
-		return true;
+		return nome.matches("^[a-zA-Z\\s]{9,50}$") &&
+				numero.matches("^[0-9]{16}$") &&
+				mese!=null && mese>0 && mese<13 && anno!=null && anno>Calendar.YEAR;
 	}
 	
 }

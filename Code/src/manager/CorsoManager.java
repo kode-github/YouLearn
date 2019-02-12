@@ -610,11 +610,11 @@ public class CorsoManager {
 		
 		
 		
-		return  corso.getNome()!=null && corso.getNome().matches("^[a-zA-Z\\s]{5,20}")  &&
-				corso.getDataCreazione()!=null && corso.getDataFine()!=null && corso.getDataCreazione().before(corso.getDataFine()) && 
-				corso.getDescrizione()!=null && corso.getDescrizione().length()<400  && corso.getCopertina()!=null && 
-				//corso.getCopertina().matches("^[a-zA-Z0-9\\.-]{1,255}") && corso.getDocente()!=null && corso.getCategoria()!=null
-				corso.getCopertina().matches("^[a-zA-Z0-9/.-]{1,255}") && corso.getDocente()!=null && corso.getCategoria()!=null
+		return  corso.getNome()!=null && corso.getNome().matches("^[a-zA-Z\\s]{5,30}")  &&
+				corso.getDataCreazione()!=null && corso.getDescrizione().length()<1048 && corso.getDescrizione().length()>10 
+				&& corso.getDataFine()!=null && corso.getDataCreazione().before(corso.getDataFine()) && 
+				corso.getDescrizione()!=null && corso.getDescrizione().length()<400  && corso.getCopertina()!=null
+				&& corso.getDocente()!=null && corso.getCategoria()!=null
 				&& corso.getStato()!=null;
 		
 
