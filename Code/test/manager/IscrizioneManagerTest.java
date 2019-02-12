@@ -53,7 +53,7 @@ public class IscrizioneManagerTest{
 	@Before
 	public void setUp() throws Exception {
 		managerIscrizione = IscrizioneManager.getIstanza();
-		managerCorso = CorsoManager.getIstanza();
+		managerCorso = CorsoManager.getIstanza(System.getProperty("user.dir")+"\\WebContent");
 		managerAccount = AccountManager.getIstanza();
 		assertNotNull(managerIscrizione);
 		assertNotNull(managerCorso);

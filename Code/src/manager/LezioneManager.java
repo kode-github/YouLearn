@@ -130,7 +130,7 @@ public class LezioneManager {
 	 * @throws SQLException
 	 * @throws DatiErratiException
 	 */
-	private void changeNumeroLezione(LezioneBean lezione,Connection c) throws SQLException, DatiErratiException {
+	void changeNumeroLezione(LezioneBean lezione,Connection c) throws SQLException, DatiErratiException {
 		PreparedStatement statement=null;
 		String sql="Update Lezione set numeroLezione=? where idLezione=?";
 		try {
@@ -438,7 +438,7 @@ public class LezioneManager {
 	 * @return
 	 * @throws SQLException
 	 */
-	private boolean checkCommento(int code) throws SQLException {
+	public boolean checkCommento(int code) throws SQLException {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 
