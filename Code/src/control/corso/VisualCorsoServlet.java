@@ -1,5 +1,6 @@
 package control.corso;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -100,16 +101,17 @@ public class VisualCorsoServlet extends HttpServlet {
 				request.getSession().setAttribute("updated", "true");
 				response.sendRedirect(request.getContextPath()+"\\Corso.jsp?idCorso="+idCorso);
 			} catch (NoPermissionException e) {
-				// TODO Auto-generated catch block
+				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 				e.printStackTrace();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 				e.printStackTrace();
 			} catch (NotFoundException e) {
-				// TODO Auto-generated catch block
+				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 				e.printStackTrace();
 			} catch (NotWellFormattedException e) {
-				// TODO Auto-generated catch block
+				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
+
 				e.printStackTrace();
 			}
 }

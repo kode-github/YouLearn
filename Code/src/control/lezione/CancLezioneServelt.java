@@ -1,5 +1,6 @@
 package control.lezione;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -42,13 +43,13 @@ public class CancLezioneServelt extends HttpServlet {
 				account.getCorsoTenuto(idCorso).removeLezione(lezione);
 	        	response.sendRedirect(request.getContextPath()+"/SettingLezione.jsp?idCorso="+idCorso);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 				e.printStackTrace();
 			} catch (DatiErratiException e) {
-				// TODO Auto-generated catch block
+				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 				e.printStackTrace();
 			} catch (NotFoundException e) {
-				// TODO Auto-generated catch block
+				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 				e.printStackTrace();
 			}
         

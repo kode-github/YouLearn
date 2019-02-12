@@ -1,5 +1,6 @@
 package control.corso;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -37,9 +38,9 @@ public class SearchCorso extends HttpServlet {
 			try {
 				corso = manager.searchCorso(search);
 				request.getSession().setAttribute("searched", corso);
-				response.sendRedirect(request.getContextPath()+"\\Risultati.jsp");
+				response.sendRedirect(request.getContextPath()+File.separator+"Risultati.jsp");
 			} catch (SQLException | NotFoundException e) {
-				// TODO Auto-generated catch block
+				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 				e.printStackTrace();
 			}
 	}

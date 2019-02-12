@@ -1,5 +1,6 @@
 package control.lezione;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -46,13 +47,15 @@ public class GetLezioniServlet extends HttpServlet {
 			request.getSession().removeAttribute("updated");
 			response.sendRedirect(request.getContextPath()+"//SettingLezione.jsp?idCorso="+corso.getIdCorso());
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 			e.printStackTrace();
 		} catch (NotWellFormattedException e) {
-			// TODO Auto-generated catch block
+			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 			e.printStackTrace();
 		} catch(NullPointerException e) {
 			e.printStackTrace();
+			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
+
 		}
 	}
 

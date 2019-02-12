@@ -31,6 +31,13 @@
 </head>
 <body>
 
+	<!-- PER QUESTI PARAMETRI HANNO VALORE TRUE O FALSE (COME STRINGHE)
+		commentoInserito
+		cancCommento
+		SONO IN SESSIONE, DOPO AVERLI RECUPERATI RIMUOVILI DALLA SESSIONE
+		VEDI ESEMPI ALTRE PAGINE, TIPO CORSO
+	 -->
+
 	<%@include file="Navbar.jsp"%>
 
 	<%

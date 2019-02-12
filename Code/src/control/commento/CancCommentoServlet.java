@@ -1,6 +1,9 @@
 package control.commento;
 
+import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import bean.AccountBean;
+import exception.NotFoundException;
 import manager.LezioneManager;
 
 
@@ -33,13 +37,21 @@ public class CancCommentoServlet extends HttpServlet {
 				int idCommento=Integer.parseInt(request.getParameter("idCommento"));
 				int idLezione=Integer.parseInt(request.getParameter("idLezione"));
 				AccountBean account=(AccountBean) request.getSession().getAttribute("account");
-				manager.delCommento(idCommento);
+				request.getSession().setAttribute("cancCommento", "true");
 				response.sendRedirect(request.getContextPath()+"/Lezione.jsp?idLezione="+idLezione);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+					manager.delCommento(idCommento);
+				} catch (NotFoundException e) {
+					request.getSession().setAttribute("cancCommento", "false");
+					response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
+					e.printStackTrace();
+				} catch (SQLException e) {
+					response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
+					e.printStackTrace();
+				}
+				
 			
-	}
+	}			
+
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -216,10 +216,10 @@ public class CorsoManager {
 			corso.setIdCorso((rs.getInt("idCorso")));
 			
 			/* Salvo la copertina */
-			Path test=Paths.get(PATH+"\\Resources\\"+corso.getIdCorso());
+			Path test=Paths.get(PATH+File.separator+"Resources"+File.separator+corso.getIdCorso());
 			if(!Files.isDirectory(test, LinkOption.NOFOLLOW_LINKS))
 				Files.createDirectories(test);
-			test=Paths.get(PATH+"\\Resources\\"+corso.getIdCorso()+File.separator+filename);
+			test=Paths.get(PATH+File.separator+"Resources"+File.separator+corso.getIdCorso()+File.separator+filename);
 			
 			copertina.write(test.toString());
 			if(!connection.getAutoCommit())
@@ -301,17 +301,17 @@ public class CorsoManager {
 																								+ "completamento");
 		/* Salvo la copertina */
 		if(file!=null) {
-			Path path=Paths.get(PATH+"\\Resources\\"+corso.getIdCorso());
+			Path path=Paths.get(PATH+File.separator+"Resources"+File.separator+corso.getIdCorso());
 			if(!Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS))
 				Files.createDirectories(path);
 			//Riuso il vecchio nome
-			String filename=corso.getCopertina().substring(corso.getCopertina().indexOf(corso.getIdCorso()+"\\")+2, corso.getCopertina().indexOf('.'));
+			String filename=corso.getCopertina().substring(corso.getCopertina().indexOf(corso.getIdCorso()+File.separator)+2, corso.getCopertina().indexOf('.'));
 			String type=file.getSubmittedFileName().substring(file.getSubmittedFileName().indexOf('.'));
 			
 			if(!type.equals(".jpg") && !type.equals(".png") && !type.equals(".jpeg")) 
 				throw new NotWellFormattedException("La copertina non ha un formato adeguato");
 			
-			path=Paths.get(PATH+"\\Resources\\"+corso.getIdCorso()+File.separator+filename);
+			path=Paths.get(PATH+File.separator+"Resources"+File.separator+corso.getIdCorso()+File.separator+filename);
 			file.write(path.toString());
 			corso.setCopertina(filename+type); //Assegno al corso la copertina appena salvata
 		}
@@ -345,7 +345,7 @@ public class CorsoManager {
 			if(!connection.getAutoCommit())
 				connection.commit();
 			
-			Path toDelete=Paths.get(PATH+"\\Resources\\"+idCorso);
+			Path toDelete=Paths.get(PATH+File.separator+"Resources"+File.separator+idCorso);
 			/*
 			 * walk: esamina ogni file presente nella directory 
 			 * sorted: ordina le cartelle nell'ordine inverso rispetto a come vengono esaminate da walk, così da avere i file all'inizio

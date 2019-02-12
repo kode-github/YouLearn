@@ -54,21 +54,22 @@ public class ModificaOrdineServlet extends HttpServlet {
         	//Setto il nuovo nome della lezione
         	response.sendRedirect(request.getContextPath()+"/SettingLezione.jsp?idCorso="+idCorso);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			response.sendRedirect(request.getContextPath()+"/Error.jsp");
 			e.printStackTrace();
 		} catch (NotFoundException e) {
-			// TODO Auto-generated catch block
+			response.sendRedirect(request.getContextPath()+"/Error.jsp");
 			e.printStackTrace();
 		} catch (NotWellFormattedException e) {
-			// TODO Auto-generated catch block
+			response.sendRedirect(request.getContextPath()+"/Error.jsp");
 			e.printStackTrace();
 		} catch(IOException e) {
+			response.sendRedirect(request.getContextPath()+"/Error.jsp");
 			e.printStackTrace();
 		} catch (DatiErratiException e) {
-			// TODO Auto-generated catch block
+			response.sendRedirect(request.getContextPath()+"/Error.jsp");
 			e.printStackTrace();
 		} catch (NoPermissionException e) {
-			// TODO Auto-generated catch block
+			response.sendRedirect(request.getContextPath()+"/Error.jsp");
 			e.printStackTrace();
 		}
 	}

@@ -1,5 +1,6 @@
 package control.lezione;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -37,18 +38,21 @@ public class InsLezioneServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		manager=LezioneManager.getIstanza(getServletContext().getRealPath(""));
 		response.getWriter().append("Served at: ").append(request.getContextPath());
+		LezioneBean lezione = new LezioneBean();
+		CorsoBean corso= null;
+		int idCorso = 0;
 	        try {
 	    		AccountBean account=(AccountBean) request.getSession().getAttribute("account");
 	        	Part file = request.getPart("file");
-	        	int idCorso=Integer.parseInt(request.getParameter("idCorso"));
+	        	idCorso=Integer.parseInt(request.getParameter("idCorso"));
 	        	String nome = request.getParameter("name");
-		    	CorsoBean corso=account.getCorsoTenuto(idCorso);
+		    	corso=account.getCorsoTenuto(idCorso);
 		    	System.out.println(corso.getIdCorso()+"\n");
 		    	String filename=getFilename(file);		      
 				System.out.println("idCorso in insLezione: "+idCorso+"\n id dell'oggetto corso: "+corso.getIdCorso());
 
 		    	
-		        LezioneBean lezione = new LezioneBean();
+		        
 		        lezione.setNome(nome);
 		        lezione.setIdLezione(null);
 		        lezione.setCorso(corso);
@@ -61,13 +65,17 @@ public class InsLezioneServlet extends HttpServlet {
 		        response.setCharacterEncoding("UTF-8");
 		        response.getWriter().write("{\"success\":true,\"format\":\" Fatto! \"}");
 			} catch (NotWellFormattedException e) {
-				// TODO Auto-generated catch block
+				corso.removeLezione(lezione);
+				response.sendRedirect(request.getContextPath()+File.separator+"SettingLezione.jsp?idLezione="+idCorso);
 				e.printStackTrace();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 				e.printStackTrace();
 			} catch (DatiErratiException e) {
-				// TODO Auto-generated catch block
+				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
+				e.printStackTrace();
+			} catch (NullPointerException e) {
+				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 				e.printStackTrace();
 			}
 
