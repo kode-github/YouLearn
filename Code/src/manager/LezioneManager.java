@@ -600,16 +600,20 @@ public class LezioneManager {
 		}
 
 		try {
+			int i=1;
 			c=DriverManagerConnectionPool.getConnection();
 			c.setAutoCommit(false);
 			statement=c.prepareStatement(sql);
-			statement.setString(1, lezione.getNome());
+			statement.setString(i++, lezione.getNome());
 			if(part!=null)
-				statement.setString(2, filename+type);
+				statement.setString(i++, filename+type);
+			statement.setInt(i, lezione.getIdLezione());
+			System.out.println("aaaaaaaaaaaaaaaaaaaaa");
 			statement.executeUpdate();
 
 			//salvo il nuovo file sul disco
 			if(part!=null) {
+				System.out.println("BBBBBBBBBBBBBBBBB");
 				Path path=Paths.get(PATH+"\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni"+File.separator+
 																				filename+type);
 				lezione.setFilePath(filename+type);
@@ -619,6 +623,7 @@ public class LezioneManager {
 				c.commit();
 		}catch (SQLException e) {
 			c.rollback();
+			e.printStackTrace();
 		}
 		finally {
 				try{

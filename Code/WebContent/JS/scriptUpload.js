@@ -1,23 +1,23 @@
 var idCorso="";
 
 $(document).ready(function(){
-	
+
 	var getUrlParameter = function getUrlParameter(sParam) {
-	    var sPageURL = window.location.search.substring(1),
-	        sURLVariables = sPageURL.split('&'),
-	        sParameterName,
-	        i;
+		var sPageURL = window.location.search.substring(1),
+		sURLVariables = sPageURL.split('&'),
+		sParameterName,
+		i;
 
-	    for (i = 0; i < sURLVariables.length; i++) {
-	        sParameterName = sURLVariables[i].split('=');
+		for (i = 0; i < sURLVariables.length; i++) {
+			sParameterName = sURLVariables[i].split('=');
 
-	        if (sParameterName[0] === sParam) {
-	            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
-	        }
-	    }
+			if (sParameterName[0] === sParam) {
+				return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+			}
+		}
 	};	
 
-	
+
 	/*
 	 * Just because the success callback is called doesn't mean your
 	 * application logic was successful, so check application success.
@@ -26,11 +26,11 @@ $(document).ready(function(){
 	 * success:  {"success":true,"format":"..."}
 	 * error:  {"success":false,"error":{"code":1,"message":"..."}}
 	 */
-	
-$( '#upload' ).click(function() {
+
+	$( '#upload' ).click(function() {
 		console.log("sono dentro");
-		
-		
+
+
 		var div=$(this).parent();
 		var ul =div.children("ul");
 		console.log(ul);
@@ -42,13 +42,13 @@ $( '#upload' ).click(function() {
 		var f = liFile.children("input[type=file]");
 		console.log($(text).val());
 		console.log(f.val());
-		
 
-	
-		
+
+
+
 		var idCorso= getUrlParameter('idCorso');
 		console.log(idCorso);
-		
+
 		f.simpleUpload("http://localhost:8080/YouLearn/InsLezioneServlet?name="+text.val()+"&idCorso="+ idCorso, {
 
 			allowedExts: ["jpg", "jpeg", "jpe", "jif", "jfif", "jfi", "png", "gif", "exe","mp4"],
@@ -91,7 +91,7 @@ $( '#upload' ).click(function() {
 				this.progressBar.remove();
 				this.cancelButton.remove();
 
-			if (data.success) {
+				if (data.success) {
 					//now fill the block with the format of the uploaded file
 
 					var format = data.format;
@@ -104,7 +104,6 @@ $( '#upload' ).click(function() {
 				}
 
 			},
-
 			error: function(error){
 				//upload failed
 				this.progressBar.remove();
@@ -120,7 +119,6 @@ $( '#upload' ).click(function() {
 					$(this).remove();
 				});
 			}
-
 		});
 	});
 

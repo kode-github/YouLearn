@@ -88,7 +88,7 @@
 
 
 			<div class="card-body item" id=<%=l.getIdLezione()%>>
-				<form method="post">
+				<form method="POST" enctype='multipart/form-data'>
 					<div class="float-left num"><%=l.getNumeroLezione()%></div>
 					<input class="d-none" name="idL" value="<%=l.getIdLezione()%>">
 					<div class="float-left" style="margin-bottom: 5px;">
@@ -97,8 +97,8 @@
 								<li id="nome" class="nome-lezione li-lezione"><input
 									type="text" name="nome" readonly="readonly" autocomplete="off"
 									value="<%=l.getNome()%>"></li>
-								<li id="file-lezione" class="li-lezione"><input type="file"
-									class="d-none" name="nomeL"><%=l.getFilePath()%> 
+								<li id="file-lezione" class="li-lezione"><input type="file" 
+									class="d-none" name="fileMod" value="<%=l.getFilePath()%>"><%=l.getFilePath()%> 
 									<button type="button" name="modLezione"
 										style="font-size: 0.9rem;"
 										onclick="modificaLezione(this.form)"
@@ -107,9 +107,8 @@
 
 									<button name="btnM" type="button" onclick="modifica(this.form)"
 										class="btn btn-primary modifica">Modifica</button>
-									<button name="btnC" type="button" id="uploads1"
-										onclick="invioDatiLezione(this.form)"
-										class="btn btn-success conferma d-none">Conferma
+									<button name="btnC" type="button" 										
+										class="btn btn-success conferma d-none UPL">Conferma
 										modifiche</button>
 
 									<button name="btnA" type="button" onclick="annulla(this.form)"
