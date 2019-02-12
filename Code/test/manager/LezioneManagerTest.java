@@ -183,7 +183,7 @@ public class LezioneManagerTest {
 	@Test
 	public void testDelCommento() throws Exception {
 		LinkedList <CommentoBean> commenti = (LinkedList<CommentoBean>) managerLezione.retrieveCommentiByLezione(tmpLezione);
-	    commenti.get(commenti.size()-1);
+	    commenti.get(0);
 		managerLezione.delCommento(tmpCommento.getIdCommento());
 		}
 		

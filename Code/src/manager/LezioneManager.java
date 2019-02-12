@@ -602,18 +602,35 @@ public class LezioneManager {
 		}
 
 		try {
+			int i=1;
 			c=DriverManagerConnectionPool.getConnection();
 			c.setAutoCommit(false);
 			statement=c.prepareStatement(sql);
-			statement.setString(1, lezione.getNome());
+			statement.setString(i++, lezione.getNome());
 			if(part!=null)
-				statement.setString(2, filename+type);
+				statement.setString(i++, filename+type);
+<<<<<<< HEAD
+			statement.setInt(i,lezione.getIdLezione());
+=======
+			statement.setInt(i, lezione.getIdLezione());
+			System.out.println("aaaaaaaaaaaaaaaaaaaaa");
+>>>>>>> e38e6be748d59475c8b5e501a55f1eed7da12e1c
 			statement.executeUpdate();
 
 			//salvo il nuovo file sul disco
 			if(part!=null) {
+<<<<<<< HEAD
+				System.out.println("lezione inserita");
+=======
+<<<<<<< HEAD
+				System.out.println("BBBBBBBBBBBBBBBBB");
+				Path path=Paths.get(PATH+"\\Resources\\"+lezione.getCorso().getIdCorso()+"\\Lezioni"+File.separator+
+																				filename+type);
+=======
+>>>>>>> e38e6be748d59475c8b5e501a55f1eed7da12e1c
 				Path path=Paths.get(PATH+File.separator+"Resources"+File.separator+lezione.getCorso().getIdCorso()+File.separator+
 						"Lezioni"+File.separator+filename+type);
+>>>>>>> 6a96fdc30c189f926831e0de22ba070ee412da5d
 				lezione.setFilePath(filename+type);
 				part.write(path.toString());
 			}
@@ -621,6 +638,7 @@ public class LezioneManager {
 				c.commit();
 		}catch (SQLException e) {
 			c.rollback();
+			e.printStackTrace();
 		}
 		finally {
 				try{

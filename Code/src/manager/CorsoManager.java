@@ -321,7 +321,6 @@ public class CorsoManager {
 	
 	/**
 	 * Elimina un corso
-	 * TODO Eliminare l'immagine di copertina
 	 * @param idCorso
 	 * @throws SQLException
 	 * @throws NotFoundException
