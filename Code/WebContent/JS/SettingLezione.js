@@ -134,10 +134,11 @@ function UploadResult()
 		url: "http://localhost:8080/YouLearn/ModificaOrdineServlet",
 		data:{ "coppie": coppie,
 			"idCorso": idCorso	},
-			
+
 	});
-	
+
 	refreshPage();
+
 }
 
 
@@ -526,6 +527,23 @@ $(".UPL").click(function(){
 	//console.log(inputID);
 	if(f==null){alert("file non modificato")}
 
+	if(checkNome($(text).val()) == false){
+		
+		alert("Il nome deve essere lungo almeno 5 caratteri e può contenere anche caratteri speciali!");
+		return false;
+		
+	}
+	
+	if( f.val() == ""){
+		
+		
+	} else	
+	if(!f.value){
+		
+		alert("riempi il file");
+		return false;
+	}
+	
 
 	console.log("Questo è: "+idCorso);
 	console.log("Questo è: "+$(text).val());
@@ -642,3 +660,91 @@ function refreshPage(){
 }
 
 
+function checkNome(nome){
+	var nameValidator = /^[a-zA-Z\s\!\-\d]{5,50}/;
+
+	if(nome == ""){
+		
+		return false;
+	} else
+	
+	if(!nome.match(nameValidator)){
+		return false;
+
+	} else {
+
+		return true;
+	}
+
+}
+
+
+
+//function checkNome(nome){
+//var nameValidator = /^[a-zA-Z\s\!\-\d]{5,50}/;
+
+//if(!this.value.match(nameValidator)){
+//console.log("No");
+//return false;
+
+//}
+
+////else if(!document.getElementById("input1").value){
+
+
+//else {
+
+//return true;}
+
+//}
+
+//$(".input-nome-lezione2").on("input", function() {
+//var nameValidator = /^[a-zA-Z\s\!\-\d]{5,50}/;
+
+//if(!this.value.match(nameValidator)){
+//console.log("No");
+//$("#b2").attr("disabled", "disabled");
+//return false;
+
+//} else {
+
+//if(!document.getElementById("input2").value){
+
+//return false;
+
+//} else {
+
+//$("#b2").removeAttr("disabled");
+//console.log("Si");
+//return true;
+//}
+//}
+
+
+//});
+
+//$(".input-nome-lezione3").on("input", function() {
+//var nameValidator = /^[a-zA-Z\s\!\-\d]{5,50}/;
+
+//if(!this.value.match(nameValidator)){
+//console.log("No");
+//$("#b3").attr("disabled", "disabled");
+//return false;
+
+//} else {
+
+//if(!document.getElementById("input3").value){
+
+//return false;
+
+//} else {
+
+//$("#b3").removeAttr("disabled");
+//console.log("Si");
+//return true;
+//}
+
+//}
+
+
+//});

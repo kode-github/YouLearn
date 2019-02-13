@@ -125,7 +125,14 @@ function validatePsw(changePswForm){
 function validateMail(changeMailForm){
 	var mailValidator = /^\w+([\._\-]?\w+)*@\w+([\.\-]?\w+)*(\.\w+)+$/;
 	var newMail= changeMailForm.newMail.value;
-
+	
+	console.log(newMail);	
+	if(newMail.length < 8){
+		
+		showAlert('La lunghezza della mail deve essere almeno di 8 caratteri');
+		return false;
+	} else
+	
 	if(!newMail.match(mailValidator)){
 		showAlert('Email non valida');
 		return false;

@@ -571,7 +571,7 @@ public class LezioneManager {
 			if(lezione.getFilePath()==null || lezione.getNumeroLezione()<=0
 			|| lezione.getVisualizzazioni()<0)
 				return false;
-		return lezione.getNome()!=null && lezione.getNome().matches("^[a-zA-Z0-9\\s:-]{5,30}") &&
+		return lezione.getNome()!=null && lezione.getNome().matches("^[a-zA-Z0-9\\.\\s:-]{5,30}") &&
 				  lezione.getCorso()!=null;
 
 

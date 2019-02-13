@@ -33,9 +33,11 @@
 
 <%
 	Collection<CorsoBean> corsi=(Collection<CorsoBean>) request.getSession().getAttribute("searched");
-	if(corsi==null){
-		//NON CI SONO CORSI
-	}
+	if(corsi==null){%>
+	
+		<div class="card-body text-center">Non è stato trovato nessun corso, in base alla ricerca selezionata!
+    </div>
+	<%} else {
 %>
 		
         <div  style="margin-top:10px; font-size:1.5rem"class="card mx-auto w-50">
@@ -51,7 +53,7 @@
                     </ul>
                     
                 </div>
-                <%} %>
+                <%}} %>
                 
             </div>
     

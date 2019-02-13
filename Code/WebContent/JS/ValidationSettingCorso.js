@@ -16,7 +16,7 @@ function validateCorso(formSettingCorso) {
 	//Save all matches in a variable
 
 	var nameValidator = /^[a-zA-Z\s\!\-\d]{5,50}/;
-
+	var prezzoValidator= /^[0-9]+$/;
 	//var usrIsOK = formRegistration.username.value.match(usrValidator);
 	var name = formSettingCorso.nome.value;
 	console.log(name + " "+ name.length);
@@ -49,7 +49,7 @@ function validateCorso(formSettingCorso) {
 				return false;
 
 			} else
-				if(prezzo == 0 || prezzo<=0) {
+				if(!(prezzo.match(prezzoValidator)) || prezzo == 0 || prezzo<=0) {
 					alertify.error("Prezzo non valido, il prezzo deve essere superiore o uguale a 1 "+String.fromCharCode(8364)+".");
 					return false;
 
