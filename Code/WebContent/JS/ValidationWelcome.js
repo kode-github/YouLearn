@@ -14,20 +14,20 @@ if($("#alert").css('display') == 'none'){
 	}, 3000);
 }
 
-function validateLogin(formLogin){
-
-	var psw = formLogin.password;
-	var pswValidator = /^[a-zA-Z 0-9 \@\._\!\?\-]{8,}$/;
-
-	if(!psw.value.match(pswValidator)){
-
-		alertify.error("La password deve contenere almeno 8 caratteri tra lettere, numeri e simboli");
-		return false;
-
-	} else return true;
-
-
-}
+//function validateLogin(formLogin){
+//
+//	var psw = formLogin.password;
+//	var pswValidator = /^[a-zA-Z 0-9 \@\._\!\?\-]{8,}$/;
+//
+//	if(!psw.value.match(pswValidator)){
+//
+//		alertify.error("La password deve contenere almeno 8 caratteri tra lettere, numeri e simboli");
+//		return false;
+//
+//	} else return true;
+//
+//
+//}
 
 function validateRegistration(formRegistration) {
 

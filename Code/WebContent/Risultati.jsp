@@ -46,7 +46,7 @@
                     		alt="FAIL" srcset="" width="150" height="150">
                     <ul class="informazioni-corso rounded float-left">
                         <li><a href="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=corso.getIdCorso()%>"><%=corso.getNome() %></a></li>
-                        <li>Numero lezioni: <%=corso.getLezioni().size() %></li>
+                        <li>Numero lezioni: <%=corso.getnLezioni() %></li>
                         <li>Data Scadenza: <%=corso.getDataFine() %></li>
                     </ul>
                     

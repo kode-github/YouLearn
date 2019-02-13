@@ -95,7 +95,9 @@
 					placeholder="Inserisci qui il tuo commento!" class="text-center"></textarea>
 			</div>
 			<div>
-				<button type="submit" style="margin:0px 5px 10px;" formaction="http://localhost:8080/YouLearn/InsCommentoServlet?idLezione=<%=lezione.getIdLezione()%>" class="btn float-right btn-success">AGGIUNGI COMMENTO</button>
+				<button type="submit" style="margin: 0px 5px 10px;"
+					formaction="http://localhost:8080/YouLearn/InsCommentoServlet?idLezione=<%=lezione.getIdLezione()%>"
+					class="btn float-right btn-success">AGGIUNGI COMMENTO</button>
 			</div>
 		</form>
 		<%
@@ -107,15 +109,16 @@
 		<%
 			if (lista.isEmpty()) {
 		%>
-		<div style="margin: 10px 20px 0px; " class="card-header rounded border">COMMENTI DEL
-			DOCENTE:</div>
+		<div style="margin: 10px 20px 0px;" class="card-header rounded border">COMMENTI
+			DEL DOCENTE:</div>
 		<div class="card-body">
 			<div id="com-doc" class=" card-body rounded border border-success">
 				Non ci sono commenti da parte del Docente <b><%=lezione.getCorso().getDocente().getNome()%>
 					<%=lezione.getCorso().getDocente().getCognome()%></b>
 			</div>
 		</div>
-		<div style="margin: 0px 20px;" class="card-header rounded border">COMMENTI DEGLI UTENTI:</div>
+		<div style="margin: 0px 20px;" class="card-header rounded border">COMMENTI
+			DEGLI UTENTI:</div>
 
 		<div class="card-body">
 			<div id="com-doc" class=" card-body rounded border border-primary">
@@ -126,8 +129,8 @@
 		<%
 			} else {
 		%>
-		<div style="margin: 10px 20px 0px;" class="card-header rounded border">COMMENTI DEL
-			DOCENTE:</div>
+		<div style="margin: 10px 20px 0px;" class="card-header rounded border">COMMENTI
+			DEL DOCENTE:</div>
 		<div class="card-body">
 
 
@@ -137,14 +140,27 @@
 
 						if (c.getAccountCreatore().getMail().equals(lezione.getCorso().getDocente().getMail())) {
 			%>
-			<div id="com-doc" class=" card-body rounded border border-success"><%=c.getTesto()%></div>
-			<%
-				x = 1;
 
+
+			<!--  <div class="legend1"c.getAccountCreatore().getNome()e() %></div>-->
+			<!--  <fieldset><%=c.getTesto()%></fieldset> -->
+			<section style="margin-bottom: 10px;">
+				<fieldset>
+					<legend class="mr-auto" style="text-align: left	; margin-left:15px;">
+						<div class="text-center"><b> Docente <%=c.getAccountCreatore().getNome() %></b></div>
+					</legend>
+					<label> <%=c.getTesto()%><br /> </label> 
+				</fieldset>
+			</section>
+
+			<!-- <div id="com-doc" class=" card-body rounded border border-success"><%=c.getTesto()%></div> -->
+			<%
+					x = 1;
+
+							}
 						}
-					}
-					if (x == 0) {
-			%>
+						if (x == 0) {
+				%>
 
 			<div class="card-body">
 				<div id="com-doc" class=" card-body rounded border border-success ">
@@ -154,11 +170,13 @@
 			</div>
 
 			<%
-				}
-			%>
+					}
+				%>
+
 		</div>
 
-		<div style="margin: 0px 20px;" class="card-header rounded border">COMMENTI DEGLI UTENTI:</div>
+		<div style="margin: 0px 20px;" class="card-header rounded border">COMMENTI
+			DEGLI UTENTI:</div>
 
 		<div class="card-body">
 			<%
@@ -168,7 +186,23 @@
 						if (!c.getAccountCreatore().getMail().equals(lezione.getCorso().getDocente().getMail())) {
 			%>
 
-			<div id="com-doc" class=" card-body rounded border border-success"><%=c.getTesto()%></div>
+			 <section style="margin-bottom: 10px;">
+				<fieldset>
+					<legend class="mr-auto" style="text-align: left	; margin-left:15px;">
+						<div class="text-center">
+						<%if(c.getAccountCreatore().getMail().equals(account.getMail())){ %>
+							<b> Tu</b>
+						<%} else { %>
+						<b> <%=c.getAccountCreatore().getNome() %></b>
+						<% }%>
+						</div>
+					</legend>
+					
+					<label> <%=c.getTesto()%><br /> </label> 
+				</fieldset>
+			</section>
+
+			 <!-- <div id="com-doc" class=" card-body rounded border border-success"><%=c.getTesto()%></div> --> 
 
 			<%
 				y = 1;
@@ -182,8 +216,8 @@
 				scrivi tu il primo commento!
 			</div>
 
-			<%
-				}
+			<%}
+				
 				}
 			%>
 
