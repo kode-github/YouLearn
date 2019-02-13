@@ -110,7 +110,7 @@
 				</div>
 				<div class="form-group">
 					<label for="InputImmCop">IMMAGINE DI COPERTINA</label> <input
-						type="file" accept=".jpg,.png" class="form-control"
+						type="file" accept=".jpg,.png" class="form-control" required="required"
 						id="InputImmCop" placeholder="" name="CARICA FILE">
 				</div>
 				<div class="row">
