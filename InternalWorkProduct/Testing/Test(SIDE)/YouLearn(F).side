@@ -1602,12 +1602,12 @@
     }]
   }, {
     "id": "2bf39082-ad42-4a10-8477-18107ef81843",
-    "name": "TC_1.6",
+    "name": "TC_1.7",
     "commands": [{
       "id": "c7959779-7202-4ffd-83cd-de76f4697a2c",
       "comment": "",
       "command": "open",
-      "target": "http://localhost:8080/YouLearn/SettingLezione.jsp?idCorso=51",
+      "target": "http://localhost:8080/YouLearn/SettingLezione.jsp?idCorso=56",
       "targets": [],
       "value": ""
     }, {
@@ -2734,7 +2734,7 @@
     }]
   }, {
     "id": "c949e2f2-0355-4c6b-bd19-06a82bc56edc",
-    "name": "TC_1.7",
+    "name": "TC_1.6",
     "commands": [{
       "id": "64e5f23d-a015-4574-a7ed-30e5c97d445d",
       "comment": "",
@@ -2857,15 +2857,17 @@
       ],
       "value": "${KEY_ENTER}"
     }, {
-      "id": "7ba8f446-c417-41aa-b8ac-c679f84cb3a5",
+      "id": "53566172-7f2d-41ae-ac71-f52cb662adc9",
       "comment": "",
       "command": "click",
-      "target": "css=.card-body:nth-child(4) a",
+      "target": "linkText=Basso Elettrico",
       "targets": [
-        ["css=.card-body:nth-child(4) a", "css:finder"],
-        ["xpath=(//a[contains(text(),'Basso Elettrico')])[3]", "xpath:link"],
-        ["xpath=//a[@href='http://localhost:8080/YouLearn/Corso.jsp?idCorso=55']", "xpath:href"],
-        ["xpath=//div[3]/ul/li/a", "xpath:position"]
+        ["linkText=Basso Elettrico", "linkText"],
+        ["css=li > a:nth-child(1)", "css:finder"],
+        ["xpath=//a[contains(text(),'Basso Elettrico')]", "xpath:link"],
+        ["xpath=//a[@href='http://localhost:8080/YouLearn/Corso.jsp?idCorso=57']", "xpath:href"],
+        ["xpath=//div/div/ul/li/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Basso Elettrico')]", "xpath:innerText"]
       ],
       "value": ""
     }, {
