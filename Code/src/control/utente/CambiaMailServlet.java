@@ -1,5 +1,10 @@
 package control.utente;
 
+/**
+ * 
+ * 
+ * @author Luigi Crisci
+ */
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -39,7 +44,7 @@ public class CambiaMailServlet extends HttpServlet {
 			request.getSession().setAttribute("account",account);
 			request.getSession().setAttribute("emailModificata",true);
 		} catch (SQLException | NotFoundException e) {
-			//Non può succedere per via dei filtri
+			//Non puï¿½ succedere per via dei filtri
 			e.printStackTrace();
 		} catch (NoPermissionException e) {
 			// TODO Auto-generated catch block
