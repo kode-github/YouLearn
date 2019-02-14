@@ -88,68 +88,65 @@
 		//Ora abbiamo le iscrizioni del corso e ruolo che ci dice da dove proveniamo
 %>
 
-	<div class="container-fluid">
 
-		<h1 id="titolo-pagina" class="display-3"><%=corso.getNome() %></h1>
-		<div class="row first-row">
-			<div id="" class="div-container col-lg-6" style="text-align: center;">
-				<img id="img-corso"
-					src="Resources\<%=corso.getIdCorso()%>\<%=corso.getCopertina()%>"
-					alt="" width="250px" height="250px">
-			</div>
-			<div class="div-container col-lg-6"
-				style="display: flex; align-items: center; justify-content: center">
-				<p id="p-info-corso"><%=corso.getDescrizione() %></p>
-			</div>
+	<h1 id="titolo-pagina" class="display-3"><%=corso.getNome() %></h1>
+	<div class="row first-row">
+		<div id="" class="div-container col-lg-6" style="text-align: center;">
+			<img id="img-corso"
+				src="Resources\<%=corso.getIdCorso()%>\<%=corso.getCopertina()%>"
+				alt="" width="250px" height="250px">
 		</div>
-		<div class="row">
-			<%
+		<div class="div-container col-lg-6"
+			style="display: flex; align-items: center; justify-content: center">
+			<p id="p-info-corso"><%=corso.getDescrizione() %></p>
+		</div>
+	</div>
+	<div class="row">
+		<%
 			System.out.println(ruolo);
-			if(ruolo.equals("docente") || ruolo.equals("iscritto")){ %>
-			<div id="" class="div-container col-12">
+			if(!ruolo.equals("NonIscritto")){ %>
+		<div id="" class="div-container col-12">
 
-				<div class="table-wrapper w-75 mx-auto">
-					<table class="fl-table">
-						<thead>
-							<tr>
-								<th colspan="5"><i class="fas fa-info"></i> INFO CORSO</th>
+			<div class="table-wrapper w-75 mx-auto">
+				<table class="fl-table">
+					<thead>
+						<tr>
+							<th colspan="5"><i class="fas fa-info"></i> INFO CORSO</th>
 
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>Numero iscritti</td>
-								<td><%=corso.getnIscritti() %></td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Numero iscritti</td>
+							<td><%=corso.getnIscritti() %></td>
 
-							</tr>
-							<tr>
-								<td>Numero lezioni</td>
-								<td><%=corso.getnLezioni() %></td>
+						</tr>
+						<tr>
+							<td>Numero lezioni</td>
+							<td><%=corso.getnLezioni() %></td>
 
-							</tr>
-							<tr>
-								<td>Data scadena iscrizioni</td>
-								<td><%=corso.getDataFine() %></td>
+						</tr>
+						<tr>
+							<td>Data scadena iscrizioni</td>
+							<td><%=corso.getDataFine() %></td>
 
-							</tr>
-						<tbody>
-					</table>
-				</div>
+						</tr>
+					<tbody>
+				</table>
 			</div>
 		</div>
+	</div>
 
 
 
-		<div style="margin-top: 50px;" class="card w-50 mx-auto">
-			<h5 class="card-h-corsi card-header">LEZIONI</h5>
-			<% 
+	<div style="margin-top: 50px;" class="card w-50 mx-auto">
+		<h5 class="card-h-corsi card-header">LEZIONI</h5>
+		<% 
 			if(corso.getLezioni().isEmpty()){
-			System.out.println("Sono vuoto");
-			%>
-
-			<div class=" card-b-corsi card-body">Questo corso non contiene lezioni!</div>
-
-			<%
+			System.out.println("Sono vuoto");%>
+		<div class=" card-b-corsi card-body">Questo corso non contiene
+			lezioni</div>
+		<%
 			
 			}else{
 				LinkedList<LezioneBean> lezioni=(LinkedList<LezioneBean>)corso.getLezioni();
@@ -165,26 +162,26 @@
 			for(LezioneBean e: corso.getLezioni()){
 				%>
 
-			<div class=" card-b-corsi card-body">
-				<a href="http://localhost/YouLearn/Corso.jsp?idCorso="><img
-					class="img-corsi-attesa rounded float-left" src="Images/Image.jpg"
-					alt="FAIL" width="170" height="170"></a>
-				<ul class="informazioni-corso rounded float-left">
-					<li><a
-						href="http://localhost:8080/YouLearn/Lezione.jsp?idLezione=<%=e.getIdLezione()%>"><%=e.getNome() %></a></li>
-					<li><%=e.getVisualizzazioni() %></li>
+		<div class=" card-b-corsi card-body">
+			<a href="http://localhost/YouLearn/Corso.jsp?idCorso="><img
+				class="img-corsi-attesa rounded float-left" src="Images/Image.jpg"
+				alt="FAIL" width="170" height="170"></a>
+			<ul class="informazioni-corso rounded float-left">
+				<li><a
+					href="http://localhost:8080/YouLearn/Lezione.jsp?idLezione=<%=e.getIdLezione()%>"><%=e.getNome() %></a></li>
+				<li><%=e.getVisualizzazioni() %></li>
 
 
-				</ul>
-			</div>
-			<%}%>
+			</ul>
 		</div>
+		<%}%>
+	</div>
 
 
-		<%}}
+	<%}}
 			else if (ruolo.equals("NonIscritto")){
 			%>
-	</div>
+
 	<div class="row">
 		<div id="prezzo" id="" class="div-container col-6"
 			style="text-align: center">
@@ -241,7 +238,7 @@
 
 
 
-<%
+	<%
 	if(ruolo.equals("NonIscritto")){
 %>
 
@@ -265,21 +262,26 @@
 				<input type="text" class="checkout-input checkout-card"
 					placeholder="4111 1111 1111 1111"
 					value=<%=account.getCarta().getNumeroCarta() %>> <input
-					type="text" class="checkout-input checkout-cvc" placeholder="CVC"
-					data-toggle="tooltip" data-placement="right"
+					type="text" class="checkout-input checkout-cvc" maxlength="3"
+					name="cvc" placeholder="CVC" data-toggle="tooltip"
+					data-placement="right"
 					title="Inserisci il tuo CVC per completare il pagamento!">
 			</p>
 			<p>
-				<input type="submit" formaction="http://localhost:8080/YouLearn/IscrizioneServlet?idCorso=<%=corso.getIdCorso()%>" value="Acquista" class="btn btn-success">
-				<input type="button" id="out" value="Annulla" class="btn btn-danger">
+				<input type=submit onclick="return controlloCVC(this.form)"
+					formaction="http://localhost:8080/YouLearn/IscrizioneServlet?idCorso=<%=corso.getIdCorso()%>"
+					value="Acquista" class="btn btn-success"> <input
+					type="button" id="out" value="Annulla" class="btn btn-danger">
 			</p>
 		</form>
 	</div>
-<%}%>
+	<%}%>
 
 	<%@ include file="Footer.jsp"%>
 
 	<script type="text/javascript" src="JS/Corso.js"></script>
+	<script src="JS/alertify.js-0.3.11/lib/alertify.min.js"></script>
+
 </body>
 
 </html>

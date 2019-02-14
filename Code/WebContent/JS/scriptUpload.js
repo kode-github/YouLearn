@@ -129,31 +129,23 @@ $(document).ready(function(){
 		
 
 		var div=$(this).parent();
-		//console.log(div)
-		var div1 = div.parent();
-		//var ul =div1.children("ul");
-		//console.log(div1);
-		
+		var div1 = div.parent();	
 		var liText = div1.children("li").eq(0);
-		//console.log(liText);
 		var liFile = div1.children("li").eq(1);
-		//console.log(liFile);
 		var text = liText.children("input[type=text]");
 		var f = liFile.children("input[type=file]");
-		//console.log($(text).val());
-		//console.log(f.val());
+	
 
 		
 		if(checkNome(text.val()) == false){
 			
-			alert("complia il nome");
 			return false;
 			
 		}
 		
 		if(!document.getElementById("input1").value){
 			
-			alert("riempi il file");
+			alertify.error("Riempi il campo file con la lezione che vuoi caricare!");
 			return false;
 		}
 
@@ -259,14 +251,13 @@ $(document).ready(function(){
 		
 		if(checkNome(text.val()) == false){
 			
-			alert("complia il nome");
 			return false;
 			
 		}
 		
 		if(!document.getElementById("input2").value){
 			
-			alert("riempi il file");
+			alertify.error("Riempi il campo file con la lezione che vuoi caricare!");
 			return false;
 		}
 
@@ -303,7 +294,7 @@ $(document).ready(function(){
 				});
 
 				this.block.append(this.progressBar).append(this.cancelButton);
-				$('.uploadsA').append(this.block);
+				$('.uploadsB').append(this.block);
 
 			},
 
@@ -373,14 +364,13 @@ $(document).ready(function(){
 		
 		if(checkNome(text.val()) == false){
 			
-			alert("complia il nome");
 			return false;
 			
 		}
 		
 		if(!document.getElementById("input3").value){
 			
-			alert("riempi il file");
+			alertify.error("Riempi il campo file con la lezione che vuoi caricare!");
 			return false;
 		}
 
@@ -417,7 +407,7 @@ $(document).ready(function(){
 				});
 
 				this.block.append(this.progressBar).append(this.cancelButton);
-				$('.uploadsA').append(this.block);
+				$('.uploadsC').append(this.block);
 
 			},
 
@@ -471,10 +461,10 @@ $(document).ready(function(){
 
 
 function checkNome(nome){
-	var nameValidator = /^[a-zA-Z\s\!\-\d]{5,50}/;
+	var nameValidator = /^[a-zA-Z\s\!\-\d]{5,50}$/;
 
 	if(!nome.match(nameValidator)){
-		console.log("No");
+		alertify.error("Il nome della lezione deve essere lungo almeno 5 caratteri e non può contenere carateri speciali diversi da ?,- e numeri");
 		return false;
 
 	}
@@ -487,3 +477,58 @@ function checkNome(nome){
 		return true;}
 
 }
+
+$(".input-nome-lezione1").on("input", function() {
+	if(this.value.length == 0){
+
+		$(".modifica").removeAttr("disabled");
+		$(".b").removeAttr("disabled");
+
+
+	} else {
+
+
+		$(".modifica").attr("disabled", "disabled");
+		$(".b").attr("disabled", "disabled");
+	}
+
+
+});
+
+$(".input-nome-lezione2").on("input", function() {
+	if(this.value.length == 0){
+
+		$(".modifica").removeAttr("disabled");
+		$(".b").removeAttr("disabled");
+
+
+	} else {
+
+
+		$(".modifica").attr("disabled", "disabled");
+		$(".b").attr("disabled", "disabled");
+	}
+
+
+});
+
+
+$(".input-nome-lezione3").on("input", function() {
+	if(this.value.length == 0){
+
+		$(".modifica").removeAttr("disabled");
+		$(".b").removeAttr("disabled");
+
+
+	} else {
+
+
+		$(".modifica").attr("disabled", "disabled");
+		$(".b").attr("disabled", "disabled");
+	}
+
+
+});
+
+
+

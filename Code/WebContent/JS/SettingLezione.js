@@ -228,22 +228,6 @@ function disableButton(x, up, down){
 	}
 }
 
-$("#nome-lezione").on("input", function() {
-	if(this.value.length == 0){
-
-		$(".modifica").removeAttr("disabled");
-		$(".b").removeAttr("disabled");
-
-
-	} else {
-
-
-		$(".modifica").attr("disabled", "disabled");
-		$(".b").attr("disabled", "disabled");
-	}
-
-
-});
 
 function annulla(form){
 
@@ -661,7 +645,7 @@ function refreshPage(){
 
 
 function checkNome(nome){
-	var nameValidator = /^[a-zA-Z\s\!\-\d]{5,50}/;
+	var nameValidator = /^[a-zA-Z\s\!\-\d]{5,50}$/;
 
 	if(nome == ""){
 		

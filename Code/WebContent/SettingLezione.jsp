@@ -159,7 +159,8 @@
 			<ul style="list-style: none; padding-left: 0px !important">
 				<li class="d-inline"><label>Nome Lezione:</label> <input
 					type="text" id="nome-lezione" class="input-nome-lezione1"></li>
-				<li class="d-inline"><input id="input1" type="file" max="1" name="file">
+				<li class="d-inline"><input id="input1" type="file" max="1"
+					name="file">
 					<button id="b1" class="btn btn-success upload	">UPLOAD
 						LEZIONE</button> <i id="bLez1" style="font-size: 1.5rem; margin-left: 5px;"
 					class="fas fa-plus-circle fa-2x" id="bLez1"></i></li>
@@ -174,14 +175,14 @@
 			<ul style="list-style: none; padding-left: 0px !important">
 				<li class="d-inline"><label>Nome Lezione:</label> <input
 					type="text" id="nome-lezione" class="input-nome-lezione2"></li>
-				<li class="d-inline"><input id="input2" type="file" max="1" name="file">
-					<button id="b2" class="btn btn-success upload2" >UPLOAD
+				<li class="d-inline"><input id="input2" type="file" max="1"
+					name="file">
+					<button id="b2" class="btn btn-success upload2">UPLOAD
 						LEZIONE</button> <i id="bLez2" style="font-size: 1.5rem; margin-left: 5px;"
 					class="fas fa-plus-circle fa-2x "></i>
-
 			</ul>
 
-			<div onclick="return validateLez()" id="uploadsA"></div>
+			<div onclick="return validateLez()" id="uploadsB"></div>
 
 		</div>
 		<div id="lezione3" class=" d-none card-body body-ins-lezione">
@@ -189,21 +190,24 @@
 			<ul style="list-style: none; padding-left: 0px !important">
 				<li class="d-inline"><label>Nome Lezione:</label> <input
 					type="text" id="nome-lezione" class="input-nome-lezione3"></li>
-				<li class="d-inline"><input id="input3" type="file" max="1" name="file">
-					<button id="b3" class="btn btn-success upload3 " >UPLOAD
+				<li class="d-inline"><input id="input3" type="file" max="1"
+					name="file">
+					<button id="b3" class="btn btn-success upload3 ">UPLOAD
 						LEZIONE</button>
 			</ul>
 
-			<div onclick="return validateLez()" id="uploadsA"></div>
+			<div onclick="return validateLez()" id="uploadsC"></div>
 
 
 		</div>
 		<button onclick="refreshPage()" disabled="disabled" id="btnFine"
-			class="btn btn-success btn-lg btn-block">AGGIUNGI ALLA LISTA LEZIONI </button>
+			class="btn btn-success btn-lg btn-block">AGGIUNGI ALLA LISTA
+			LEZIONI</button>
 	</div>
 
 
 	<script src="JS/SettingLezione.js"></script>
+	<script src="JS/alertify.js-0.3.11/lib/alertify.min.js"></script>
 	<script src="JS/simpleUpload.min.js"></script>
 	<script src="JS/scriptUpload.js"></script>
 

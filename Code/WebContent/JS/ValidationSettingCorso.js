@@ -15,7 +15,7 @@ function validateCorso(formSettingCorso) {
 
 	//Save all matches in a variable
 
-	var nameValidator = /^[a-zA-Z\s\!\-\d]{5,50}/;
+	var nameValidator = /^[a-zA-Z\s\!\-\d]{5,50}$/;
 	var prezzoValidator= /^[0-9]+$/;
 	//var usrIsOK = formRegistration.username.value.match(usrValidator);
 	var name = formSettingCorso.nome.value;
@@ -33,27 +33,33 @@ function validateCorso(formSettingCorso) {
 
 
 	if(!(name.match(nameValidator)) || name.length == 0 || name.length<5 || name.length >50){
-
-
-		alertify.error("("+name + ") non e' valido, prova con un nome che contenga almeno 5 caratteri e che non sia piu' lungo di 30 caratteri.");
-
+		alertify.error("("+name + ") non e' valido, prova con un nome che contenga almeno 5 caratteri, che non sia piu' lungo di 30 caratteri e che non contenga caratteri speciali diversi da !,- o numeri.");
+		$("#InputName").focus();
 		return false;
 	} else
 
 		if(desc.length==0 || desc.length<10 || desc.length>1048){
 			alertify.error("Descrizione non valida, la lunghezza del descrizione deve essere compresa tra 10 e 400 caratteri.");
+			$("#txtarea").focus();
 			return false;
 		} else 
-			if(isValidDate(date) == false){
-
+			if(date.length == 0 || isValidDate(date) == false){
+				alertify.error("Riempi la data con valori corretti.");
+				$("#data").focus();
 				return false;
 
 			} else
-				if(!(prezzo.match(prezzoValidator)) || prezzo == 0 || prezzo<=0) {
-					alertify.error("Prezzo non valido, il prezzo deve essere superiore o uguale a 1 "+String.fromCharCode(8364)+".");
+				if(!(prezzo.match(prezzoValidator)) || prezzo<=0) {
+					alertify.error("Prezzo non valido, il prezzo non deve contere lettere e deve essere superiore o uguale a 1 "+String.fromCharCode(8364)+".");
+					$("#InputPrezzo").focus();
 					return false;
 
-				} else
+				} if(!$("#InputImmCop").val()){
+					alertify.error("Il campo Immagine di Copertina non può essere vuoto.");
+					$("#InputImmCop").focus();
+					return false;
+					
+				}else
 
 
 					return true; //Grant access
@@ -93,15 +99,6 @@ function isValidDate(dateString)
 		
 		alertify.error("Il mese deve essere successiva a quello odierna");
 		return false;
-
-		
-	} else {
-		
-		if(day <= dd){
-			alertify.error("Il giorno deve essere successiva a quello odierno");
-			return false;
-			
-		}
 		
 	}
 
