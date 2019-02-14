@@ -31,11 +31,9 @@
 <script type="text/javascript" src="JS/jquery-3.3.1.js"></script>
 <script type="text/javascript" src="JS/jquery-ui.js"></script>
 <!-- include the core styles -->
-<link rel="stylesheet"
-	href="JS/alertify.js-0.3.11/themes/alertify.core.css" />
+<link rel="stylesheet" href="JS/alertify.js-0.3.11/themes/alertify.core.css" />
 <!-- include a theme, can be included into the core instead of 2 separate files -->
-<link rel="stylesheet"
-	href="JS/alertify.js-0.3.11/themes/alertify.default.css" />
+<link rel="stylesheet" href="JS/alertify.js-0.3.11/themes/alertify.default.css" />
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
 	integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"

@@ -88,14 +88,15 @@
 
 	<div style="margin-bottom: 20px;" class="card w-75 mx-auto text-center">
 		<div class="card-header text-center">COMMENTI</div>
-		<form action="YouLearn/InsCommentoServlet" method="post">
+		<form name="formCommento" action="YouLearn/InsCommentoServlet"
+			method="post" onsubmit="return validateCommento(formCommento)">
 			<div class="card-body">
 
-				<textarea id="txtarea" name="testoCommento"
+				<textarea id="txtarea" name="testoCommento" id="txtArea"
 					placeholder="Inserisci qui il tuo commento!" class="text-center"></textarea>
 			</div>
 			<div>
-				<button type="submit" style="margin: 0px 5px 10px;"
+				<button type="submit" id="btnTextArea" style="margin: 0px 5px 10px;"
 					formaction="http://localhost:8080/YouLearn/InsCommentoServlet?idLezione=<%=lezione.getIdLezione()%>"
 					class="btn float-right btn-success">AGGIUNGI COMMENTO</button>
 			</div>
@@ -146,21 +147,35 @@
 			<!--  <fieldset><%=c.getTesto()%></fieldset> -->
 			<section style="margin-bottom: 10px;">
 				<fieldset>
-					<legend class="mr-auto" style="text-align: left	; margin-left:15px;">
-						<div class="text-center"><b> Docente <%=c.getAccountCreatore().getNome() %></b></div>
+					<legend class="mr-auto"
+						style="text-align: left; margin-left: 15px;">
+						<div class="text-center">
+							<b> Docente <%=c.getAccountCreatore().getNome()%></b>
+						</div>
 					</legend>
-					<label> <%=c.getTesto()%><br /> </label> 
+					<label> <%=c.getTesto()%>
+					<%
+						if (c.getLezione().getCorso().getDocente().getMail().equals(account.getMail())) {
+					%>
+					</label> <label style="float: right; margin-right: 15px;"><a
+						onclick="confirm('Sei sicuro di voler cancellare il commento?')"
+						href="http://localhost:8080/YouLearn/CancCommentoServlet?idCommento=<%=c.getIdCommento()%>&idLezione=<%=c.getLezione().getIdLezione()%>">
+							<i style="color: red;" class="fas fa-times"></i>
+					</a></label>
+					<%} %>
 				</fieldset>
 			</section>
 
+
+
 			<!-- <div id="com-doc" class=" card-body rounded border border-success"><%=c.getTesto()%></div> -->
 			<%
-					x = 1;
+				x = 1;
 
-							}
 						}
-						if (x == 0) {
-				%>
+					}
+					if (x == 0) {
+			%>
 
 			<div class="card-body">
 				<div id="com-doc" class=" card-body rounded border border-success ">
@@ -170,8 +185,8 @@
 			</div>
 
 			<%
-					}
-				%>
+				}
+			%>
 
 		</div>
 
@@ -186,23 +201,29 @@
 						if (!c.getAccountCreatore().getMail().equals(lezione.getCorso().getDocente().getMail())) {
 			%>
 
-			 <section style="margin-bottom: 10px;">
+			<section style="margin-bottom: 10px;">
 				<fieldset>
-					<legend class="mr-auto" style="text-align: left	; margin-left:15px;">
+					<legend class="mr-auto"
+						style="text-align: left; margin-left: 15px;">
 						<div class="text-center">
-						<%if(c.getAccountCreatore().getMail().equals(account.getMail())){ %>
-							<b> Tu</b>
-						<%} else { %>
-						<b> <%=c.getAccountCreatore().getNome() %></b>
-						<% }%>
+							<b><%=c.getAccountCreatore().getNome()%></b>
 						</div>
 					</legend>
-					
-					<label> <%=c.getTesto()%><br /> </label> 
+					<label> <%=c.getTesto()%>
+					</label>
+					<%
+						if (c.getLezione().getCorso().getDocente().getMail().equals(account.getMail()) || c.getAccountCreatore().getMail().equals(account.getMail())) {
+					%>
+					<label style="float: right; margin-right: 15px;"><a onclick="confirm('Sei sicuro di voler cancellare il commento?')"
+						href="http://localhost:8080/YouLearn/CancCommentoServlet?idCommento=<%=c.getIdCommento()%>&idLezione=<%=c.getLezione().getIdLezione()%>">
+						<i style="color: red;" class="fas fa-times"></i></a></label>
+					<%
+						}
+					%>
 				</fieldset>
 			</section>
 
-			 <!-- <div id="com-doc" class=" card-body rounded border border-success"><%=c.getTesto()%></div> --> 
+			<!-- <div id="com-doc" class=" card-body rounded border border-success"><%=c.getTesto()%></div> -->
 
 			<%
 				y = 1;
@@ -216,8 +237,9 @@
 				scrivi tu il primo commento!
 			</div>
 
-			<%}
-				
+			<%
+				}
+
 				}
 			%>
 
@@ -233,6 +255,9 @@
 
 	<%@ include file="Footer.jsp"%>
 
+	<script src="JS/Lezione.js"></script>
+
+
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script
@@ -243,6 +268,7 @@
 		src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
 		integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
 		crossorigin="anonymous"></script>
+	<script src="JS/alertify.js-0.3.11/lib/alertify.min.js"></script>
 
 </body>
 </html>

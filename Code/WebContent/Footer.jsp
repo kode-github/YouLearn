@@ -19,7 +19,7 @@
 <body>
 
 	
-        <div class="icon-footer" id="footer">
+        <div class="icon-footer" id="footer" style="width: 100%!important">
             <i class="icon-footer fab fa-twitter fa-2x"></i>
             <i class="icon-footer fab fa-facebook-f fa-2x"></i>
             <i class="icon-footer fab fa-instagram fa-2x"></i>

@@ -185,7 +185,7 @@
 									style="margin-bottom: 10px; text-align: center;">
 									<div class="form-group">
 										<input type="email" name="newMail" class="form-control"
-											placeholder="Inserisci la tua nuova e-mail">
+											placeholder="Inserisci la tua nuova e-mail" required="required">
 									</div>
 									<button type="submit"
 										onclick="return confirm('Sei sicuro di voler continuare?\nLa tua email verrà moodificata!')"

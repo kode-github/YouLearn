@@ -610,7 +610,7 @@ public class CorsoManager {
 		
 		
 		
-		return  corso.getNome()!=null && corso.getNome().matches("^[a-zA-Z\\s\\!\\-\\d]{5,50}")  &&
+		return  corso.getNome()!=null && corso.getNome().matches("^[a-zA-Z\\s\\!\\-\\d]{5,50}$")  &&
 				corso.getDataCreazione()!=null && corso.getDescrizione().length()<1048 && corso.getDescrizione().length()>10 
 				&& corso.getDataFine()!=null && corso.getDataCreazione().before(corso.getDataFine()) && 
 				corso.getDescrizione()!=null && corso.getDescrizione().length()<400  && corso.getCopertina()!=null

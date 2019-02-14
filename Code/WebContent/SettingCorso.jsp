@@ -61,14 +61,14 @@
 				onsubmit="return validateCorso(formSettingCorso)">
 				<div class="form-group">
 					<label for="InputName">TITOLO DEL CORSO</label> <input type="text"
-						required="required" name="nome" class="form-control"
+						 name="nome" class="form-control"
 						id="InputName" placeholder="Titolo" <%if(corso!=null) {%>
 						value=<%=corso.getNome() %> <%} %>>
 				</div>
 				<div class="form-group">
 					<label for="Input" >DESCRIZIONE DEL CORSO</label>
 					
-					<textarea id="txtarea" name="descrizione" required="required"
+					<textarea id="txtarea" name="descrizione" 
 				placeholder="Inserisci qui la descrizione!" class="form-control" class=" w-100"><%if(corso!=null){ %> <%=corso.getDescrizione() %> <%} %></textarea>
 				</div>
 				<div class="form-group">
@@ -94,15 +94,15 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="InputName">SCADENZA ISCRIZIONE CORSO</label> <input
-						required="required" type="date" name="dataScadenza"
+					<label>SCADENZA ISCRIZIONE CORSO</label> <input
+						 type="date" name="dataScadenza" id="data"
 						class="form-control" placeholder="AAAA/MM/GG"
 						<%if(corso!=null){ %> value="<%=corso.getDataFine().toString() %>"
 						<%} %>>
 
 				</div>
 				<div class="form-group">
-					<label for="InputPrezzo">PREZZO</label> <input required="required"
+					<label for="InputPrezzo">PREZZO</label> <input 
 						type="text" name="prezzo" class="form-control" id="InputPrezzo"
 						placeholder="Prezzo" <%if(corso!=null){ %>
 						value="<%=corso.getPrezzo()%>" <%} %>>
@@ -110,7 +110,7 @@
 				</div>
 				<div class="form-group">
 					<label for="InputImmCop">IMMAGINE DI COPERTINA</label> <input
-						type="file" accept=".jpg,.png" class="form-control" required="required"
+						type="file" accept=".jpg,.png" class="form-control" 
 						id="InputImmCop" placeholder="" name="CARICA FILE">
 				</div>
 				<div class="row">

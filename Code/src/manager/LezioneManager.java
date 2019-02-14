@@ -89,10 +89,6 @@ public class LezioneManager {
     		}
 		});
 
-    	//STAMPIAMO I NUMERI LEZIONE
-    	for(int i=0;i<lezione.size();i++)
-    		System.out.println("idLezione: "+lezione.get(i).getIdLezione()+" nuovo numero: "+map.get(lezione.get(i).getIdLezione())+"\n");
-
     	for(int i=0;i<numeriLezione.size();i++) {
     		if(numeriLezione.get(i)!=i+1) throw new DatiErratiException("I numeri lezione non sono consecutivi");
     	}
@@ -571,7 +567,7 @@ public class LezioneManager {
 			if(lezione.getFilePath()==null || lezione.getNumeroLezione()<=0
 			|| lezione.getVisualizzazioni()<0)
 				return false;
-		return lezione.getNome()!=null && lezione.getNome().matches("^[a-zA-Z0-9\\.\\s:-]{5,30}") &&
+		return lezione.getNome()!=null && lezione.getNome().matches("^[a-zA-Z\\s\\!\\-\\d]{5,50}$") &&
 				  lezione.getCorso()!=null;
 
 
