@@ -24,7 +24,7 @@ import manager.LezioneManager;
  * Servlet implementation class InsLezioneServlet
  */
 @WebServlet("/InsLezioneServlet")
-@MultipartConfig(fileSizeThreshold= 1024*1024*150, maxFileSize=1024*1024*150, maxRequestSize=1024*1024*150 ) //TODO Va controllata la dimensione 
+@MultipartConfig(fileSizeThreshold= 1024*1024*500, maxFileSize=1024*1024*500, maxRequestSize=1024*1024*500 ) //TODO Va controllata la dimensione 
 public class InsLezioneServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -73,9 +73,13 @@ public class InsLezioneServlet extends HttpServlet {
 				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 				e.printStackTrace();
 			} catch (DatiErratiException e) {
-				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
+				request.getSession().setAttribute("inavlidType", "true");
+				response.sendRedirect(request.getContextPath()+File.separator+"SettingLezione.jsp?idCorso="+idCorso);
 				e.printStackTrace();
 			} catch (NullPointerException e) {
+				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
+				e.printStackTrace();
+			} catch(IOException e) {
 				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 				e.printStackTrace();
 			}

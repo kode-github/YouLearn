@@ -524,8 +524,8 @@ $(".UPL").click(function(){
 	} else	
 	if(!f.value){
 		
-		alert("riempi il file");
-		return false;
+		//alert("riempi il file");
+		//return false;
 	}
 	
 
@@ -564,16 +564,16 @@ $(".UPL").click(function(){
 	else{
 		f.simpleUpload("http://localhost:8080/YouLearn/ModificaLezioneServlet?name="+$(text).val()+"&idCorso="+ idCorso+"&idLezione="+$(divI).val(), {
 
-			allowedExts: ["jpg", "jpeg", "jpe", "jif", "jfif", "jfi", "png", "gif", "exe","mp4"],
-			allowedTypes: ["video/mp4" ,"image/pjpeg", "image/jpeg", "image/png", "image/x-png", "image/gif", "image/x-gif", "application/x-dosexe"],
-			maxFileSize: 50000000, //50 MB in bytes
+			allowedExts: ["mp4"],
+			allowedTypes: ["video/mp4"],
+			maxFileSize: 500000000, //500 MB in bytes
 
 			start: function(file){
 				//Modificare nome file con file.name=qualcosa
 
 				this.block = $('<div class="block"></div>');
-				this.progressBar = $('<div class="progressBar"></div>');
-				this.cancelButton = $('<div class="cancelButton">x</div>');
+				this.progressBar = $('<div class="progressBar">aaa</div>');
+				this.cancelButton = $('<div class="cancelButton">X</div>');
 
 				/*
 				 * Since "this" differs depending on the function in which it is called,

@@ -41,6 +41,7 @@ public class CancLezioneServelt extends HttpServlet {
             	LezioneBean lezione=account.getCorsoTenuto(idCorso).getLezione(idLezione);
 				manager.delLezione(lezione);
 				account.getCorsoTenuto(idCorso).removeLezione(lezione);
+				request.getSession().setAttribute("updated", "true");
 	        	response.sendRedirect(request.getContextPath()+"/SettingLezione.jsp?idCorso="+idCorso);
 			} catch (SQLException e) {
 				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
@@ -49,6 +50,9 @@ public class CancLezioneServelt extends HttpServlet {
 				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 				e.printStackTrace();
 			} catch (NotFoundException e) {
+				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
+				e.printStackTrace();
+			} catch(IOException e) {
 				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 				e.printStackTrace();
 			}

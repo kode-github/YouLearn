@@ -3,7 +3,10 @@ package manager;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -184,7 +187,19 @@ public class LezioneManager {
 			statement.setInt(3, lezione.getCorso().getIdCorso());
 			statement.executeUpdate(); //inserisce nel db
 
-			file.write(path.toString()); //Scrivo il file sul disco
+			//file.write(path.toString()); //Scrivo il file sul disco
+			
+			InputStream in = file.getInputStream(); //Read data from a file
+			FileOutputStream out = new FileOutputStream(path.toString()); //Write data to a file
+			byte[] buffer = new byte[4096]; //Buffer size, Usually 1024-4096
+			int len;
+			while ((len = in.read(buffer, 0, buffer.length)) > 0) {
+			    out.write(buffer, 0, len);
+			}
+			//Close the FileStreams
+			in.close();
+			out.close();
+			
 
 			if(!c.getAutoCommit())
 				c.commit(); //conferma l'inserimento nel db
@@ -335,6 +350,7 @@ public class LezioneManager {
 				lezione.setCorso(corso);
 				collection.add(lezione);
 			}
+			corso.setLezioni(collection);
 		}finally {
 			try {
 			if(preparedStatement!=null)
@@ -583,8 +599,9 @@ public class LezioneManager {
 	 * @throws NotFoundException
 	 * @throws NotWellFormattedException
 	 * @throws IOException
+	 * @throws DatiErratiException 
 	 */
-	public synchronized void modificaLezione(LezioneBean lezione, Part part) throws SQLException, NotFoundException, NotWellFormattedException, IOException {
+	public synchronized void modificaLezione(LezioneBean lezione, Part part) throws SQLException, NotFoundException, NotWellFormattedException, IOException, DatiErratiException {
 		if(!checkLezione(lezione.getIdLezione())) throw new NotFoundException("La lezione non esiste");
 		if(!lezioneIsWellFormatted(lezione)) throw new NotWellFormattedException("La lezione non � ben formattata");
 
@@ -593,9 +610,9 @@ public class LezioneManager {
 		String filename = null,type=null;
 		String sql="Update Lezione set nome=?  where idLezione=?";
 		if(part!=null) {
-			filename=UUID.randomUUID().toString();
+			filename=lezione.getFilePath().substring(0,lezione.getFilePath().lastIndexOf('.'));
 			type=part.getSubmittedFileName().substring(part.getSubmittedFileName().indexOf('.'));
-			if(!type.equals(".mp4")) throw new IllegalArgumentException("La lezione non ha il formato sperato");
+			if(!type.equals(".mp4")) throw new DatiErratiException("La lezione non ha il formato sperato");
 			sql="Update Lezione set nome=?, filepath=? where idLezione=?"; //Modifico la stringa
 		}
 
@@ -617,7 +634,18 @@ public class LezioneManager {
 				Path path=Paths.get(PATH+File.separator+"Resources"+File.separator+lezione.getCorso().getIdCorso()+File.separator+
 						"Lezioni"+File.separator+filename+type);
 				lezione.setFilePath(filename+type);
-				part.write(path.toString());
+				if(Files.exists(path, LinkOption.NOFOLLOW_LINKS))
+					Files.delete(path);
+				InputStream in = part.getInputStream(); //Read data from a file
+				FileOutputStream out = new FileOutputStream(path.toString()); //Write data to a file
+				byte[] buffer = new byte[4096]; //Buffer size, Usually 1024-4096
+				int len;
+				while ((len = in.read(buffer, 0, buffer.length)) > 0) {
+				    out.write(buffer, 0, len);
+				}
+				//Close the FileStreams
+				in.close();
+				out.close();
 			}
 			if(!c.getAutoCommit())
 				c.commit();
@@ -657,6 +685,8 @@ public class LezioneManager {
 			ResultSet rs=statement.executeQuery();
 			rs.next();
 			lezione.setVisualizzazioni(rs.getInt("visualizzazione"));
+			if(!c.getAutoCommit())
+				c.commit();
 		}finally {
 				try{
 					if(statement!=null)

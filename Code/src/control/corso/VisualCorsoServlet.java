@@ -23,6 +23,7 @@ import exception.NotFoundException;
 import exception.NotWellFormattedException;
 import manager.CorsoManager;
 import manager.IscrizioneManager;
+import manager.LezioneManager;
 
 
 @WebServlet("/VisualCorsoServlet")
@@ -31,6 +32,7 @@ public class VisualCorsoServlet extends HttpServlet {
        
 	IscrizioneManager manager;
 	CorsoManager corsoManager;
+	LezioneManager lezioneManager;
 	
     public VisualCorsoServlet() {
         super();
@@ -40,7 +42,7 @@ public class VisualCorsoServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
         corsoManager=CorsoManager.getIstanza(getServletContext().getRealPath(""));
-
+        lezioneManager=LezioneManager.getIstanza("");
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 			try {
 				String ruolo=null;
@@ -64,6 +66,7 @@ public class VisualCorsoServlet extends HttpServlet {
 					if(ruolo==null) //Non sono il docente
 						while(iscrizioni.hasNext()) //controllo se sono iscritto
 							if((corso=(iscrizioni.next()).getCorso()).getIdCorso()==idCorso) {
+								System.out.println("SOno un iscritto al corso");
 								ruolo="iscritto";
 								break;
 							}
@@ -95,6 +98,8 @@ public class VisualCorsoServlet extends HttpServlet {
 					if(corso==null) throw new NotFoundException("Non � un corso da lui supervisionato");
 				}
 				manager.getIscrittiCorso(corso); //recupero le iscrizioni
+				if(ruolo.equals("iscritto"))
+					lezioneManager.retrieveLezioniByCorso(corso);
 				request.getSession().setAttribute("ruolo", ruolo); //Setto il ruolo in sessione
 				request.getSession().setAttribute("corso", corso);
 				request.getSession().setAttribute("updated", "true");

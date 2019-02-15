@@ -228,6 +228,7 @@ public class IscrizioneManager {
 			preparedStatement.setDouble(4,iscrizione.getImporto());
 			preparedStatement.setInt(5, Integer.parseInt(iscrizione.getFattura()));
 			preparedStatement.executeUpdate();
+			iscrizione.getCorso().setnIscritti(iscrizione.getCorso().getnIscritti()+1);
 			if(!connection.getAutoCommit())
 				connection.commit();
 		}finally {

@@ -1,5 +1,6 @@
 package control.lezione;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -22,7 +23,7 @@ import manager.LezioneManager;
  * Servlet implementation class ModificaLezioneServlet
  */
 @WebServlet("/ModificaLezioneServlet")
-@MultipartConfig(fileSizeThreshold= 1024*1024*150, maxFileSize=1024*1024*150, maxRequestSize=1024*1024*150 ) //TODO Va controllata la dimensione 
+@MultipartConfig(fileSizeThreshold= 1024*1024*500, maxFileSize=1024*1024*500, maxRequestSize=1024*1024*500 ) //TODO Va controllata la dimensione 
 public class ModificaLezioneServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -36,10 +37,11 @@ public class ModificaLezioneServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		manager=LezioneManager.getIstanza(getServletContext().getRealPath(""));
 		response.getWriter().append("Served at: ").append(request.getContextPath());
+		int idCorso = 0;
 		try {
     		AccountBean account=(AccountBean) request.getSession().getAttribute("account");
     		int idLezione=Integer.parseInt(request.getParameter("idLezione"));
-    		int idCorso=Integer.parseInt(request.getParameter("idCorso"));
+    		idCorso=Integer.parseInt(request.getParameter("idCorso"));
         	String tipo=request.getParameter("tipo");
         	System.out.println("idCorso="+idCorso +", idLezione="+ idLezione);
         	LezioneBean lezione=account.getCorsoTenuto(idCorso).getLezione(idLezione);
@@ -55,15 +57,24 @@ public class ModificaLezioneServlet extends HttpServlet {
 			manager.modificaLezione(lezione,part);
         	response.sendRedirect(request.getContextPath()+"/SettingLezione.jsp?idCorso="+idCorso);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 			e.printStackTrace();
-		} catch (NotFoundException e) {
-			// TODO Auto-generated catch block
+		} catch (DatiErratiException e) {
+			request.getSession().setAttribute("inavlidType", "true");
+			response.sendRedirect(request.getContextPath()+File.separator+"SettingLezione.jsp?idCorso="+idCorso);
 			e.printStackTrace();
-		} catch (NotWellFormattedException e) {
-			// TODO Auto-generated catch block
+		} catch (NullPointerException e) {
+			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 			e.printStackTrace();
 		} catch(IOException e) {
+			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
+			e.printStackTrace();
+		} catch (NotFoundException e) {
+			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
+			e.printStackTrace();
+		} catch (NotWellFormattedException e) {
+			request.getSession().setAttribute("invalidLesson", "true");
+			response.sendRedirect(request.getContextPath()+File.separator+"SettingLezione.jsp?idCorso="+idCorso);
 			e.printStackTrace();
 		}
 		

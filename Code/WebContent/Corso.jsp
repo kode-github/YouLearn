@@ -169,7 +169,7 @@
 			<ul class="informazioni-corso rounded float-left">
 				<li><a
 					href="http://localhost:8080/YouLearn/Lezione.jsp?idLezione=<%=e.getIdLezione()%>"><%=e.getNome() %></a></li>
-				<li><%=e.getVisualizzazioni() %></li>
+				<li>N°Visualizzazioni:<%=e.getVisualizzazioni() %></li>
 
 
 			</ul>

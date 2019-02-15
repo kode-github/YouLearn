@@ -157,16 +157,16 @@ $(document).ready(function(){
 
 		f.simpleUpload("http://localhost:8080/YouLearn/InsLezioneServlet?name="+text.val()+"&idCorso="+ idCorso, {
 
-			allowedExts: ["jpg", "jpeg", "jpe", "jif", "jfif", "jfi", "png", "gif", "exe","mp4"],
-			allowedTypes: ["video/mp4" ,"image/pjpeg", "image/jpeg", "image/png", "image/x-png", "image/gif", "image/x-gif", "application/x-dosexe"],
-			maxFileSize: 50000000, //50 MB in bytes
+			allowedExts: ["mp4"],
+			allowedTypes: ["video/mp4"],
+			maxFileSize: 500000000, //500 MB in bytes
 
 			start: function(file){
 				//Modificare nome file con file.name=qualcosa
 
 				this.block = $('<div class="block"></div>');
-				this.progressBar = $('<div class="progressBar"></div>');
-				this.cancelButton = $('<div class="cancelButton">x</div>');
+				this.progressBar = $('<div class="progressBar">aaaaaaaaaaaaaaaa</div>');
+				this.cancelButton = $('<div class="cancelButton">X</div>');
 
 				/*
 				 * Since "this" differs depending on the function in which it is called,
@@ -182,7 +182,7 @@ $(document).ready(function(){
 				});
 
 				this.block.append(this.progressBar).append(this.cancelButton);
-				$('.uploadsA').append(this.block);
+				$('#uploadsA').append(this.block);
 
 			},
 
@@ -269,12 +269,11 @@ $(document).ready(function(){
 
 		f.simpleUpload("http://localhost:8080/YouLearn/InsLezioneServlet?name="+text.val()+"&idCorso="+ idCorso, {
 
-			allowedExts: ["jpg", "jpeg", "jpe", "jif", "jfif", "jfi", "png", "gif", "exe","mp4"],
-			allowedTypes: ["video/mp4" ,"image/pjpeg", "image/jpeg", "image/png", "image/x-png", "image/gif", "image/x-gif", "application/x-dosexe"],
-			maxFileSize: 50000000, //50 MB in bytes
+			allowedExts: ["mp4"],
+			allowedTypes: ["video/mp4"],
+			maxFileSize: 500000000, //500 MB in bytes
 
 			start: function(file){
-				//Modificare nome file con file.name=qualcosa
 
 				this.block = $('<div class="block"></div>');
 				this.progressBar = $('<div class="progressBar"></div>');
@@ -294,7 +293,7 @@ $(document).ready(function(){
 				});
 
 				this.block.append(this.progressBar).append(this.cancelButton);
-				$('.uploadsB').append(this.block);
+				$('#uploadsB').append(this.block);
 
 			},
 
@@ -382,9 +381,9 @@ $(document).ready(function(){
 
 		f.simpleUpload("http://localhost:8080/YouLearn/InsLezioneServlet?name="+text.val()+"&idCorso="+ idCorso, {
 
-			allowedExts: ["jpg", "jpeg", "jpe", "jif", "jfif", "jfi", "png", "gif", "exe","mp4"],
-			allowedTypes: ["video/mp4" ,"image/pjpeg", "image/jpeg", "image/png", "image/x-png", "image/gif", "image/x-gif", "application/x-dosexe"],
-			maxFileSize: 50000000, //50 MB in bytes
+			allowedExts: ["mp4"],
+			allowedTypes: ["video/mp4"],
+			maxFileSize: 500000000, //500 MB in bytes
 
 			start: function(file){
 				//Modificare nome file con file.name=qualcosa
@@ -407,7 +406,7 @@ $(document).ready(function(){
 				});
 
 				this.block.append(this.progressBar).append(this.cancelButton);
-				$('.uploadsC').append(this.block);
+				$('#uploadsC').append(this.block);
 
 			},
 
