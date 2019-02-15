@@ -1,5 +1,7 @@
 package manager;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -634,5 +636,36 @@ public class LezioneManager {
 
 	}
 
-
+	public void increaseVisualizzazioni(LezioneBean lezione) throws SQLException, NotFoundException {
+		if(lezione==null) throw new NullPointerException("La lezione non può essere null");
+		if(!checkLezione(lezione.getIdLezione())) throw new NotFoundException("La lezione non esiste");
+		PreparedStatement statement=null;
+		Connection c=null;
+		java.sql.CallableStatement callableStatement=null;
+		String sql="Select visualizzazione from lezione where idLezione=?";
+		try {
+			c=DriverManagerConnectionPool.getConnection();
+			//Aggiorno le visualizzazioni
+			callableStatement=c.prepareCall("{ call increaseVisualizzazioni(?) }");
+			callableStatement.setInt(1,lezione.getIdLezione());
+			callableStatement.execute();
+			System.out.println("Increase visualizzaizoni: "+callableStatement.toString());
+			//Recupero il nuovo numero di visualizzazioni
+			statement=c.prepareStatement(sql);
+			statement.setInt(1, lezione.getIdLezione());
+			System.out.println("GetVisualizzazioni: "+statement.toString());
+			ResultSet rs=statement.executeQuery();
+			rs.next();
+			lezione.setVisualizzazioni(rs.getInt("visualizzazione"));
+		}finally {
+				try{
+					if(statement!=null)
+						statement.close();
+					if(callableStatement!=null)
+						callableStatement.close();
+				}finally {
+					DriverManagerConnectionPool.releaseConnection(c);
+				}
+		}
+	}
 }

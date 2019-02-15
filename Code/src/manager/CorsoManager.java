@@ -242,8 +242,10 @@ public class CorsoManager {
 	 * Aggiorna un corso
 	 * @param corso
 	 * @throws SQLException
+	 * @throws NotWellFormattedException 
 	 */
-	public synchronized void doUpdate(CorsoBean corso) throws SQLException {
+	public synchronized void doUpdate(CorsoBean corso) throws SQLException, NotWellFormattedException {
+		if(corso==null || !isWellFormatted(corso)) throw new NotWellFormattedException("Il corso non è ben formattato");
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
@@ -374,7 +376,7 @@ public class CorsoManager {
 	 * @throws SQLException
 	 */
 	public synchronized void convalidaCorso(boolean accetta,CorsoBean corso) throws NotFoundException, NotWellFormattedException, NoPermissionException, SQLException {
-		//if(!isWellFormatted(corso) || corso.getIdCorso()==null) throw new NotWellFormattedException("Il corso non ï¿½ ben formattato");
+		if(corso.getIdCorso()==null || !isWellFormatted(corso) ) throw new NotWellFormattedException("Il corso non ï¿½ ben formattato");
 		if(!checkCorso(corso.getIdCorso())) throw new NotFoundException("Il corso non esiste");
 		if(!corso.getStato().equals(Stato.Attesa)) throw new NoPermissionException("Non si puï¿½ confermare un corso non in attesa");
 		
@@ -394,7 +396,7 @@ public class CorsoManager {
 	 * @throws SQLException
 	 */
 	public synchronized void confermaCorso(CorsoBean corso) throws NotWellFormattedException, NotFoundException, NoPermissionException, SQLException {
-		if(corso==null || !isWellFormatted(corso) || corso.getIdCorso()==null) throw new NotWellFormattedException("Il corso non ï¿½ ben formattato");
+		if(corso==null || corso.getIdCorso()==null || !isWellFormatted(corso)) throw new NotWellFormattedException("Il corso non ï¿½ ben formattato");
 		if(!checkCorso(corso.getIdCorso())) throw new NotFoundException("Il corso non esiste");
 		if(!corso.getStato().equals(Stato.Completamento)) throw new NoPermissionException("Non si puï¿½ confermare un corso non in completamento");
 		
@@ -419,7 +421,7 @@ public class CorsoManager {
 	public synchronized Collection<CorsoBean> retrieveByCreatore(AccountBean account) throws NoPermissionException, SQLException, NotFoundException, NotWellFormattedException {
 		accountManager= AccountManager.getIstanza();
 		lezioneManager= LezioneManager.getIstanza("");
-		if(!accountManager.isWellFormatted(account)) throw new NotWellFormattedException("L'account non ï¿½ ben formattato");
+		if(account==null || !accountManager.isWellFormatted(account)) throw new NotWellFormattedException("L'account non ï¿½ ben formattato");
 		if(!accountManager.checkAccount(account)) throw new NotFoundException("Questo account non esiste");
 		if(!account.getTipo().equals(Ruolo.Utente)) throw new NoPermissionException("Questo utente non puï¿½ avere corsi creati");
 		
@@ -479,6 +481,7 @@ public class CorsoManager {
 	public synchronized Collection<CorsoBean> doRetrieveBySupervisore(AccountBean account) throws SQLException, NotFoundException, NoPermissionException, NotWellFormattedException {
 		accountManager= AccountManager.getIstanza();
 		lezioneManager= LezioneManager.getIstanza("");
+		if(account==null) throw new NotWellFormattedException("l'account è null");
 		if(!accountManager.isWellFormatted(account)) throw new NotWellFormattedException("L'account non ï¿½ ben formattato");
 		if(!accountManager.checkAccount(account)) throw new NotFoundException("Questo account non esiste");
 		if(!account.getTipo().equals(Ruolo.Supervisore)) throw new NoPermissionException("Questo utente non puï¿½ avere corsi da supervisionare");
@@ -537,6 +540,7 @@ public class CorsoManager {
 	 * @throws SQLException 
 	 */
 	public synchronized boolean checkCorso(CorsoBean corso) throws SQLException {
+		if(corso==null) return false;
 		Connection connection=null;
 		PreparedStatement statement=null;
 		
@@ -607,10 +611,8 @@ public class CorsoManager {
 	 * @return
 	 */
 	public synchronized boolean isWellFormatted(CorsoBean corso) {
-		
-		
-		
-		return  corso.getNome()!=null && corso.getNome().matches("^[a-zA-Z\\s\\!\\-\\d]{5,50}$")  &&
+		if(corso==null) return false;
+		return  corso.getNome()!=null && corso.getNome().matches("^[a-zA-Zèòàùì\\s\\!\\-\\d]{5,50}$")  &&
 				corso.getDataCreazione()!=null && corso.getDescrizione().length()<1048 && corso.getDescrizione().length()>10 
 				&& corso.getDataFine()!=null && corso.getDataCreazione().before(corso.getDataFine()) && 
 				corso.getDescrizione()!=null && corso.getDescrizione().length()<400  && corso.getCopertina()!=null

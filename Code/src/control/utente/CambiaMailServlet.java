@@ -47,7 +47,6 @@ public class CambiaMailServlet extends HttpServlet {
 			//Non pu� succedere per via dei filtri
 			e.printStackTrace();
 		} catch (NoPermissionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (AlreadyExistingException e) {
 			request.getSession().setAttribute("emailGiaEsistente", true);

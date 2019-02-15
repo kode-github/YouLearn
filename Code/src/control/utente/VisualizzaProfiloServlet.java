@@ -35,9 +35,7 @@ public class VisualizzaProfiloServlet extends HttpServlet {
         manager=CorsoManager.getIstanza(getServletContext().getRealPath(""));
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		HttpSession session=request.getSession();
-		AccountBean account=(AccountBean) request.getSession().getAttribute("account");
-		System.out.println(getServletContext().getRealPath(""));
-		
+		AccountBean account=(AccountBean) request.getSession().getAttribute("account");		
 				try {
 					if(account.getTipo().equals(Ruolo.Utente)) {
 						manager.retrieveByCreatore(account);

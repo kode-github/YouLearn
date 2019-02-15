@@ -37,9 +37,10 @@ public class CancCommentoServlet extends HttpServlet {
 				int idCommento=Integer.parseInt(request.getParameter("idCommento"));
 				int idLezione=Integer.parseInt(request.getParameter("idLezione"));
 				AccountBean account=(AccountBean) request.getSession().getAttribute("account");
+				manager.delCommento(idCommento);
 				request.getSession().setAttribute("cancCommento", "true");
 				response.sendRedirect(request.getContextPath()+"/Lezione.jsp?idLezione="+idLezione);
-					manager.delCommento(idCommento);
+				
 				} catch (NotFoundException e) {
 					request.getSession().setAttribute("cancCommento", "false");
 					response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");

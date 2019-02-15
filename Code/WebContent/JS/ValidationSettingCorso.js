@@ -15,7 +15,7 @@ function validateCorso(formSettingCorso) {
 
 	//Save all matches in a variable
 
-	var nameValidator = /^[a-zA-Z\s\!\-\d]{5,50}$/;
+	var nameValidator = /^[a-zA-Zàèòìù\s\!\-\d]{5,50}$/;
 	var prezzoValidator= /^[0-9]+$/;
 	//var usrIsOK = formRegistration.username.value.match(usrValidator);
 	var name = formSettingCorso.nome.value;
@@ -32,7 +32,7 @@ function validateCorso(formSettingCorso) {
 
 
 
-	if(!(name.match(nameValidator)) || name.length == 0 || name.length<5 || name.length >50){
+	if(!(name.match(nameValidator))){
 		alertify.error("("+name + ") non e' valido, prova con un nome che contenga almeno 5 caratteri, che non sia piu' lungo di 30 caratteri e che non contenga caratteri speciali diversi da !,- o numeri.");
 		$("#InputName").focus();
 		return false;

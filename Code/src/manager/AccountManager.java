@@ -39,6 +39,7 @@ public class AccountManager {
 	 * @throws NoPermissionException 
 	 */
 	public AccountBean doRetrieveByKey(String code) throws SQLException,NotFoundException {
+		if(code==null) return null;
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		AccountBean temp=new AccountBean();
@@ -83,7 +84,7 @@ public class AccountManager {
 	 */
 	public void modificaPassword(String email, String pass) throws SQLException, NotFoundException, NoPermissionException,NotWellFormattedException {
 		if(!checkMail(email)) throw new NotFoundException("L'account non esiste");
-		//TODO Controllo sul formato della password
+		if(email==null || pass==null || !pass.matches("^[a-zA-Z 0-9 \\@\\._\\!\\?\\-]{8,45}$")) throw new IllegalArgumentException("I dati non sono corretti");
 		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -122,7 +123,10 @@ public class AccountManager {
 	 * @throws AlreadyExistingException 
 	 */
 	public void modificaMail(String email, String newMail) throws SQLException, NotFoundException, NoPermissionException, AlreadyExistingException {
-		//Controlli sui formati delle mail
+		if(email==null || newMail==null || !email.matches("^\\w+([\\._\\-]?\\w+)*@\\w+([\\.\\-]?\\w+)*(\\.\\w+)+$")
+				|| !newMail.matches("^\\w+([\\._\\-]?\\w+)*@\\w+([\\.\\-]?\\w+)*(\\.\\w+)+$"))
+			throw new IllegalArgumentException("Le mail non sono corrette");
+		
 		if(!checkMail(email)) throw new NotFoundException("L'account non esiste");
 		if(checkMail(newMail)) throw new AlreadyExistingException("La mail esiste gia");
 		Connection connection = null;
@@ -163,26 +167,21 @@ public class AccountManager {
 	 * @throws NotWellFormattedException 
 	 */
 	public AccountBean login(String email, String password) throws SQLException, NotFoundException, DatiErratiException, NoPermissionException, NotWellFormattedException {
+		if(email==null || password==null) throw new IllegalArgumentException("I valori non possono essere null");
 		AccountBean temp=doRetrieveByKey(email); //NotFoundException se non esiste
 		if(!temp.getPassword().equals(password)) throw new DatiErratiException("Le password non corrispondono"); 
 		
 		managerCarta= CartaDiCreditoManager.getIstanza();
-
 		
-		if(temp.getTipo().equals(Ruolo.Utente)) {
-			managerCarta.retrieveByAccount(temp); //recupero la carta
-//			managerCorso.retrieveByCreatore(temp); //recupero gli account da lui creati
-//			managerIscrizione.getIscrizioniUtente(temp); //recupero gli account a cui � iscritto
-		}
-//		else {
-//			managerCorso.doRetrieveBySupervisore(temp); //recupero i corsi supervisionati
-//		}
-		temp.setPassword(""); //elimino la password in quanto va inserito in sessione
+		if(temp.getTipo().equals(Ruolo.Utente)) 
+			managerCarta.retrieveByAccount(temp);
+		temp.setPassword("");
 		return temp;
 	}
 	
 	/**
 	 * Registra un nuovo utente con la propria carta
+	 * USATO SOLO PER IL TESTING
 	 * @param user
 	 * @return
 	 * @throws NotWellFormattedException 
@@ -242,6 +241,7 @@ public class AccountManager {
 	 * @throws NotFoundException 
 	 */
 	public boolean checkMail(String email) throws SQLException, NoPermissionException {
+		if(email==null) return false;
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		
@@ -275,6 +275,7 @@ public class AccountManager {
 	 * @throws SQLException 
 	 */
 	public boolean checkAccount(AccountBean account) throws SQLException {
+		if(account==null) return false;
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		ResultSet rs;
@@ -309,6 +310,7 @@ public class AccountManager {
 	 * @param account
 	 */
 	public boolean isWellFormatted(AccountBean account) {
+		if(account==null) return false;
 			String nome=account.getNome();
 			String cognome=account.getCognome();
 			String password=account.getPassword();
@@ -316,9 +318,6 @@ public class AccountManager {
 					nome!=null && nome.matches("^[a-zA-Z]{4,25}$") && cognome!=null &&
 			cognome.matches("^[a-zA-Z]{4,25}$") && password!=null /*&& password.matches("^[a-zA-Z0-9_-\\.%]{5,30}$")*/ && account.getTipo()!=null;
 	
-//			}
-//		else 
-//			return false;
 	}
 
 	/**
