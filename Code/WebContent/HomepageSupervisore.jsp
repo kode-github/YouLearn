@@ -273,7 +273,8 @@
 							onclick="return confirm('Sei sicuro di voler continuare?\nIl corso verrà reso attivo e pubblicato sulla piattaforma!')"
 							formaction="http://localhost:8080/YouLearn/VerificaCorsoServlet?verifica=true&idCorso=<%=i.getIdCorso()%>"
 							class="btn btn-success btn-lg ">Conferma</button>
-						<button type="submit" formaction="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>" class="btn btn-outline-secondary btn-lg ">Vai
+						<button type="submit" formaction="http://localhost:8080/YouLearn/Corso.jsp?idCorso=<%=i.getIdCorso()%>" 
+						class="btn btn-outline-secondary btn-lg ">Vai
 							al corso</button>
 						<button type="submit"
 							onclick="return confirm('Sei sicuro di voler continuare?\nIl corso verrà reso nuovamente in Completamento e verrà inviata una notifica al docente creatore.!')"

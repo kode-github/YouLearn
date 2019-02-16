@@ -247,16 +247,6 @@ function annulla(form){
 	var button = liFile.children("button");
 	console.log(button);
 
-//	button = $('<button />').addClass('d-none btn btn-outline-secondary but').text('Modifica Lezione...');
-//	$(button).css("font-size","0.9rem");
-//	$(button).attr('name', 'modLezione');
-//	$(button).attr('type', 'button');
-
-//	var fileLezione = liFile.children("input[type=file]");
-//	$(liFile).text("");
-//	$(liFile).append(path);
-//	console.log($(liFile).text());
-
 	if($(btnModLezione).css("display") == "none"){
 
 		$(liFile).text("");
@@ -298,16 +288,10 @@ function modificaLezione(form){
 	var text = liText.children("input[type=text]");
 	var f = liFile.children("input[type=file]");
 
-//	path = $(liFile)
-//	.clone()    //clone the element
-//	.children() //select all the children
-//	.remove()   //remove all the children
-//	.end()  //again go back to selected element
-//	.text();    //get the text of element
 
 	console.log("ModificaLezione: " +path);
 	$(liFile).text("");
-	$(liFile).append("<input type='file' name='nomeL'>");
+	$(liFile).append("<input type='file' name='nomeL'><div id='uploads' class='uploads'>");
 
 	//var path2 =$("#file-lezione").text("CIAO");
 	var fileLezione = liFile.children("input[type=file]");
@@ -388,99 +372,6 @@ function updateNomeLezione(nome, idL, form){
 }
 
 
-//function sendDataUpload(text, f, idLezione){	
-
-
-//var div=$(this).parent();
-//var ul =div.children("ul");
-//console.log(ul);
-//var liText = ul.children("li").eq(0);
-//console.log(liText);
-//var liFile = ul.children("li").eq(1);
-//console.log(liFile);
-//var text = liText.children("input[type=text]");
-//var f = liFile.children("input[type=file]");
-//console.log($(text).val());
-//console.log(f.val());
-
-
-//var idCorso= getUrlParameter('idCorso');
-//console.log("Questo è: "+idCorso);
-
-//f.simpleUpload("http://localhost:8080/YouLearn/ModificaLezioneServlet?name="+$(text).val()+"&idCorso="+ idCorso+"&idLezione="+idLezione.value, {
-
-//allowedExts: ["jpg", "jpeg", "jpe", "jif", "jfif", "jfi", "png", "gif", "exe","mp4"],
-//allowedTypes: ["video/mp4" ,"image/pjpeg", "image/jpeg", "image/png", "image/x-png", "image/gif", "image/x-gif", "application/x-dosexe"],
-//maxFileSize: 50000000, //50 MB in bytes
-
-//start: function(file){
-////Modificare nome file con file.name=qualcosa
-
-//this.block = $('<div class="block"></div>');
-//this.progressBar = $('<div class="progressBar"></div>');
-//this.cancelButton = $('<div class="cancelButton">x</div>');
-
-///*
-//* Since "this" differs depending on the function in which it is called,
-//* we need to assign "this" to a local variable to be able to access
-//* this.upload.cancel() inside another function call.
-//*/
-
-//var that = this;
-
-//this.cancelButton.click(function(){
-//that.upload.cancel();
-////now, the cancel callback will be called
-//});
-
-//this.block.append(this.progressBar).append(this.cancelButton);
-//$('#uploads1').append(this.block);
-
-//},
-
-//progress: function(progress){
-////received progress
-//this.progressBar.width(progress + "%");
-//},
-
-//success: function(data){
-////upload successful
-
-//this.progressBar.remove();
-//this.cancelButton.remove();
-//window.location.reload();
-//if (data.success) {
-////now fill the block with the format of the uploaded file
-
-//var format = data.format;
-//var formatDiv = $('<div class="format"></div>').text(format);
-//this.block.append(formatDiv);
-//} else {
-////our application returned an error
-//var error = data.error.message;
-//var errorDiv = $('<div class="error"></div>').text(error);				this.block.append(errorDiv);
-//}
-
-//},
-
-//error: function(error){
-////upload failed
-//this.progressBar.remove();
-//this.cancelButton.remove();
-//var error = error.message;
-//var errorDiv = $('<div class="error"></div>').text(error);
-//this.block.append(errorDiv);
-//},
-
-//cancel: function(){
-////upload cancelled
-//this.block.fadeOut(400, function(){
-//$(this).remove();
-//});
-//}
-
-//});
-//}
 
 
 $(".UPL").click(function(){	
@@ -664,71 +555,3 @@ function checkNome(nome){
 
 
 
-//function checkNome(nome){
-//var nameValidator = /^[a-zA-Z\s\!\-\d]{5,50}/;
-
-//if(!this.value.match(nameValidator)){
-//console.log("No");
-//return false;
-
-//}
-
-////else if(!document.getElementById("input1").value){
-
-
-//else {
-
-//return true;}
-
-//}
-
-//$(".input-nome-lezione2").on("input", function() {
-//var nameValidator = /^[a-zA-Z\s\!\-\d]{5,50}/;
-
-//if(!this.value.match(nameValidator)){
-//console.log("No");
-//$("#b2").attr("disabled", "disabled");
-//return false;
-
-//} else {
-
-//if(!document.getElementById("input2").value){
-
-//return false;
-
-//} else {
-
-//$("#b2").removeAttr("disabled");
-//console.log("Si");
-//return true;
-//}
-//}
-
-
-//});
-
-//$(".input-nome-lezione3").on("input", function() {
-//var nameValidator = /^[a-zA-Z\s\!\-\d]{5,50}/;
-
-//if(!this.value.match(nameValidator)){
-//console.log("No");
-//$("#b3").attr("disabled", "disabled");
-//return false;
-
-//} else {
-
-//if(!document.getElementById("input3").value){
-
-//return false;
-
-//} else {
-
-//$("#b3").removeAttr("disabled");
-//console.log("Si");
-//return true;
-//}
-
-//}
-
-
-//});
