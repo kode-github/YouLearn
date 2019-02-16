@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 
+import javax.naming.NoPermissionException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -17,6 +18,7 @@ import bean.AccountBean;
 import bean.CorsoBean;
 import bean.LezioneBean;
 import exception.DatiErratiException;
+import exception.NotFoundException;
 import exception.NotWellFormattedException;
 import manager.LezioneManager;
 
@@ -65,21 +67,7 @@ public class InsLezioneServlet extends HttpServlet {
 				response.setContentType("application/json");
 		        response.setCharacterEncoding("UTF-8");
 		        response.getWriter().write("{\"success\":true,\"format\":\" Fatto! \"}");
-			} catch (NotWellFormattedException e) {
-				corso.removeLezione(lezione);
-				response.sendRedirect(request.getContextPath()+File.separator+"SettingLezione.jsp?idLezione="+idCorso);
-				e.printStackTrace();
-			} catch (SQLException e) {
-				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
-				e.printStackTrace();
-			} catch (DatiErratiException e) {
-				request.getSession().setAttribute("inavlidType", "true");
-				response.sendRedirect(request.getContextPath()+File.separator+"SettingLezione.jsp?idCorso="+idCorso);
-				e.printStackTrace();
-			} catch (NullPointerException e) {
-				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
-				e.printStackTrace();
-			} catch(IOException e) {
+			} catch (SQLException |NumberFormatException | NotWellFormattedException | DatiErratiException e) {
 				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 				e.printStackTrace();
 			}

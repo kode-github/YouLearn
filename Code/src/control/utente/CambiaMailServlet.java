@@ -43,10 +43,7 @@ public class CambiaMailServlet extends HttpServlet {
 			account.setMail(newMail);
 			request.getSession().setAttribute("account",account);
 			request.getSession().setAttribute("emailModificata",true);
-		} catch (SQLException | NotFoundException e) {
-			//Non pu� succedere per via dei filtri
-			e.printStackTrace();
-		} catch (NoPermissionException e) {
+		} catch (SQLException | NotFoundException | NoPermissionException e) {
 			e.printStackTrace();
 		} catch (AlreadyExistingException e) {
 			request.getSession().setAttribute("emailGiaEsistente", true);

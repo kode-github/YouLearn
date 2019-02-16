@@ -74,13 +74,7 @@ public class CreaCorsoServlet extends HttpServlet {
 			e.printStackTrace();
 			request.getSession().setAttribute("creato", "false");
 			response.sendRedirect(request.getContextPath()+"/SettingCorso.jsp");
-		} catch (NoPermissionException e) {
-			response.sendRedirect(request.getContextPath()+"/Error.jsp");
-			e.printStackTrace();
-		} catch (NotFoundException e) {
-			response.sendRedirect(request.getContextPath()+"/Error.jsp");
-			e.printStackTrace();
-		} catch (SQLException e) {
+		} catch (NoPermissionException | NotFoundException | SQLException e) {
 			response.sendRedirect(request.getContextPath()+"/Error.jsp");
 			e.printStackTrace();
 		}

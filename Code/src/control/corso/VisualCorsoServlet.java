@@ -13,7 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import javax.servlet.http.HttpSession;
 
 import bean.AccountBean;
 import bean.AccountBean.Ruolo;
@@ -36,36 +36,40 @@ public class VisualCorsoServlet extends HttpServlet {
 	
     public VisualCorsoServlet() {
         super();
-        manager=IscrizioneManager.getIstanza();
+        
     }
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
-        corsoManager=CorsoManager.getIstanza(getServletContext().getRealPath(""));
+		manager=IscrizioneManager.getIstanza();
+		corsoManager=CorsoManager.getIstanza(request.getServletContext().getRealPath(""));
         lezioneManager=LezioneManager.getIstanza("");
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+        HttpSession session=request.getSession();
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
 			try {
 				String ruolo=null;
 				Integer idCorso=Integer.parseInt(request.getParameter("idCorso"));
 				CorsoBean corso=null;
-				
-				AccountBean account=(AccountBean) request.getSession().getAttribute("account");
+				AccountBean account=(AccountBean) session.getAttribute("account");
 				
 				//controllo dove si trovi il corso
 				if(account.getTipo().equals(Ruolo.Utente)) {
 					Iterator<CorsoBean> corsiTenuti=account.getCorsiTenuti().iterator();
 					Iterator<IscrizioneBean> iscrizioni=account.getIscrizioni().iterator();
-					Collection<CorsoBean> researched=(Collection<CorsoBean>) request.getSession().getAttribute("research");
+					Collection<CorsoBean> researched=(Collection<CorsoBean>) session.getAttribute("research");
 					
 					//Maronna mij
-					while(corsiTenuti.hasNext())  //Se sono il docente
-						if((corso=corsiTenuti.next()).getIdCorso()==idCorso) {
+					while(corsiTenuti.hasNext()) { //Se sono il docente
+						corso=corsiTenuti.next();
+						System.out.println("Corso tenuto: "+corso.getIdCorso()+" idCorso: "+idCorso);
+						if(corso.getIdCorso().equals(idCorso)) {
 							ruolo="docente";
 							break;
 						}
+					}
 					if(ruolo==null) //Non sono il docente
 						while(iscrizioni.hasNext()) //controllo se sono iscritto
-							if((corso=(iscrizioni.next()).getCorso()).getIdCorso()==idCorso) {
+							if((corso=(iscrizioni.next()).getCorso()).getIdCorso().equals(idCorso)) {
 								System.out.println("SOno un iscritto al corso");
 								ruolo="iscritto";
 								break;
@@ -100,28 +104,18 @@ public class VisualCorsoServlet extends HttpServlet {
 				manager.getIscrittiCorso(corso); //recupero le iscrizioni
 				if(ruolo.equals("iscritto"))
 					lezioneManager.retrieveLezioniByCorso(corso);
-				request.getSession().setAttribute("ruolo", ruolo); //Setto il ruolo in sessione
-				request.getSession().setAttribute("corso", corso);
-				request.getSession().setAttribute("updated", "true");
+				session.setAttribute("ruolo", ruolo); //Setto il ruolo in sessione
+				session.setAttribute("corso", corso);
+				session.setAttribute("updated", "true");
 				response.sendRedirect(request.getContextPath()+"\\Corso.jsp?idCorso="+idCorso);
-			} catch (NoPermissionException e) {
+			} catch (NoPermissionException |SQLException | NotFoundException |NotWellFormattedException e) {
 				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
-				e.printStackTrace();
-			} catch (SQLException e) {
-				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
-				e.printStackTrace();
-			} catch (NotFoundException e) {
-				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
-				e.printStackTrace();
-			} catch (NotWellFormattedException e) {
-				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
-
 				e.printStackTrace();
 			}
 }
 
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
 

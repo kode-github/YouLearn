@@ -353,7 +353,8 @@ public class CorsoManager {
 			 * map: per ogni path, ne restituisce un file
 			 * forEach: per ogni file, cancellalo
 			 */
-			Files.walk(toDelete).sorted(Comparator.reverseOrder()).map(s->s.toFile()).peek(System.out::println).forEach(s->s.delete());
+			if(Files.isDirectory(toDelete, LinkOption.NOFOLLOW_LINKS))
+				Files.walk(toDelete).sorted(Comparator.reverseOrder()).map(s->s.toFile()).peek(System.out::println).forEach(s->s.delete());
 			
 		} finally {
 			try {

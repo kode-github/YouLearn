@@ -55,8 +55,6 @@ public class ModCorsoServlet extends HttpServlet {
 			Part copertina=request.getPart("CARICA FILE");
 			if(copertina.getSize()==0)
 				copertina=null;
-			
-			
 			//Crea un oggetto temporaneo in cui inserire i dati
 			CorsoBean temp=new CorsoBean(corso.getIdCorso(),nome,descrizione,corso.getDataCreazione(),
 					dataScadenza,prezzo,categoria,corso.getCopertina(),corso.getStato(),corso.getnIscritti(),
@@ -72,19 +70,11 @@ public class ModCorsoServlet extends HttpServlet {
 			e.printStackTrace();
 			request.getSession().setAttribute("corsoModificato", "false");
 			response.sendRedirect(request.getContextPath()+File.separator+"SettingCorso.jsp?idCorso="+idCorso);
-		} catch (NoPermissionException e) {
-			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
-			e.printStackTrace();
-		} catch (NotFoundException e) {
-			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
-			e.printStackTrace();
-		} catch (SQLException e) {
+		} catch (NoPermissionException | NotFoundException | SQLException e) {
 			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 			e.printStackTrace();
 		}
-		
-		
-		
+
 	}
 
 	

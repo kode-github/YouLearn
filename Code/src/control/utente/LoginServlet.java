@@ -43,9 +43,8 @@ public class LoginServlet extends HttpServlet {
 					response.sendRedirect(request.getContextPath()+"\\HomepageUtente.jsp");
 				else
 					response.sendRedirect(request.getContextPath()+"\\HomepageSupervisore.jsp");
-			} catch (NoPermissionException e) {
+			} catch (NoPermissionException | NotWellFormattedException e) {
 				response.sendRedirect(request.getContextPath()+"\\Error.jsp");
-				//Non dovrebbe MAI essere qui
 				e.printStackTrace();
 			} catch (DatiErratiException e) {
 				e.printStackTrace();
@@ -59,15 +58,11 @@ public class LoginServlet extends HttpServlet {
 				e.printStackTrace();
 				sessione.setAttribute("erroreConnessione", true);
 				response.sendRedirect(request.getContextPath()+"\\Welcome.jsp");
-		} catch (NotWellFormattedException e) {
-				//Non ci andrà mai
-				e.printStackTrace();
-				response.sendRedirect(request.getContextPath()+"\\Error.jsp");
-			}
+		}
 	}
 
 	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
 

@@ -42,18 +42,8 @@ public class VerificaCorsoServlet extends HttpServlet {
 				manager.convalidaCorso(verifica, corso);
 				request.getSession().setAttribute("verificato", verifica);
 				response.sendRedirect(request.getContextPath()+"\\HomepageSupervisore.jsp");
-			} catch (NoPermissionException e) {
+			}catch (NoPermissionException | NotFoundException | SQLException | NotWellFormattedException e) {
 				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
-				e.printStackTrace();
-			} catch (NotFoundException e) {
-				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
-				e.printStackTrace();
-			} catch (NotWellFormattedException e) {
-				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
-				e.printStackTrace();
-			} catch (SQLException e) {
-				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
-
 				e.printStackTrace();
 			}
 			

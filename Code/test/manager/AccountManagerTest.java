@@ -83,8 +83,6 @@ public class AccountManagerTest {
 
 	@Test (expected = NotFoundException.class)
 	public void testDoRetrieveByKeyNotFound() throws SQLException, NotFoundException, NoPermissionException {     
-		
-		
 		assertNull(managerAccount.doRetrieveByKey("mario1000@gmail.com"));
 	}
 	

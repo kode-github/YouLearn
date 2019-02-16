@@ -1,8 +1,10 @@
 package control.lezione;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import javax.naming.NoPermissionException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -41,20 +43,10 @@ public class VisualLezioneServlet extends HttpServlet {
 				manager.retrieveCommentiByLezione(lezione);
 				request.getSession().setAttribute("lezione", lezione);
 				response.sendRedirect(request.getContextPath()+"/Lezione.jsp?idLezione="+idLezione);
-			} catch (SQLException e) {
-				response.sendRedirect(request.getContextPath()+"/Error.jsp");
-				e.printStackTrace();
-			} catch (NotFoundException e) {
-				response.sendRedirect(request.getContextPath()+"/Error.jsp");
-				e.printStackTrace();
-			} catch (NotWellFormattedException e) {
-				response.sendRedirect(request.getContextPath()+"/Error.jsp");
-				e.printStackTrace();
-			} catch(NullPointerException e) {
-				response.sendRedirect(request.getContextPath()+"/Welcome.jsp");
+			} catch ( NotFoundException | SQLException |NumberFormatException | NotWellFormattedException e) {
+				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 				e.printStackTrace();
 			}
-			
 
 		
 	}

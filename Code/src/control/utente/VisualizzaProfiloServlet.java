@@ -32,10 +32,10 @@ public class VisualizzaProfiloServlet extends HttpServlet {
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        manager=CorsoManager.getIstanza(getServletContext().getRealPath(""));
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+        manager=CorsoManager.getIstanza(request.getServletContext().getRealPath(""));
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		HttpSession session=request.getSession();
-		AccountBean account=(AccountBean) request.getSession().getAttribute("account");		
+		AccountBean account=(AccountBean) session.getAttribute("account");		
 				try {
 					if(account.getTipo().equals(Ruolo.Utente)) {
 						manager.retrieveByCreatore(account);
@@ -58,7 +58,7 @@ public class VisualizzaProfiloServlet extends HttpServlet {
 	}
 
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
 

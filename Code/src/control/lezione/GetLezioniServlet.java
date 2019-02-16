@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import javax.naming.NoPermissionException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -46,16 +47,9 @@ public class GetLezioniServlet extends HttpServlet {
 			account.AddCorsoTenuto(corso);
 			request.getSession().removeAttribute("updated");
 			response.sendRedirect(request.getContextPath()+"//SettingLezione.jsp?idCorso="+corso.getIdCorso());
-		} catch (SQLException e) {
+		} catch ( SQLException |NumberFormatException | NotWellFormattedException e) {
 			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 			e.printStackTrace();
-		} catch (NotWellFormattedException e) {
-			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
-			e.printStackTrace();
-		} catch(NullPointerException e) {
-			e.printStackTrace();
-			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
-
 		}
 	}
 

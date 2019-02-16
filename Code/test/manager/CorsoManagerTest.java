@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -18,6 +19,7 @@ import java.util.LinkedList;
 import java.util.UUID;
 
 import javax.naming.NoPermissionException;
+import javax.servlet.http.Part;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -68,6 +70,137 @@ public class CorsoManagerTest {
 		assertNotNull(managerIscrizione);
 		createTmpComponentCorso();
 	}
+	
+	@Test
+	public void creaCorso() throws NoPermissionException, SQLException, NotWellFormattedException, NotFoundException {
+		tmpCorso.setIdCorso(null);
+		managerCorso.creaCorso(tmpCorso, new Part() {
+			
+			@Override
+			public void write(String arg0) throws IOException {
+				return;
+				
+			}
+			
+			@Override
+			public String getSubmittedFileName() {
+				return "azz.jpg";
+			}
+			
+			@Override
+			public long getSize() {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+			
+			@Override
+			public String getName() {
+				return "azz";
+			}
+			
+			@Override
+			public InputStream getInputStream() throws IOException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public Collection<String> getHeaders(String arg0) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public Collection<String> getHeaderNames() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String getHeader(String arg0) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String getContentType() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public void delete() throws IOException {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+	}
+	
+	@Test
+	public void modificaCorso() throws NoPermissionException, NotFoundException, NotWellFormattedException, SQLException, IOException {
+			tmpCorso.setStato(Stato.Completamento);
+			managerCorso.modificaCorso(tmpCorso,  new Part() {
+			
+			@Override
+			public void write(String arg0) throws IOException {
+				return;
+				
+			}
+			
+			@Override
+			public String getSubmittedFileName() {
+				return "azz.jpg";
+			}
+			
+			@Override
+			public long getSize() {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+			
+			@Override
+			public String getName() {
+				return "azz";
+			}
+			
+			@Override
+			public InputStream getInputStream() throws IOException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public Collection<String> getHeaders(String arg0) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public Collection<String> getHeaderNames() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String getHeader(String arg0) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String getContentType() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public void delete() throws IOException {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+	}
+	
 
 	/**
 	 * Test di prelevazione di un corso tramite l'uso del suo id.
@@ -113,13 +246,12 @@ public class CorsoManagerTest {
 		updated.setCategoria(Categoria.Informatica);
 		updated.setNome("Programmazione C");
 		updated.setCopertina("/User/local/lib/img.png"); //I controlli sull'URL vengono effettuati nell'isWellFormatted 
-		Date date = Date.valueOf("2020-10-10");
+		Date date = Date.valueOf("2018-02-02");
 		Date date2 = Date.valueOf("2020-11-11");
 		
 		updated.setDataCreazione(date);
 		updated.setDataFine(date2);
-		updated.setDescrizione("Modificata");
-		System.out.println("UPDATE HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+		updated.setDescrizione("ModificataDi10caratterialmeno");
 		managerCorso.doUpdate(updated);
 		CorsoBean check = managerCorso.doRetrieveByKey(tmpCorso.getIdCorso());
 		
@@ -128,7 +260,7 @@ public class CorsoManagerTest {
 		assertEquals(check.getCopertina(), "/User/local/lib/img.png");
 		assertEquals(check.getDataCreazione(), date);
 		assertEquals(check.getDataFine(), date2);
-		assertEquals(check.getDescrizione(), "Modificata");
+		assertEquals(check.getDescrizione(), "ModificataDi10caratterialmeno");
 		
 		managerCorso.doUpdate(restored);
 		

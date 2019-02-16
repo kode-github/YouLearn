@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -14,12 +15,14 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.UUID;
 
 import javax.naming.NoPermissionException;
+import javax.servlet.http.Part;
 
 import org.junit.After;
 import org.junit.Before;
@@ -67,8 +70,7 @@ public class LezioneManagerTest {
 	public void setUp() throws Exception {
 		managerLezione=LezioneManager.getIstanza(System.getProperty("user.dir")+"\\WebContent");
 		managerAccount = AccountManager.getIstanza();
-		managerCorso = CorsoManager.getIstanza(System.getProperty("user.dir")+"\\WebContent");
-//		
+		managerCorso = CorsoManager.getIstanza(System.getProperty("user.dir")+"\\WebContent");		
 		createTmpComponentLezione();
 	
 	}
@@ -94,21 +96,165 @@ public class LezioneManagerTest {
 //		lezioneManager.delLezione(lezione);
 //	}
 //	
+	@Test
+	public void increaseVis() throws SQLException, NotFoundException {
+		managerLezione.increaseVisualizzazioni(tmpLezione);
+	}
+	
+	@Test
+	public void modificaLezione() throws SQLException, NotFoundException, NotWellFormattedException, IOException, DatiErratiException {
+		managerLezione.modificaLezione(tmpLezione, new Part() {
+			
+			@Override
+			public void write(String arg0) throws IOException {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public String getSubmittedFileName() {
+				return "azzzz.mp4";
+			}
+			
+			@Override
+			public long getSize() {
+				return 0;
+			}
+			
+			@Override
+			public String getName() {
+				return "azzzz.mp4";
+			}
+			
+			@Override
+			public InputStream getInputStream() throws IOException {
+				return new InputStream() {
+					
+					@Override
+					public int read() throws IOException {
+						return -1;
+					}
+				};
+			}
+			
+			@Override
+			public Collection<String> getHeaders(String arg0) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public Collection<String> getHeaderNames() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String getHeader(String arg0) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String getContentType() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public void delete() throws IOException {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+	}
+	
+	@Test
+	public void insLezione() throws NotWellFormattedException, SQLException, DatiErratiException, IOException, NotFoundException {
+		LezioneBean tmp=new LezioneBean(tmpCorso, "lezioneBellaTest", 0, 1000, null, "azzz.mp4", new LinkedList<CommentoBean>());
+		managerLezione.insLezione(tmp, new Part() {
+			
+			@Override
+			public void write(String arg0) throws IOException {
+				
+				
+			}
+			
+			@Override
+			public String getSubmittedFileName() {
+				return "aazzzz.mp4";
+			}
+			
+			@Override
+			public long getSize() {
+				return 1;
+			}
+			
+			@Override
+			public String getName() {
+				return "aazzzz.mp4";
+			}
+			
+			@Override
+			public InputStream getInputStream() throws IOException {
+				return new InputStream() {
+					
+					@Override
+					public int read() throws IOException {
+						return -1;
+					}
+				};
+			}
+			
+			@Override
+			public Collection<String> getHeaders(String arg0) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public Collection<String> getHeaderNames() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String getHeader(String arg0) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String getContentType() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public void delete() throws IOException {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		Connection c=DriverManagerConnectionPool.getConnection();
+		PreparedStatement preparedStatement=c.prepareStatement("select idLezione\r\n" + 
+				"from lezione\r\n" + 
+				"where idLezione=(select max(idLezione)\r\n" + 
+				"				from lezione)");
+		ResultSet rs=preparedStatement.executeQuery();
+		rs.next();
+		tmp.setIdLezione((rs.getInt("idLezione")));
+		managerLezione.delLezione(tmp);
+		preparedStatement.close();
+		DriverManagerConnectionPool.releaseConnection(c);
+	}
 	
 	
 	@Test
 	public void testModificaOrdine(){
-		
-		//15 id lezione
-		//4 numero lezione
-		//Lezioni di un corso tutti 
-		//Partendo da uno ad N
-		//Per ogni numeroLezione
-		
-		
-		String test="15-4,16-3,17-1,18-2";
+		String test="10000-1,10001-2";
 		try {
-			managerLezione.modificaOrdine(5, test);
+			managerLezione.modificaOrdine(10000, test);
 		} catch (NoPermissionException | SQLException | DatiErratiException | NotFoundException
 				| NotWellFormattedException e) {
 			
@@ -121,8 +267,7 @@ public class LezioneManagerTest {
 	public void testModificaOrdineErrorData() throws NoPermissionException, SQLException, DatiErratiException, NotFoundException, NotWellFormattedException{
 		String test="";
 		String test2="HELLOWORLD";
-			managerLezione.modificaOrdine(5, null);
-			managerLezione.modificaOrdine(5, test2);
+		managerLezione.modificaOrdine(10000, null);
 		
 	}
 	
@@ -182,9 +327,8 @@ public class LezioneManagerTest {
 	 */
 	@Test
 	public void testDelCommento() throws Exception {
-		LinkedList <CommentoBean> commenti = (LinkedList<CommentoBean>) managerLezione.retrieveCommentiByLezione(tmpLezione);
-	    commenti.get(0);
-		managerLezione.delCommento(tmpCommento.getIdCommento());
+		CommentoBean tmp=managerLezione.retrieveCommentiByLezione(tmpLezione).iterator().next();
+		managerLezione.delCommento(tmp.getIdCommento());
 		}
 		
 	
@@ -243,13 +387,13 @@ public class LezioneManagerTest {
 	}
 	
 	
-	@Test
-	public void testchangeNumeroLezione() throws SQLException, DatiErratiException {
-		Connection c = DriverManagerConnectionPool.getConnection();
-		tmpLezione.setNumeroLezione(tmpLezione.getNumeroLezione()+1);
-		managerLezione.changeNumeroLezione(tmpLezione, c);
-		DriverManagerConnectionPool.releaseConnection(c);
-	}
+//	@Test
+//	public void testchangeNumeroLezione() throws SQLException, DatiErratiException {
+//		Connection c = DriverManagerConnectionPool.getConnection();
+//		tmpLezione.setNumeroLezione(tmpLezione.getNumeroLezione()+1);
+//		managerLezione.changeNumeroLezione(tmpLezione, c);
+//		DriverManagerConnectionPool.releaseConnection(c);
+//	}
 
 	
 	
@@ -257,17 +401,17 @@ public class LezioneManagerTest {
 		System.out.println("INIZIO LA CREAZIONE\n");
 		
 		//Carta docente
-		tmpCarta= new CartaDiCreditoBean("1111111111111111","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount);
+		tmpCarta= new CartaDiCreditoBean("0258789654123654","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount);
 		//Account docente
 		tmpAccount = new AccountBean("Mario", "Sessa", "PentiumD", "Prova@mail.com", Ruolo.Utente, true, tmpCarta);
 		
-		tmpCarta2= new CartaDiCreditoBean("1111211111341111","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount2);
+		tmpCarta2= new CartaDiCreditoBean("0258789654123600","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount2);
 
 		tmpAccount2 = new AccountBean("Mario", "Sessa", "PentiumD", "Prova2@mail.com", Ruolo.Utente, true, tmpCarta2);
 		//Corso e lezioni
-		tmpCorso = new CorsoBean(10,"Informatica", "Informatica per principianti in linguaggio C", Date.valueOf("2018-10-10"), Date.valueOf("2020-10-10"), 12, Categoria.Informatica, "/User/kode/git/YouLearn/WebContent/Resources/Desert.jsp", Stato.Attivo,1,0, tmpAccount, null); //Non ha un supervisore 
-		tmpLezione = new LezioneBean(null, "Lezione", 0, 1, 90, "/User/local/lib/mp4.mp4", null);
-		tmpLezione2 = new LezioneBean(null, "LezioneDue", 0, 2, 20, "/User/local/lib/video.mp4", null);
+		tmpCorso = new CorsoBean(10000,"Informatica", "Informatica per principianti in linguaggio C", Date.valueOf("2018-01-10"), Date.valueOf("2020-10-10"), 12, Categoria.Informatica, "/User/kode/git/YouLearn/WebContent/Resources/Desert.jsp", Stato.Attivo,2,0, tmpAccount, null); //Non ha un supervisore 
+		tmpLezione = new LezioneBean(null, "Lezione", 0, 1, 10000, "AAAAAAA.mp4", new LinkedList<CommentoBean>());
+		tmpLezione2 = new LezioneBean(null, "LezioneDue", 0, 2, 10001, "BBBBBBB.mp4", new LinkedList<CommentoBean>());
 		
 		// commento della prima lezione di test
 		
@@ -292,7 +436,7 @@ public class LezioneManagerTest {
 		
 		//Inserisci gli account e le carte
 		
-		System.out.println(tmpAccount);
+
 		managerAccount.setRegistration(tmpAccount);
 		managerAccount.setRegistration(tmpAccount2);
 		//Creazione corso - controllare riferimenti a corso
@@ -432,7 +576,7 @@ public class LezioneManagerTest {
 		assertTrue(managerLezione.commentoIsWellFormatted(tmpCommento));
 
 		managerLezione.insCommento(tmpCommento);
-		
+		System.out.println("Dopo inserisci commento");
 		//managerIscrizione.iscriviStudente(tmpIscrizione);
 		
 	}

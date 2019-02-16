@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import javax.naming.NoPermissionException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +15,7 @@ import bean.AccountBean;
 import bean.LezioneBean;
 import exception.DatiErratiException;
 import exception.NotFoundException;
+import exception.NotWellFormattedException;
 import manager.LezioneManager;
 
 
@@ -43,16 +45,7 @@ public class CancLezioneServelt extends HttpServlet {
 				account.getCorsoTenuto(idCorso).removeLezione(lezione);
 				request.getSession().setAttribute("updated", "true");
 	        	response.sendRedirect(request.getContextPath()+"/SettingLezione.jsp?idCorso="+idCorso);
-			} catch (SQLException e) {
-				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
-				e.printStackTrace();
-			} catch (DatiErratiException e) {
-				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
-				e.printStackTrace();
-			} catch (NotFoundException e) {
-				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
-				e.printStackTrace();
-			} catch(IOException e) {
+			}catch (IOException | NotFoundException | SQLException |NumberFormatException | DatiErratiException e) {
 				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 				e.printStackTrace();
 			}

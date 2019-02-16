@@ -98,10 +98,10 @@ public class CartaDiCreditoManagerTest {
 		CartaDiCreditoBean oldCarta = managerCarta.doRetrieveByKey(tmpCarta.getNumeroCarta());
 		CartaDiCreditoBean newCarta = managerCarta.doRetrieveByKey(tmpCarta2.getNumeroCarta());
 		
-		newCarta.setNumeroCarta("999999999991");
+		newCarta.setNumeroCarta("2587456987852156");
 		System.out.println(oldCarta.getNumeroCarta());
 		assertNotNull(newCarta);
-		assertEquals(newCarta.getNumeroCarta(),"999999999991");
+		assertEquals(newCarta.getNumeroCarta(),"2587456987852156");
 		managerCarta.modifyCard(newCarta, oldCarta.getNumeroCarta());
 		//managerCarta.modifyCard(oldCarta, newCarta.getNumeroCarta());
 		System.out.println(managerCarta.checkCarta(newCarta.getNumeroCarta()));
@@ -146,13 +146,13 @@ public class CartaDiCreditoManagerTest {
 	private void createTmpComponent() throws NoPermissionException, NotWellFormattedException, AlreadyExistingException, SQLException {
 		
 		System.out.println("INIZIO LA CREAZIONE\n");
-		tmpCarta= new CartaDiCreditoBean("000011118888222","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount);
+		tmpCarta= new CartaDiCreditoBean("0000005489658741","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount);
 		
 		tmpAccount = new AccountBean("Mario", "Sessa", "PentiumD", "Prova@mail.com", Ruolo.Utente, true, tmpCarta);
 		tmpCarta.setAccount(tmpAccount);
 		tmpAccount.setCarta(tmpCarta);
 		
-		tmpCarta2= new CartaDiCreditoBean("000011118888333","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount2);
+		tmpCarta2= new CartaDiCreditoBean("0000008489658741","10","2022", "Mario Sessa", CartaEnum.PAYPAL, tmpAccount2);
 		tmpAccount2 = new AccountBean("Mario", "Sessa", "PentiumD", "Prova2@mail.com", Ruolo.Utente, true, tmpCarta2);
 		tmpAccount2.setCarta(tmpCarta2);
 		tmpCarta2.setAccount(tmpAccount2);

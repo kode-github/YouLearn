@@ -1,9 +1,6 @@
 package manager;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,8 +21,6 @@ import java.util.UUID;
 
 import javax.naming.NoPermissionException;
 import javax.servlet.http.Part;
-
-import com.mysql.jdbc.CallableStatement;
 
 import bean.CommentoBean;
 import bean.CorsoBean;
@@ -110,12 +105,24 @@ public class LezioneManager {
 		try {
 			c=DriverManagerConnectionPool.getConnection();
 			c.setAutoCommit(false);
-			for(LezioneBean l: lezione)
-				changeNumeroLezione(l, c);
-			if(!c.getAutoCommit())
+			for(LezioneBean l: lezione) {
+//				changeNumeroLezione(l, c);
+				PreparedStatement statement=null;
+				String sql="Update Lezione set numeroLezione=? where idLezione=?";
+				try {
+					statement=c.prepareStatement(sql);
+					statement.setInt(1, l.getNumeroLezione());
+					statement.setInt(2, l.getIdLezione());
+					System.out.println("Modifica numero lezione: "+statement.toString());
+					statement.executeUpdate();
+				}finally {
+						if(statement!=null)
+							statement.close();
+				}
+			}if(!c.getAutoCommit())
 				c.commit();
 			System.out.println("Sono dopo il commit");
-		}catch(SQLException | DatiErratiException  e) {
+		}catch(SQLException e) {
 			c.rollback();
 			e.printStackTrace();
 		}finally {
@@ -125,27 +132,27 @@ public class LezioneManager {
 	}
 
 
-
-	/**
-	 * Cambia il numero di lezione
-	 * @throws SQLException
-	 * @throws DatiErratiException
-	 */
-	void changeNumeroLezione(LezioneBean lezione,Connection c) throws SQLException, DatiErratiException {
-		PreparedStatement statement=null;
-		String sql="Update Lezione set numeroLezione=? where idLezione=?";
-		try {
-			statement=c.prepareStatement(sql);
-			statement.setInt(1, lezione.getNumeroLezione());
-			statement.setInt(2, lezione.getIdLezione());
-			System.out.println("Modifica numero lezione: "+statement.toString());
-			int res=statement.executeUpdate();
-			if(res==0) throw new DatiErratiException("non esiste una lezione con questo codice oppure non appartiene a questo corso");
-		}finally {
-				if(statement!=null)
-					statement.close();
-		}
-	}
+//
+//	/**
+//	 * Cambia il numero di lezione
+//	 * @throws SQLException
+//	 * @throws DatiErratiException
+//	 */
+//	void changeNumeroLezione(LezioneBean lezione,Connection c) throws SQLException, DatiErratiException {
+//		PreparedStatement statement=null;
+//		String sql="Update Lezione set numeroLezione=? where idLezione=?";
+//		try {
+//			statement=c.prepareStatement(sql);
+//			statement.setInt(1, lezione.getNumeroLezione());
+//			statement.setInt(2, lezione.getIdLezione());
+//			System.out.println("Modifica numero lezione: "+statement.toString());
+//			int res=statement.executeUpdate();
+//			if(res==0) throw new DatiErratiException("non esiste una lezione con questo codice oppure non appartiene a questo corso");
+//		}finally {
+//				if(statement!=null)
+//					statement.close();
+//		}
+//	}
 
 
 	/**
@@ -248,7 +255,8 @@ public class LezioneManager {
 			//Elimino il file dal disco
 			Path path=Paths.get(PATH+File.separator+"Resources"+File.separator+lezione.getCorso().getIdCorso()
 					+File.separator+"Lezioni"+File.separator+lezione.getFilePath());
-			Files.delete(path);
+			if(Files.exists(path, LinkOption.NOFOLLOW_LINKS))
+				Files.delete(path);
 
 			if(!connection.getAutoCommit())
 				connection.commit();
@@ -360,52 +368,6 @@ public class LezioneManager {
 			}
 		}
 		return collection;
-	}
-
-	/**
-	 * TODO Non viene mai usato, ma va controllato
-	 * @param id PK di commento
-	 * @return Commento
-	 * @throws SQLException
-	 * @throws NotFoundException
-	 */
-	public synchronized CommentoBean retrieveCommentoById(int id) throws SQLException, NotFoundException {
-		Connection connection=null;
-		PreparedStatement preparedStatement=null;
-		CommentoBean temp=new CommentoBean();
-
-		String sql="SELECT* FROM commento WHERE idcommento=?";
-		try {
-			connection=DriverManagerConnectionPool.getConnection();
-			preparedStatement= connection.prepareStatement(sql);
-			preparedStatement.setInt(1, id);
-			System.out.println("retrieveCommento: " + preparedStatement.toString());
-
-			ResultSet rs= preparedStatement.executeQuery();
-
-			if(!rs.next()) throw new NotFoundException("Il commento non esiste"); //controllo che il commento esista
-
-			temp.setIdCommento(id);
-			temp.setTesto(rs.getString("Testo"));
-			//Creo la lezione con la sola PK
-			LezioneBean l= new LezioneBean();
-			l.setIdLezione(rs.getInt("idLezione"));
-//			l.setNumeroLezione(rs.getString("numeroLezione")); Senso della riga?
-			CorsoBean corso= new CorsoBean();
-			corso.setIdCorso(rs.getInt("idCorso"));
-			l.setCorso(corso);
-			temp.setLezione(l);
-
-		}finally {
-			try {
-			if(preparedStatement!=null)
-				preparedStatement.close();
-			}finally {
-				DriverManagerConnectionPool.releaseConnection(connection);
-			}
-		}
-		return temp;
-
 	}
 
 	/**
@@ -636,6 +598,14 @@ public class LezioneManager {
 				lezione.setFilePath(filename+type);
 				if(Files.exists(path, LinkOption.NOFOLLOW_LINKS))
 					Files.delete(path);
+				else{
+					path=Paths.get(PATH+File.separator+"Resources"+File.separator+lezione.getCorso().getIdCorso()+File.separator+
+							"Lezioni");
+					if(!Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS))
+						Files.createDirectories(path);
+					path=Paths.get(PATH+File.separator+"Resources"+File.separator+lezione.getCorso().getIdCorso()+File.separator+
+							"Lezioni"+File.separator+filename+type);
+				}
 				InputStream in = part.getInputStream(); //Read data from a file
 				FileOutputStream out = new FileOutputStream(path.toString()); //Write data to a file
 				byte[] buffer = new byte[4096]; //Buffer size, Usually 1024-4096

@@ -1,5 +1,6 @@
 package control.lezione;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -53,23 +54,8 @@ public class ModificaOrdineServlet extends HttpServlet {
         	//Setto un attributo per dire che è andato a buon fine
         	//Setto il nuovo nome della lezione
         	response.sendRedirect(request.getContextPath()+"/SettingLezione.jsp?idCorso="+idCorso);
-		} catch (SQLException e) {
-			response.sendRedirect(request.getContextPath()+"/Error.jsp");
-			e.printStackTrace();
-		} catch (NotFoundException e) {
-			response.sendRedirect(request.getContextPath()+"/Error.jsp");
-			e.printStackTrace();
-		} catch (NotWellFormattedException e) {
-			response.sendRedirect(request.getContextPath()+"/Error.jsp");
-			e.printStackTrace();
-		} catch(IOException e) {
-			response.sendRedirect(request.getContextPath()+"/Error.jsp");
-			e.printStackTrace();
-		} catch (DatiErratiException e) {
-			response.sendRedirect(request.getContextPath()+"/Error.jsp");
-			e.printStackTrace();
-		} catch (NoPermissionException e) {
-			response.sendRedirect(request.getContextPath()+"/Error.jsp");
+		} catch (IOException | NoPermissionException | NotFoundException | SQLException |NumberFormatException | NotWellFormattedException | DatiErratiException e) {
+			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 			e.printStackTrace();
 		}
 	}

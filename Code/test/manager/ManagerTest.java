@@ -4,7 +4,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-
+import controltest.corso.VisualCorsoTest;
+import controltest.utente.LoginControlTest;
+import controltest.utente.VisualizzaProfiloSupervisoreTest;
+import controltest.utente.VisualizzaProfiloUtenteTest;
 import junit.framework.TestSuite;
 
 @RunWith(Suite.class)
@@ -13,7 +16,11 @@ import junit.framework.TestSuite;
 	CartaDiCreditoManagerTest.class,
 	CorsoManagerTest.class,
 	IscrizioneManagerTest.class,
-	LezioneManagerTest.class
+	LezioneManagerTest.class,
+	LoginControlTest.class,
+	VisualizzaProfiloUtenteTest.class,
+	VisualizzaProfiloSupervisoreTest.class,
+	VisualCorsoTest.class
 })
 public class ManagerTest {
 

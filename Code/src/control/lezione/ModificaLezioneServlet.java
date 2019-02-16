@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import javax.naming.NoPermissionException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -56,23 +57,10 @@ public class ModificaLezioneServlet extends HttpServlet {
         	//System.out.println("nome file: "+part.getSubmittedFileName());
 			manager.modificaLezione(lezione,part);
         	response.sendRedirect(request.getContextPath()+"/SettingLezione.jsp?idCorso="+idCorso);
-		} catch (SQLException e) {
+		}catch (DatiErratiException | NotFoundException | SQLException |NumberFormatException e) {
 			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
 			e.printStackTrace();
-		} catch (DatiErratiException e) {
-			request.getSession().setAttribute("inavlidType", "true");
-			response.sendRedirect(request.getContextPath()+File.separator+"SettingLezione.jsp?idCorso="+idCorso);
-			e.printStackTrace();
-		} catch (NullPointerException e) {
-			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
-			e.printStackTrace();
-		} catch(IOException e) {
-			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
-			e.printStackTrace();
-		} catch (NotFoundException e) {
-			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");
-			e.printStackTrace();
-		} catch (NotWellFormattedException e) {
+		}catch (NotWellFormattedException e) {
 			request.getSession().setAttribute("invalidLesson", "true");
 			response.sendRedirect(request.getContextPath()+File.separator+"SettingLezione.jsp?idCorso="+idCorso);
 			e.printStackTrace();
