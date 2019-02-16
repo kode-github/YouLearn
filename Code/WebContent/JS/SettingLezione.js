@@ -291,7 +291,7 @@ function modificaLezione(form){
 
 	console.log("ModificaLezione: " +path);
 	$(liFile).text("");
-	$(liFile).append("<input type='file' name='nomeL'><div id='uploads' class='uploads'>");
+	$(liFile).append("<input type='file' name='nomeL' id='videoUP' accept='video/mp4,video/x-m4v,video/*'>");
 
 	//var path2 =$("#file-lezione").text("CIAO");
 	var fileLezione = liFile.children("input[type=file]");
@@ -380,9 +380,14 @@ $(".UPL").click(function(){
 	var div=$(this).parent();
 	//var ul =div.children("ul");
 	var ul = div.parent();
+	//var divP = ul.parent();
+	//var divU = divP.children().eq(1);
+	//var div = ul.parent();
 	var liText = ul.children("li").eq(0);
 
 	var liFile = ul.children("li").eq(1);
+	
+
 
 
 	var text = liText.children("input[type=text]");
@@ -393,6 +398,7 @@ $(".UPL").click(function(){
 	var divU = ul.parent();
 	var divX = divU.parent();
 	var divF = divX.parent();
+	var up = divU.children().eq(1)
 	var divI = divF.children().eq(1);//div input con id in form
 	//console.log(divU); //div upload
 	//console.log(divX);//div prima di upload
@@ -404,15 +410,18 @@ $(".UPL").click(function(){
 
 	if(checkNome($(text).val()) == false){
 		
-		alert("Il nome deve essere lungo almeno 5 caratteri e può contenere anche caratteri speciali!");
 		return false;
 		
 	}
 	
-	if( f.val() == ""){
-		
-		
-	} else	
+
+	
+	if(document.getElementById("videoUP").files[0].size > 524288000){
+		console.log(document.getElementById("videoUP").files[0].size)
+		alertify.error("Il file che vuoi caricare è troppo grande!\nGrandezza massima: 500MB.");
+		return false;
+	}
+	
 	if(!f.value){
 		
 		//alert("riempi il file");
@@ -453,6 +462,7 @@ $(".UPL").click(function(){
 		window.location.reload();
 	}
 	else{
+		
 		f.simpleUpload("http://localhost:8080/YouLearn/ModificaLezioneServlet?name="+$(text).val()+"&idCorso="+ idCorso+"&idLezione="+$(divI).val(), {
 
 			allowedExts: ["mp4"],
@@ -463,8 +473,8 @@ $(".UPL").click(function(){
 				//Modificare nome file con file.name=qualcosa
 
 				this.block = $('<div class="block"></div>');
-				this.progressBar = $('<div class="progressBar">aaa</div>');
-				this.cancelButton = $('<div class="cancelButton">X</div>');
+				this.progressBar = $('<div class="progressBar"></div>');
+				this.cancelButton = $('<div class="cancelButton">x</div>');
 
 				/*
 				 * Since "this" differs depending on the function in which it is called,
@@ -480,7 +490,7 @@ $(".UPL").click(function(){
 				});
 
 				this.block.append(this.progressBar).append(this.cancelButton);
-				$('#uploads1').append(this.block);
+				up.append(this.block);
 
 			},
 
@@ -494,7 +504,7 @@ $(".UPL").click(function(){
 
 				this.progressBar.remove();
 				this.cancelButton.remove();
-				window.location.reload();
+
 				if (data.success) {
 					//now fill the block with the format of the uploaded file
 
@@ -504,17 +514,17 @@ $(".UPL").click(function(){
 				} else {
 					//our application returned an error
 					//var error = data.error.message;
-					//var errorDiv = $('<div class="error"></div>').text(error);				this.block.append(errorDiv);
+					var errorDiv = $('<div class="error"></div>').text("Upload risucito!");	
+					this.block.append(errorDiv);
 				}
 
 			},
-
 			error: function(error){
 				//upload failed
 				this.progressBar.remove();
 				this.cancelButton.remove();
 				var error = error.message;
-				var errorDiv = $('<div class="error"></div>').text(error);
+				var errorDiv = $('<div class="error"></div>').text("Upload riuscito!");
 				this.block.append(errorDiv);
 			},
 
@@ -523,10 +533,17 @@ $(".UPL").click(function(){
 				this.block.fadeOut(400, function(){
 					$(this).remove();
 				});
-			}
+			},
+			finish: function(){
+				
+				window.location.reload();
 
+			}
 		});
 	}
+	
+
+
 });
 
 function refreshPage(){

@@ -91,7 +91,8 @@
 				<form method="POST" enctype='multipart/form-data'>
 					<div class="float-left num"><%=l.getNumeroLezione()%></div>
 					<input class="d-none" name="idL" value="<%=l.getIdLezione()%>">
-					<div class="float-left" style="margin-bottom: 5px;">
+					<div class="float-left"
+						style="margin-bottom: 5px; max-height: 140px;">
 						<div>
 							<ul id="list-lezione">
 								<li id="nome" class="nome-lezione li-lezione"><input
@@ -116,9 +117,11 @@
 									<button type="submit" class="btn btn-danger mx-auto"
 										formaction="http://localhost:8080/YouLearn/CancLezioneServelt?idLezione=<%=l.getIdLezione()%>&idCorso=<%=l.getCorso().getIdCorso()%>">Cancella</button>
 								</li>
+
 							</ul>
+							<div id="uploadsX" class='x'></div>
+
 						</div>
-						<div id="uploads"></div>
 
 					</div>
 					<div class="float-right	 Commands">
@@ -159,13 +162,13 @@
 			<ul style="list-style: none; padding-left: 0px !important">
 				<li class="d-inline"><label>Nome Lezione:</label> <input
 					type="text" id="nome-lezione" class="input-nome-lezione1"></li>
-				<li class="d-inline"><input id="input1" type="file" max="1" accept="video/mp4,video/x-m4v,video/*"
-					name="file">
+				<li class="d-inline"><input id="input1" type="file" max="1"
+					accept="video/mp4,video/x-m4v,video/*" name="file">
 					<button id="b1" class="btn btn-success upload	">UPLOAD
 						LEZIONE</button> <i id="bLez1" style="font-size: 1.5rem; margin-left: 5px;"
 					class="fas fa-plus-circle fa-2x" id="bLez1"></i></li>
-				<li class="d-inline" style="float: right;"><div
-						 id="uploadsA" class="uploads"></div></li>
+				<li class="d-inline" style="float: right;"><div id="uploadsA"
+						class="uploads"></div></li>
 			</ul>
 
 
@@ -175,19 +178,20 @@
 			<ul style="list-style: none; padding-left: 0px !important">
 				<li class="d-inline"><label>Nome Lezione:</label> <input
 					type="text" id="nome-lezione" class="input-nome-lezione2"></li>
-				<li class="d-inline"><input id="input2" type="file" max="1" accept="video/mp4,video/x-m4v,video/*"
-					name="file">
+				<li class="d-inline"><input id="input2" type="file" max="1"
+					accept="video/mp4,video/x-m4v,video/*" name="file">
 					<button id="b2" class="btn btn-success upload2">UPLOAD
-						LEZIONE</button> <i id="bLez2" style="font-size: 1.5rem; margin-left: 5px;"
-					class="fas fa-plus-circle fa-2x "></i></li>
-				<li class="d-inline" style="float: right;"><div
-						 id="uploadsB" class="uploads"></div></li>
+						LEZIONE</button> <!-- <i id="bLez2" style="font-size: 1.5rem; margin-left: 5px;"
+					class="fas fa-plus-circle fa-2x "></i> --></li>
+				<li class="d-inline" style="float: right;"><div id="uploadsB"
+						class="uploads"></div></li>
 			</ul>
 
 
 
 		</div>
-		<div id="lezione3" class=" d-none card-body body-ins-lezione">
+
+		<!-- <div id="lezione3" class=" d-none card-body body-ins-lezione">
 
 			<ul style="list-style: none; padding-left: 0px !important">
 				<li class="d-inline"><label>Nome Lezione:</label> <input
@@ -202,7 +206,7 @@
 
 
 
-		</div>
+		</div>-->
 		<button onclick="refreshPage()" disabled="disabled"
 			style="z-index: 5;" id="btnFine"
 			class="btn btn-success btn-lg btn-block">AGGIUNGI ALLA LISTA

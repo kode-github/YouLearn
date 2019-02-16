@@ -199,3 +199,78 @@
 	font-weight: bolder;
 }
 
+/*CSS upload di modifica*/
+#uploadsX .block {
+	position: relative;
+	display: inline-block;
+	vertical-align: top;
+	width: 100px;
+	height: 70px;
+	margin-right: 20px;
+	margin-bottom: 20px;
+	padding: 10px;
+	background-color: white;
+	border: 1px solid #CCCCCC;
+}
+
+#uploadsX .block .progressBar {
+	background-color: #3E6FAD;
+	width: 0px;
+	height: 5px;
+	margin-top: 47px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
+	-moz-transition: .25s ease-out;
+	-webkit-transition: .25s ease-out;
+	-o-transition: .25s ease-out;
+	transition: .25s ease-out;
+}
+
+#uploadsX .block .cancelButton {
+	position: absolute;
+	top: -10px;
+	right: -10px;
+	width: 25px;
+	height: 25px;
+	background-color: black;
+	border: 2px solid white;
+	color: white;
+	text-align: center;
+	font-weight: bold;
+	-moz-border-radius: 25px;
+	-webkit-border-radius: 25px;
+	-o-border-radius: 25px;
+	border-radius: 25px;
+	-moz-box-shadow: 0px 0px 10px 0px #C4C4C4;
+	-webkit-box-shadow: 0px 0px 10px 0px #C4C4C4;
+	-o-box-shadow: 0px 0px 10px 0px #C4C4C4;
+	box-shadow: 0px 0px 10px 0px #C4C4C4;
+	cursor: pointer;
+}
+
+#uploadsX .block .format {
+	text-align: center;
+	font-size: 20px;
+	font-weight: bold;
+	margin-top: 34px;
+}
+
+#uploadsX .block .error {
+	text-align: left;
+	font-size: 14px;
+	color: green;
+	font-weight: bolder;
+}
+
+.x{
+	
+	    left: 150px;
+    float: right;
+    position: relative;
+     bottom: 90px;
+	
+}
+
+
