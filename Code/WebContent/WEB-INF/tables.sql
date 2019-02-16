@@ -34,6 +34,16 @@ CREATE TABLE `account` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `account`
+--
+
+LOCK TABLES `account` WRITE;
+/*!40000 ALTER TABLE `account` DISABLE KEYS */;
+INSERT INTO `account` VALUES ('Mario','Sessa','PentiumD','china@gmail.com','Utente',0),('Luigi','Crisci','PentiumD','luigicrisci1997@gmail.com','Utente',0),('Mario','XXXXXX','PentiumD','mario@mail.it','Utente',0),('Pasquale','Ambrosio','PentiumD','pasqualeAmbrosio@gmail.com','Supervisore',0),('Luigi','Tester','PentiumD','supervisore@gmail.com','Supervisore',0);
+/*!40000 ALTER TABLE `account` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `cartadicredito`
 --
 
@@ -54,6 +64,16 @@ CREATE TABLE `cartadicredito` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `cartadicredito`
+--
+
+LOCK TABLES `cartadicredito` WRITE;
+/*!40000 ALTER TABLE `cartadicredito` DISABLE KEYS */;
+INSERT INTO `cartadicredito` VALUES ('4023600655123698','02','2020','PayPal','Luigi','luigicrisci1997@gmail.com'),('4023600666666666','02','2089','Visa','Mario','china@gmail.com'),('8888888888888888','02','2025','Visa','Mario','mario@mail.it');
+/*!40000 ALTER TABLE `cartadicredito` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `commento`
 --
 
@@ -61,15 +81,25 @@ DROP TABLE IF EXISTS `commento`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `commento` (
-  `idcommento` int(11) NOT NULL,
+  `idcommento` int(11) NOT NULL AUTO_INCREMENT,
   `idLezione` int(11) DEFAULT NULL,
   `testo` varchar(1024) NOT NULL,
   `AccountMail` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idcommento`),
   KEY `creatore_idx` (`AccountMail`),
   CONSTRAINT `creatore` FOREIGN KEY (`AccountMail`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=449 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `commento`
+--
+
+LOCK TABLES `commento` WRITE;
+/*!40000 ALTER TABLE `commento` DISABLE KEYS */;
+INSERT INTO `commento` VALUES (1,26,'Un commento','luigicrisci1997@gmail.com'),(2,26,'Un secondo commento','luigicrisci1997@gmail.com'),(3,26,'Un commento utente','pasqualeAmbrosio@gmail.com'),(8,20,'Un commento utente','pasqualeAmbrosio@gmail.com'),(9,20,'Un commento docente','luigicrisci1997@gmail.com'),(10,20,'Un secondo commento docente','luigicrisci1997@gmail.com'),(33,222,'EEEEEEEEEEEEE','luigicrisci1997@gmail.com'),(34,222,'Questo corso è tropp bell','china@gmail.com');
+/*!40000 ALTER TABLE `commento` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `corso`
@@ -97,8 +127,18 @@ CREATE TABLE `corso` (
   KEY `corso_ibfk_2` (`accountSupervisore`),
   CONSTRAINT `corso_ibfk_1` FOREIGN KEY (`accountCreatore`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `corso_ibfk_2` FOREIGN KEY (`accountSupervisore`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10011 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `corso`
+--
+
+LOCK TABLES `corso` WRITE;
+/*!40000 ALTER TABLE `corso` DISABLE KEYS */;
+INSERT INTO `corso` VALUES (5,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','NonBellissimo',' Stupendo oiii             ','2018-02-02','2030-02-02','141668b4-4eee-4ae4-972b-d6266166c9e2.jpg','90','Attivo','Musica',2,1),(12,'china@gmail.com','pasqualeAmbrosio@gmail.com','SuperComunista','PER IL PROLETARIATO','1917-02-02','2089-02-02','azz.jpg','1','Attivo','Informatica',1,2),(24,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','PasqualeBellissimo','Pasquale è stupendo','2019-02-01','2025-09-06','bafa13cf-0077-4ac8-928a-ae5dfc309a49.jpg','100','Attivo','Informatica',0,0),(26,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','Corso di Giusy','Come diventare Giusy e vivere una vita felice','2019-02-04','2025-09-06','135ebdea-e2ff-426a-959d-c2cb6b87eae7.jpg','5','Attivo','Informatica',0,0),(30,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','LuigiEEEEE','  Il mio corso è il più bello anche dopo la modifica','2019-02-07','2029-09-06','f7b2cc8f-959a-46b0-9791-6573d1d91a2c.jpg','150','Attivo','Danza',0,0),(41,'pasqualeAmbrosio@gmail.com','pasqualeAmbrosio@gmail.com','TestIscrizione','aaaaaaaaaaaaaaaaaaaaaa','2019-02-11','2025-09-06','x','56','Attivo','Informatica',0,1),(56,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','Quanto e bello','aaaaaaaaaaaaaaaaaaaa','2019-02-15','2025-09-06','f9166b1f-af45-458e-a425-d56d97d7f24b.png','25','Attivo','Informatica',0,0),(57,'luigicrisci1997@gmail.com','supervisore@gmail.com','AAAAAAAAAAA','aaaaaaaaaaaaaaaaa','2019-02-15','2019-05-18','a5896793-bd61-47a9-a911-649fe1266d5b.png','15','Completamento','Informatica',1,0);
+/*!40000 ALTER TABLE `corso` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `iscrizione`
@@ -114,12 +154,59 @@ CREATE TABLE `iscrizione` (
   `importo` double NOT NULL,
   `fattura` int(10) NOT NULL,
   PRIMARY KEY (`accountMail`,`corsoIdCorso`),
-  UNIQUE KEY `fattura` (`fattura`),
   KEY `iscrizione_ibfk_2` (`corsoIdCorso`),
   CONSTRAINT `iscrizione_ibfk_1` FOREIGN KEY (`accountMail`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `iscrizione_ibfk_2` FOREIGN KEY (`corsoIdCorso`) REFERENCES `corso` (`idcorso`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `iscrizione`
+--
+
+LOCK TABLES `iscrizione` WRITE;
+/*!40000 ALTER TABLE `iscrizione` DISABLE KEYS */;
+INSERT INTO `iscrizione` VALUES ('luigicrisci1997@gmail.com',12,'2019-01-10',89,555),('luigicrisci1997@gmail.com',41,'2019-02-12',56,1111111111),('mario@mail.it',5,'2019-02-15',90,1111111111),('mario@mail.it',12,'2019-02-15',1,1111111111);
+/*!40000 ALTER TABLE `iscrizione` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `iscrizione_AFTER_INSERT` AFTER INSERT ON `iscrizione` FOR EACH ROW BEGIN
+update corso 
+    set nIscritti=nIscritti+1
+    where idcorso=new.corsoIdCorso;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `iscrizione_BEFORE_DELETE` BEFORE DELETE ON `iscrizione` FOR EACH ROW BEGIN
+update corso 
+    set nIscritti=nIscritti-1
+    where idcorso=old.corsoIdCorso;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `lezione`
@@ -138,8 +225,18 @@ CREATE TABLE `lezione` (
   PRIMARY KEY (`IdLezione`),
   KEY `corso_idx` (`corsoIdCorso`),
   CONSTRAINT `corso` FOREIGN KEY (`corsoIdCorso`) REFERENCES `corso` (`idcorso`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10029 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lezione`
+--
+
+LOCK TABLES `lezione` WRITE;
+/*!40000 ALTER TABLE `lezione` DISABLE KEYS */;
+INSERT INTO `lezione` VALUES ('Lezione 1',28,1,23,'cd171a96-bf26-4458-974c-19ea51cda60e.mp4',5),('Lezione 2',1,1,24,'b27997f6-7521-4339-86ff-8bc996bbdb84.mp4',5),('LezioneSeguita',39,1,222,'sss',12),('eeeeeeeeeeeeeeeee',0,1,10023,'e4c8a5d3-0519-4cce-93e2-6d0a7c762056.mp4',57);
+/*!40000 ALTER TABLE `lezione` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -209,6 +306,33 @@ DELIMITER ;
 --
 -- Dumping events for database 'youlearndb'
 --
+/*!50106 SET @save_time_zone= @@TIME_ZONE */ ;
+/*!50106 DROP EVENT IF EXISTS `scandezaCorso` */;
+DELIMITER ;;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;;
+/*!50003 SET character_set_client  = utf8mb4 */ ;;
+/*!50003 SET character_set_results = utf8mb4 */ ;;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;;
+/*!50003 SET @saved_time_zone      = @@time_zone */ ;;
+/*!50003 SET time_zone             = 'SYSTEM' */ ;;
+/*!50106 CREATE*/ /*!50117 DEFINER=`root`@`localhost`*/ /*!50106 EVENT `scandezaCorso` ON SCHEDULE EVERY 1 DAY STARTS '2019-02-16 00:03:33' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+	
+    update corso
+    set stato="disattivato"
+    where dataFine=now();
+    
+END */ ;;
+/*!50003 SET time_zone             = @saved_time_zone */ ;;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;;
+/*!50003 SET character_set_results = @saved_cs_results */ ;;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;;
+DELIMITER ;
+/*!50106 SET TIME_ZONE= @save_time_zone */ ;
 
 --
 -- Dumping routines for database 'youlearndb'
@@ -234,6 +358,27 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `increaseVisualizzazioni` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `increaseVisualizzazioni`(id int)
+BEGIN
+	update Lezione
+    set visualizzazione=visualizzazione+1
+    where idLezione=id;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -244,4 +389,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-10 19:00:06
+-- Dump completed on 2019-02-16 13:52:38
