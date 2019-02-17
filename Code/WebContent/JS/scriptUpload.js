@@ -55,6 +55,12 @@ $(document).ready(function(){
 			alertify.error("Riempi il campo file con la lezione che vuoi caricare!");
 			return false;
 		}
+		
+		if(document.getElementById("input1").files[0].size > 524288000){
+			console.log(document.getElementById("input1").files[0].size)
+			alertify.error("Il file che vuoi caricare è troppo grande!\nGrandezza massima: 500MB.");
+			return false;
+		}
 
 
 		$(btnFine).removeAttr("disabled");
@@ -165,6 +171,13 @@ $(document).ready(function(){
 		if(!document.getElementById("input2").value){
 			
 			alertify.error("Riempi il campo file con la lezione che vuoi caricare!");
+			return false;
+		}
+		
+		
+		if(document.getElementById("input2").files[0].size > 524288000){
+			console.log(document.getElementById("input2").files[0].size)
+			alertify.error("Il file che vuoi caricare è troppo grande!\nGrandezza massima: 500MB.");
 			return false;
 		}
 
@@ -280,6 +293,12 @@ $(document).ready(function(){
 			return false;
 		}
 
+		if(document.getElementById("input3").files[0].size > 524288000){
+			console.log(document.getElementById("input3").files[0].size)
+			alertify.error("Il file che vuoi caricare è troppo grande!\nGrandezza massima: 500MB.");
+			return false;
+		}
+		
 		$(btnFine).removeAttr("disabled");
 
 

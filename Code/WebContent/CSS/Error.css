@@ -1,0 +1,25 @@
+body {
+  background: #00AFF9 url(https://cbwconline.com/IMG/Codepen/Unplugged.png) center/cover no-repeat;
+  height: 100vh;
+  margin: 0;
+}
+
+#h1 {
+	font-family: 'Roboto', sans-serif;
+	
+  margin: .8em 3rem;
+  font-size: 4em;
+     color: white;
+   
+}
+
+#p {
+	font-family: 'Roboto', sans-serif;
+	
+  display: inline-block;
+  
+  margin: .2em 3rem;
+  font-size: 2em;
+    color: white;
+  
+}
