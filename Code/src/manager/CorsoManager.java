@@ -303,17 +303,18 @@ public class CorsoManager {
 																								+ "completamento");
 		/* Salvo la copertina */
 		if(file!=null) {
+			System.out.println("Modifico la copertina");
 			Path path=Paths.get(PATH+File.separator+"Resources"+File.separator+corso.getIdCorso());
 			if(!Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS))
 				Files.createDirectories(path);
 			//Riuso il vecchio nome
-			String filename=corso.getCopertina().substring(corso.getCopertina().indexOf(corso.getIdCorso()+File.separator)+2, corso.getCopertina().indexOf('.'));
-			String type=file.getSubmittedFileName().substring(file.getSubmittedFileName().indexOf('.'));
+			String filename=corso.getCopertina().substring(0, corso.getCopertina().lastIndexOf('.'));
+			String type=file.getSubmittedFileName().substring(file.getSubmittedFileName().lastIndexOf('.'));
 			
-			if(!type.equals(".jpg") && !type.equals(".png") && !type.equals(".jpeg")) 
+			if(!type.equalsIgnoreCase(".jpg") && !type.equalsIgnoreCase(".png") && !type.equalsIgnoreCase(".jpeg")) 
 				throw new NotWellFormattedException("La copertina non ha un formato adeguato");
 			
-			path=Paths.get(PATH+File.separator+"Resources"+File.separator+corso.getIdCorso()+File.separator+filename);
+			path=Paths.get(PATH+File.separator+"Resources"+File.separator+corso.getIdCorso()+File.separator+filename+type);
 			file.write(path.toString());
 			corso.setCopertina(filename+type); //Assegno al corso la copertina appena salvata
 		}
@@ -347,6 +348,7 @@ public class CorsoManager {
 				connection.commit();
 			
 			Path toDelete=Paths.get(PATH+File.separator+"Resources"+File.separator+idCorso);
+			
 			/*
 			 * walk: esamina ogni file presente nella directory 
 			 * sorted: ordina le cartelle nell'ordine inverso rispetto a come vengono esaminate da walk, così da avere i file all'inizio

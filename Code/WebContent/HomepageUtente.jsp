@@ -419,7 +419,7 @@
 				if (corsiTenuti.isEmpty()) {
 			%>
 			<div class="card-b-corsi card-body">Non ci sono corsi
-				Tenuti....M'occ a mammt</div>
+				Tenuti...</div>
 			<%
 				} else {
 					for (CorsoBean i : corsiTenuti) {

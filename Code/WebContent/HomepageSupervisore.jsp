@@ -247,7 +247,7 @@
 				if (corsiDaSupervsionare.isEmpty()) {
 			%>
 			<div class="card-b-corsi card-body">Non ci sono corsi da
-				supervisionare fate proprio schifo...</div>
+				supervisionare...</div>
 			<%
 				} else {
 					for (CorsoBean i : corsiDaSupervsionare) {
