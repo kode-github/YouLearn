@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import bean.AccountBean;
 import bean.CorsoBean;
+import bean.CorsoBean.Stato;
 import bean.LezioneBean;
 import exception.NotFoundException;
 import exception.NotWellFormattedException;
@@ -39,7 +40,8 @@ public class VisualLezioneServlet extends HttpServlet {
 				CorsoBean corso=(CorsoBean) session.getAttribute("corso");
 				int idLezione=Integer.parseInt(request.getParameter("idLezione"));
 				LezioneBean lezione=corso.getLezione(idLezione);
-				manager.increaseVisualizzazioni(lezione);
+				if(corso.getStato()==Stato.Attivo || corso.getStato()==Stato.Disattivo)
+					manager.increaseVisualizzazioni(lezione);
 				manager.retrieveCommentiByLezione(lezione);
 				request.getSession().setAttribute("lezione", lezione);
 				response.sendRedirect(request.getContextPath()+"/Lezione.jsp?idLezione="+idLezione);

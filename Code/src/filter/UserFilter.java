@@ -43,6 +43,7 @@ public class UserFilter implements Filter {
 			chain.doFilter(request, response);
 		else {
 			if(!account.getTipo().equals(Ruolo.Utente)) {
+				System.out.println("Sono un supervisore che accedeva a pagine non autorizzate");
 				httpResponse.sendRedirect(httpRequest.getContextPath()+"/HomepageSupervisore.jsp");
 				return;
 			}else

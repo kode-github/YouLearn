@@ -77,7 +77,7 @@ public class VisualCorsoServlet extends HttpServlet {
 					if(ruolo==null && researched!=null) {//non sono docente, iscritto e vengo da una ricerca
 						Iterator<CorsoBean> ricercati=researched.iterator();
 						while(ricercati.hasNext())
-							if((corso=ricercati.next()).getIdCorso()==idCorso) {
+							if((corso=ricercati.next()).getIdCorso().equals(idCorso)) {
 								ruolo="NonIscritto";
 								break;
 							}
@@ -93,7 +93,7 @@ public class VisualCorsoServlet extends HttpServlet {
 					CorsoBean tmp=new CorsoBean();
 					while(corsiSup.hasNext()) {
 						tmp=corsiSup.next();
-						if(tmp.getIdCorso()==idCorso) {
+						if(tmp.getIdCorso().equals(idCorso)) {
 							corso=tmp;
 							ruolo="supervisore";
 							break;

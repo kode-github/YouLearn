@@ -50,7 +50,7 @@ public class ModificaOrdineServlet extends HttpServlet {
 
         	
         	manager.modificaOrdine(idCorso, coppie); 
-        	request.getSession().setAttribute("updated", "true"); //fa ricaricare le lezioni
+        	//request.getSession().setAttribute("updated", "true"); //fa ricaricare le lezioni
         	//Setto un attributo per dire che è andato a buon fine
         	//Setto il nuovo nome della lezione
         	response.sendRedirect(request.getContextPath()+"/SettingLezione.jsp?idCorso="+idCorso);

@@ -34,6 +34,7 @@ public class GetLezioniServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		manager=LezioneManager.getIstanza(getServletContext().getRealPath(""));
+		System.out.println("Sono in get lezioni\n\n\n");
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		HttpSession session=request.getSession();
 		try {
@@ -45,7 +46,7 @@ public class GetLezioniServlet extends HttpServlet {
 			corso.setLezioni(new LinkedList<LezioneBean>()); //Annullo le lezioni che contiene
 			corso.setLezioni(lezione);
 			account.AddCorsoTenuto(corso);
-			request.getSession().removeAttribute("updated");
+			request.getSession().setAttribute("updated","true");
 			response.sendRedirect(request.getContextPath()+"//SettingLezione.jsp?idCorso="+corso.getIdCorso());
 		} catch ( SQLException |NumberFormatException | NotWellFormattedException e) {
 			response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");

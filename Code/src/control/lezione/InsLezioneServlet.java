@@ -26,7 +26,7 @@ import manager.LezioneManager;
  * Servlet implementation class InsLezioneServlet
  */
 @WebServlet("/InsLezioneServlet")
-@MultipartConfig(fileSizeThreshold= 1024*1024*500, maxFileSize=1024*1024*500, maxRequestSize=1024*1024*500 ) //TODO Va controllata la dimensione 
+@MultipartConfig(fileSizeThreshold= 1024*1024*2000, maxFileSize=1024*1024*2000, maxRequestSize=1024*1024*2000 ) //TODO Va controllata la dimensione 
 public class InsLezioneServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -63,7 +63,7 @@ public class InsLezioneServlet extends HttpServlet {
 				manager.insLezione(lezione, file);
 		
 				
-				request.getSession().setAttribute("updated", "true");
+				//request.getSession().setAttribute("updated", "true");
 				response.setContentType("application/json");
 		        response.setCharacterEncoding("UTF-8");
 		        response.getWriter().write("{\"success\":true,\"format\":\" Fatto! \"}");

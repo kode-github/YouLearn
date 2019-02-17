@@ -129,6 +129,18 @@
 	<%
 		}
 	%>
+	
+	
+	<%
+		String creato = (String) request.getSession().getAttribute("creato");
+		if (creato != null) {
+			request.getSession().removeAttribute("creato");
+	%>
+	<div id="alert1" class="alert alert-success d-none"
+		style="text-align: center;" role="alert">Corso creato! Puoi trovarlo nella sezione 'corsi seguiti'"</div>
+	<%
+		}
+	%>
 
 	<div id="alert" class="" style="text-align: center;" role="alert"></div>
 
@@ -339,9 +351,9 @@
 		</div>
 
 		<div class="row">
-			<div class="three-infromazioni col-lg-4">ROBA DA SCRIVERE</div>
-			<div class="three-infromazioni col-lg-4">ROBA DA SCRIVERE</div>
-			<div class="three-infromazioni col-lg-4">ROBA DA SCRIVERE</div>
+			<div class="three-infromazioni col-lg-4">Crea un corso e condividi le tue conoscenze!</div>
+			<div class="three-infromazioni col-lg-4">Iscriviti ad un corso e apprendi</div>
+			<div class="three-infromazioni col-lg-4">Fai entrambe le precedenti! Sei felice?</div>
 		</div>
 
 		<!-- INIZIO CORSI SEGUITI -->

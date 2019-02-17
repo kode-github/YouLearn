@@ -35,10 +35,13 @@
 
 		//Se ho inserito delle lezioni o modificato l'ordine,ricarico
 		String updated = (String) request.getSession().getAttribute("updated");
-		if (updated != null) {
+		if (updated == null) {
 			response.sendRedirect(request.getContextPath() + "\\GetLezioniServlet?idCorso=" + idCorso);
 			return;
 		}
+		else
+			request.getSession().removeAttribute("updated");
+			
 		corso = account.getCorsoTenuto(idCorso);
 	%>
 

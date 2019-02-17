@@ -43,7 +43,7 @@ public class CancLezioneServelt extends HttpServlet {
             	LezioneBean lezione=account.getCorsoTenuto(idCorso).getLezione(idLezione);
 				manager.delLezione(lezione);
 				account.getCorsoTenuto(idCorso).removeLezione(lezione);
-				request.getSession().setAttribute("updated", "true");
+				//request.getSession().setAttribute("updated", "true");
 	        	response.sendRedirect(request.getContextPath()+"/SettingLezione.jsp?idCorso="+idCorso);
 			}catch (IOException | NotFoundException | SQLException |NumberFormatException | DatiErratiException e) {
 				response.sendRedirect(request.getContextPath()+File.separator+"Error.jsp");

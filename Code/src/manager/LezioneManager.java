@@ -250,7 +250,9 @@ public class LezioneManager {
 			System.out.println("doDelete: "+ preparedStatement.toString());
 			preparedStatement.executeUpdate();
 			//Sistemo le lezioni
-			callableStatement=connection.prepareCall("{ call adjustLezioni }");
+			callableStatement=connection.prepareCall("{ call adjustLezioni(?,?) }");
+			callableStatement.setInt(1, lezione.getNumeroLezione());
+			callableStatement.setInt(2, lezione.getCorso().getIdCorso());
 			callableStatement.execute();
 			//Elimino il file dal disco
 			Path path=Paths.get(PATH+File.separator+"Resources"+File.separator+lezione.getCorso().getIdCorso()
