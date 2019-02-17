@@ -127,7 +127,7 @@ CREATE TABLE `corso` (
   KEY `corso_ibfk_2` (`accountSupervisore`),
   CONSTRAINT `corso_ibfk_1` FOREIGN KEY (`accountCreatore`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `corso_ibfk_2` FOREIGN KEY (`accountSupervisore`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10011 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10015 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -136,7 +136,7 @@ CREATE TABLE `corso` (
 
 LOCK TABLES `corso` WRITE;
 /*!40000 ALTER TABLE `corso` DISABLE KEYS */;
-INSERT INTO `corso` VALUES (5,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','NonBellissimo',' Stupendo oiii             ','2018-02-02','2030-02-02','141668b4-4eee-4ae4-972b-d6266166c9e2.jpg','90','Attivo','Musica',2,1),(12,'china@gmail.com','pasqualeAmbrosio@gmail.com','SuperComunista','PER IL PROLETARIATO','1917-02-02','2089-02-02','azz.jpg','1','Attivo','Informatica',1,2),(24,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','PasqualeBellissimo','Pasquale è stupendo','2019-02-01','2025-09-06','bafa13cf-0077-4ac8-928a-ae5dfc309a49.jpg','100','Attivo','Informatica',0,0),(26,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','Corso di Giusy','Come diventare Giusy e vivere una vita felice','2019-02-04','2025-09-06','135ebdea-e2ff-426a-959d-c2cb6b87eae7.jpg','5','Attivo','Informatica',0,0),(30,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','LuigiEEEEE','  Il mio corso è il più bello anche dopo la modifica','2019-02-07','2029-09-06','f7b2cc8f-959a-46b0-9791-6573d1d91a2c.jpg','150','Attivo','Danza',0,0),(41,'pasqualeAmbrosio@gmail.com','pasqualeAmbrosio@gmail.com','TestIscrizione','aaaaaaaaaaaaaaaaaaaaaa','2019-02-11','2025-09-06','x','56','Attivo','Informatica',0,1),(56,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','Quanto e bello','aaaaaaaaaaaaaaaaaaaa','2019-02-15','2025-09-06','f9166b1f-af45-458e-a425-d56d97d7f24b.png','25','Attivo','Informatica',0,0),(57,'luigicrisci1997@gmail.com','supervisore@gmail.com','AAAAAAAAAAA','aaaaaaaaaaaaaaaaa','2019-02-15','2019-05-18','a5896793-bd61-47a9-a911-649fe1266d5b.png','15','Completamento','Informatica',1,0);
+INSERT INTO `corso` VALUES (5,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','NonBellissimo',' Stupendo oiii             ','2018-02-02','2030-02-02','141668b4-4eee-4ae4-972b-d6266166c9e2.jpg','90','Attivo','Musica',2,1),(12,'china@gmail.com','pasqualeAmbrosio@gmail.com','SuperComunista','PER IL PROLETARIATO','1917-02-02','2089-02-02','azz.jpg','1','Attivo','Informatica',1,2),(24,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','PasqualeBellissimo','Pasquale è stupendo','2019-02-01','2025-09-06','bafa13cf-0077-4ac8-928a-ae5dfc309a49.jpg','100','Attivo','Informatica',0,0),(26,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','Corso di Giusy','Come diventare Giusy e vivere una vita felice','2019-02-04','2025-09-06','135ebdea-e2ff-426a-959d-c2cb6b87eae7.jpg','5','Attivo','Informatica',0,0),(30,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','LuigiEEEEE','  Il mio corso è il più bello anche dopo la modifica','2019-02-07','2029-09-06','f7b2cc8f-959a-46b0-9791-6573d1d91a2c.jpg','150','Attivo','Danza',0,0),(41,'pasqualeAmbrosio@gmail.com','pasqualeAmbrosio@gmail.com','TestIscrizione','aaaaaaaaaaaaaaaaaaaaaa','2019-02-11','2025-09-06','x','56','Attivo','Informatica',0,1),(56,'luigicrisci1997@gmail.com','pasqualeAmbrosio@gmail.com','Quanto e bello','aaaaaaaaaaaaaaaaaaaa','2019-02-15','2025-09-06','f9166b1f-af45-458e-a425-d56d97d7f24b.png','25','Attivo','Informatica',0,0),(10013,'luigicrisci1997@gmail.com','supervisore@gmail.com','Fotografia- che passione','La fotograia è bella proprio','2019-02-16','2025-09-06','15e1534c-a201-4d5e-ad03-868539f14fb7.jpg','35','Attivo','Informatica',2,0),(10014,'luigicrisci1997@gmail.com',NULL,'aaaaaaaaaaaaa','aaaaaaaaaaaaaaaa','2019-02-16','2025-09-06','be3e7362-0072-4273-87c4-e5c67d9b0210.png','25','Completamento','Informatica',2,0);
 /*!40000 ALTER TABLE `corso` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -225,7 +225,7 @@ CREATE TABLE `lezione` (
   PRIMARY KEY (`IdLezione`),
   KEY `corso_idx` (`corsoIdCorso`),
   CONSTRAINT `corso` FOREIGN KEY (`corsoIdCorso`) REFERENCES `corso` (`idcorso`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10029 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10062 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -234,7 +234,7 @@ CREATE TABLE `lezione` (
 
 LOCK TABLES `lezione` WRITE;
 /*!40000 ALTER TABLE `lezione` DISABLE KEYS */;
-INSERT INTO `lezione` VALUES ('Lezione 1',28,1,23,'cd171a96-bf26-4458-974c-19ea51cda60e.mp4',5),('Lezione 2',1,1,24,'b27997f6-7521-4339-86ff-8bc996bbdb84.mp4',5),('LezioneSeguita',39,1,222,'sss',12),('eeeeeeeeeeeeeeeee',0,1,10023,'e4c8a5d3-0519-4cce-93e2-6d0a7c762056.mp4',57);
+INSERT INTO `lezione` VALUES ('Lezione 1',28,1,23,'cd171a96-bf26-4458-974c-19ea51cda60e.mp4',5),('Lezione 2',1,1,24,'b27997f6-7521-4339-86ff-8bc996bbdb84.mp4',5),('LezioneSeguita',39,1,222,'sss',12),('Le basi',5,1,10056,'9a33cc64-d54a-4e6a-a1cf-5e633beeb93f.mp4',10013),('I vari tipi di obiettivi',1,2,10057,'42cb9714-dd66-4a19-8a09-058bbb27a23f.mp4',10013),('E che bella lezione!',0,2,10060,'fd8a9398-2af8-4ebe-ae5d-62ebbf2ea669.mp4',10014),('E jamm bell',0,1,10061,'f6f8234d-ed80-43c7-845f-6a2736e7fcae.mp4',10014);
 /*!40000 ALTER TABLE `lezione` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -347,11 +347,11 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `adjustLezioni`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `adjustLezioni`(nLezione int,idCorso int)
 BEGIN
 	update lezione
 	set numeroLezione=numeroLezione-1
-    where numeroLezione!=1;
+    where numeroLezione>nLezione AND corsoIdCorso=idCorso ;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -389,4 +389,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-16 13:52:38
+-- Dump completed on 2019-02-17 16:20:22
