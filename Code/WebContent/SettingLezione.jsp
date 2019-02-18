@@ -157,7 +157,7 @@
 	</div>
 
 
-	<div class="card w-50 mx-auto" id="insLezione">
+	<div class="card w-75 mx-auto" id="insLezione">
 		<div class="card-header" style="font-size: 30px">INSERIMENTO
 			LEZIONI</div>
 		<div class="card-body body-ins-lezione">
@@ -165,8 +165,8 @@
 			<ul style="list-style: none; padding-left: 0px !important">
 				<li class="d-inline"><label>Nome Lezione:</label> <input
 					type="text" id="nome-lezione" class="input-nome-lezione1"></li>
-				<li class="d-inline"><input id="input1" type="file" max="1"
-					accept="video/mp4,video/x-m4v,video/*" name="file">
+					<li class="d-inline"><input id="input1" type="file" max="1"
+						accept="video/mp4" name="file">
 					<button id="b1" class="btn btn-success upload	">UPLOAD
 						LEZIONE</button> <i id="bLez1" style="font-size: 1.5rem; margin-left: 5px;"
 					class="fas fa-plus-circle fa-2x" id="bLez1"></i></li>
@@ -182,7 +182,7 @@
 				<li class="d-inline"><label>Nome Lezione:</label> <input
 					type="text" id="nome-lezione" class="input-nome-lezione2"></li>
 				<li class="d-inline"><input id="input2" type="file" max="1"
-					accept="video/mp4,video/x-m4v,video/*" name="file">
+					accept="video/mp4" name="file">
 					<button id="b2" class="btn btn-success upload2">UPLOAD
 						LEZIONE</button> <!-- <i id="bLez2" style="font-size: 1.5rem; margin-left: 5px;"
 					class="fas fa-plus-circle fa-2x "></i> --></li>

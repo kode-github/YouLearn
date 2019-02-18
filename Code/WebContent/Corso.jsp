@@ -164,7 +164,7 @@
 
 		<div class=" card-b-corsi card-body">
 			<a href="http://localhost/YouLearn/Corso.jsp?idCorso="><img
-				class="img-corsi-attesa rounded float-left" src="Images/Image.jpg"
+				class="img-corsi-attesa rounded float-left" src="Images/youLearnLez.png""
 				alt="FAIL" width="170" height="170"></a>
 			<ul class="informazioni-corso rounded float-left">
 				<li><a

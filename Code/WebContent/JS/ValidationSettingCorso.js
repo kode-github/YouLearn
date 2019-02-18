@@ -33,7 +33,7 @@ function validateCorso(formSettingCorso) {
 
 
 	if(!(name.match(nameValidator))){
-		alertify.error("("+name + ") non e' valido, prova con un nome che contenga almeno 5 caratteri, che non sia piu' lungo di 30 caratteri e che non contenga caratteri speciali diversi da !,- o numeri.");
+		alertify.error("("+name + ") non &egrave; valido, prova con un nome che contenga almeno 5 caratteri, che non sia piu' lungo di 30 caratteri e che non contenga caratteri speciali diversi da !,- o numeri.");
 		$("#InputName").focus();
 		return false;
 	} else

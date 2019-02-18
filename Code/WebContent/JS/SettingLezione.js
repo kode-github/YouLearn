@@ -160,7 +160,6 @@ function modifica(form){
 
 		console.log("Modifica con path!=null: " +path);}
 
-	//console.log(path2)
 	var file = form.nomeL;
 	var btn = form.btnM;
 	var btnA = form.btnA;
@@ -177,15 +176,6 @@ function modifica(form){
 	console.log(liFile);
 
 
-
-//	button = $('<button />').addClass('d-none btn btn-outline-secondary but').text('Modifica Lezione...');
-//	$(button).css("font-size","0.9rem");
-//	$(button).attr('name', 'modLezione');
-//	$(button).attr('type', 'button');
-//	button.appendTo(liFile);
-
-
-
 	//Diasbilito gli altri bottoni per la modifica
 	disableButton($(btn).text(), btnUp, btnDown);
 
@@ -195,7 +185,6 @@ function modifica(form){
 	$(nome).attr("readonly", false);
 	$(nome).focus();
 
-	//$(file).attr("type","file");
 
 
 
@@ -291,9 +280,8 @@ function modificaLezione(form){
 
 	console.log("ModificaLezione: " +path);
 	$(liFile).text("");
-	$(liFile).append("<input type='file' name='nomeL' id='videoUP' accept='video/mp4,video/x-m4v,video/*'>");
+	$(liFile).append("<input type='file' name='nomeL' id='videoUP' accept='video/mp4'>");
 
-	//var path2 =$("#file-lezione").text("CIAO");
 	var fileLezione = liFile.children("input[type=file]");
 	console.log(fileLezione);
 	$(fileLezione).removeClass("d-none");
@@ -378,15 +366,12 @@ $(".UPL").click(function(){
 
 
 	var div=$(this).parent();
-	//var ul =div.children("ul");
 	var ul = div.parent();
-	//var divP = ul.parent();
-	//var divU = divP.children().eq(1);
-	//var div = ul.parent();
+
 	var liText = ul.children("li").eq(0);
 
 	var liFile = ul.children("li").eq(1);
-	
+
 
 
 
@@ -400,34 +385,14 @@ $(".UPL").click(function(){
 	var divF = divX.parent();
 	var up = divU.children().eq(1)
 	var divI = divF.children().eq(1);//div input con id in form
-	//console.log(divU); //div upload
-	//console.log(divX);//div prima di upload
-	//console.log(divF);//form
 
-	//console.log("Questo è l'id:" + idLezione);
-	//console.log(inputID);
 	if(f==null){alert("file non modificato")}
 
 	if(checkNome($(text).val()) == false){
-		
-		return false;
-		
-	}
-	
 
-	
-	if(document.getElementById("videoUP").files[0].size > 524288000){
-		console.log(document.getElementById("videoUP").files[0].size)
-		alertify.error("Il file che vuoi caricare è troppo grande!\nGrandezza massima: 500MB.");
 		return false;
+
 	}
-	
-	if(!f.value){
-		
-		//alert("riempi il file");
-		//return false;
-	}
-	
 
 	console.log("Questo è: "+idCorso);
 	console.log("Questo è: "+$(text).val());
@@ -462,7 +427,13 @@ $(".UPL").click(function(){
 		window.location.reload();
 	}
 	else{
-		
+
+		if(document.getElementById("videoUP").files[0].size >  524288000){
+			console.log(document.getElementById("videoUP").files[0].size)
+			alertify.error("Il file che vuoi caricare &egrave; troppo grande!\nGrandezza massima: 500MB.");
+			return false;
+		}
+
 		f.simpleUpload("http://localhost:8080/YouLearn/ModificaLezioneServlet?name="+$(text).val()+"&idCorso="+ idCorso+"&idLezione="+$(divI).val(), {
 
 			allowedExts: ["mp4"],
@@ -535,13 +506,13 @@ $(".UPL").click(function(){
 				});
 			},
 			finish: function(){
-				
+
 				window.location.reload();
 
 			}
 		});
 	}
-	
+
 
 
 });
@@ -556,17 +527,17 @@ function checkNome(nome){
 	var nameValidator = /^[a-zA-Z\s\!\-\d]{5,50}$/;
 
 	if(nome == ""){
-		
+
 		return false;
 	} else
-	
-	if(!nome.match(nameValidator)){
-		return false;
 
-	} else {
+		if(!nome.match(nameValidator)){
+			return false;
 
-		return true;
-	}
+		} else {
+
+			return true;
+		}
 
 }
 
